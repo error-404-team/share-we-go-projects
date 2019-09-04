@@ -49,7 +49,7 @@ async function getWebpackSizes() {
 }
 
 async function run() {
-  const rollupBundles = [path.join(workspaceRoot, 'packages/material-ui/size-snapshot.json')];
+  const rollupBundles = [path.join(workspaceRoot, 'packages/share-we-go-ui/size-snapshot.json')];
 
   const bundleSizes = lodash.fromPairs([
     ...(await getWebpackSizes()),
