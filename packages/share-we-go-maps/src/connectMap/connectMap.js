@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ScriptCache} from '../../lib/ScriptCache';
+import { ScriptCache } from '../../lib/ScriptCache';
 import ConnectApi from '../../lib/ConnectApi';
 
 const defaultMapConfig = {};
@@ -26,8 +26,8 @@ const defaultCreateCache = options => {
       version: version,
       url: url,
       client: client,
-      region: region
-    })
+      region: region,
+    }),
   });
 };
 
@@ -48,7 +48,7 @@ export const connectMap = input => ConnectMapComponent => {
         loaded: false,
         map: null,
         google: null,
-        options: options
+        options: options,
       };
     }
 
@@ -75,7 +75,7 @@ export const connectMap = input => ConnectMapComponent => {
       this.setState({
         options: options,
         loaded: false,
-        google: null
+        google: null,
       });
     }
 
@@ -91,29 +91,27 @@ export const connectMap = input => ConnectMapComponent => {
 
       // Build script
       this.scriptCache = createCache(options);
-      this.unregisterLoadHandler =
-        this.scriptCache.google.onLoad(this.onLoad.bind(this));
+      this.unregisterLoadHandler = this.scriptCache.google.onLoad(this.onLoad.bind(this));
 
       // Store information about loading container
-      this.LoadingContainer =
-        options.LoadingContainer || DefaultLoadingContainer;
+      this.LoadingContainer = options.LoadingContainer || DefaultLoadingContainer;
     }
 
     onLoad(err, tag) {
       this._gapi = window.google;
 
-      this.setState({loaded: true, google: this._gapi});
+      this.setState({ loaded: true, google: this._gapi });
     }
 
     render() {
-      const {LoadingContainer} = this;
+      const { LoadingContainer } = this;
       if (!this.state.loaded) {
         return <LoadingContainer />;
       }
 
       const props = Object.assign({}, this.props, {
         loaded: this.state.loaded,
-        google: window.google
+        google: window.google,
       });
 
       return (

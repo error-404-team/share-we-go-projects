@@ -1,13 +1,16 @@
 import React from 'react';
 import ScriptsLoader from './ScriptsLoader';
 
-function mapLoader (connect,initMap) {
+function mapLoader(connect, initMap) {
+  console.log(connect);
 
-    console.log(connect);
-    
-    ScriptsLoader(`https://maps.googleapis.com/maps/api/js?key=${connect.key}&libraries=${connect.libraries}&callback=initMap`)
+  ScriptsLoader(
+    `https://maps.googleapis.com/maps/api/js?key=${connect.key}&libraries=${
+      connect.libraries
+    }&callback=initMap`,
+  );
 
-    window.initMap = initMap;
+  window.initMap = initMap;
 }
 
 export default mapLoader;

@@ -11,11 +11,10 @@ import * as firebase from 'firebase';
 //     appId: "1:950367710306:web:219271895378fa7e"
 // }
 
-function connectDatabase (config) {
-    return firebase.initializeApp(config);
+function connectDatabase(config) {
+  return firebase.initializeApp(config);
 }
 // Get the Firebase config from the auto generated file.
 
-
-// Instantiate a Firebase app. 
+// Instantiate a Firebase app.
 export default connectDatabase;
