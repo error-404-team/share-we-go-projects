@@ -1,0 +1,50 @@
+{
+  "name": "share-we-go-styles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "build": "yarn build:cjs && yarn build:esm && yarn build:es && yarn build:copy-files",
+    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ../../babel.config.js ./src --out-dir ./build --ignore \"**/*.test.js\"",
+    "build:esm": "cross-env NODE_ENV=production BABEL_ENV=esm babel --config-file ../../babel.config.js ./src --out-dir ./build/esm --ignore \"**/*.test.js\"",
+    "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel --config-file ../../babel.config.js ./src --out-dir ./build/es --ignore \"**/*.test.js\"",
+    "build:copy-files": "node ../../scripts/copy-files.js",
+    "prebuild": "rimraf build",
+    "release": "yarn build && npm publish build --tag latest",
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/share-we-go-styles/**/*.test.js' --exclude '**/node_modules/**'",
+    "typescript": "tslint -p tsconfig.json \"{src,test}/**/*.{ts,tsx}\""
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.4.4",
+    "@emotion/hash": "^0.7.1",
+    "share-we-go-types": "^1.0.0",
+    "share-we-go-utils": "^1.0.0",
+    "clsx": "^1.0.2",
+    "csstype": "^2.5.2",
+    "deepmerge": "^4.0.0",
+    "hoist-non-react-statics": "^3.2.1",
+    "jss": "10.0.0-alpha.24",
+    "jss-plugin-camel-case": "10.0.0-alpha.24",
+    "jss-plugin-default-unit": "10.0.0-alpha.24",
+    "jss-plugin-global": "10.0.0-alpha.24",
+    "jss-plugin-nested": "10.0.0-alpha.24",
+    "jss-plugin-props-sort": "10.0.0-alpha.24",
+    "jss-plugin-rule-value-function": "10.0.0-alpha.24",
+    "jss-plugin-vendor-prefixer": "10.0.0-alpha.24",
+    "prop-types": "^15.7.2",
+    "warning": "^4.0.1"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}

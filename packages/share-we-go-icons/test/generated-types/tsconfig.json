@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "jsx": "react",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": "../../../",
+    "noErrorTruncation": true,
+    "paths": {
+      "share-we-go-ui": ["./material-ui/src"],
+      "share-we-go-ui/*": ["./material-ui/src/*"],
+      "share-we-go-icons": ["./share-we-go-icons/build"],
+      "share-we-go-icons/*": ["./share-we-go-icons/build/*"]
+    }
+  },
+  "exclude": ["**/node_modules/"]
+}

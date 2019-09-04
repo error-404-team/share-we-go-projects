@@ -1,0 +1,46 @@
+{
+  "name": "share-we-go-icons",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "build": "yarn build:cjs && yarn build:esm && yarn build:es && yarn build:typings && yarn build:copy-files",
+    "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ../../babel.config.js ./src --out-dir ./build --ignore \"**/*.test.js\"",
+    "build:esm": "cross-env NODE_ENV=production BABEL_ENV=esm babel --config-file ../../babel.config.js ./src --out-dir ./build/esm --ignore \"**/*.test.js\"",
+    "build:es": "echo 'skip es folder'",
+    "build:copy-files": "node ../../scripts/copy-files.js",
+    "build:typings": "babel-node --config-file ../../babel.config.js ./scripts/create-typings.js",
+    "prebuild": "rimraf material-design-icons && rimraf build",
+    "release": "yarn build && npm publish build --tag latest",
+    "src:download": "cd ../../ && babel-node --config-file ./babel.config.js packages/share-we-go-icons/scripts/download.js",
+    "src:icons": "cd ../../ && UV_THREADPOOL_SIZE=64 babel-node --config-file ./babel.config.js packages/share-we-go-icons/builder.js --output-dir packages/share-we-go-icons/src --svg-dir packages/share-we-go-icons/material-io-tools-icons --renameFilter ./renameFilters/material-design-icons.js",
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/share-we-go-icons/**/*.test.js' --exclude '**/node_modules/**'",
+    "test:built-typings": "tslint -p test/generated-types/tsconfig.json \"test/generated-types/*.{ts,tsx}\"",
+    "typescript": "tslint -p tsconfig.json \"src/**/*.{ts,tsx}\""
+  },
+  "peerDependencies": {
+    "share-we-go-ui": "^1.0.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.4.4"
+  },
+  "devDependencies": {
+    "fs-extra": "^8.1.0",
+    "mkdirp": "^0.5.0",
+    "mustache": "^3.0.2",
+    "svgo": "^1.3.0",
+    "temp": "^0.9.0",
+    "yargs": "^13.3.0"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}

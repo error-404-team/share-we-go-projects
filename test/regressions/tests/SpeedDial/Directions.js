@@ -1,0 +1,92 @@
+import clsx from 'clsx';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Avatar from 'share-we-go-ui/Avatar';
+import { withStyles } from 'share-we-go-ui/styles';
+import { capitalize } from 'share-we-go-ui/utils';
+import SpeedDial from 'share-we-go-lab/SpeedDial';
+import SpeedDialIcon from 'share-we-go-lab/SpeedDialIcon';
+import SpeedDialAction from 'share-we-go-lab/SpeedDialAction';
+
+const styles = {
+  root: {
+    position: 'relative',
+    height: 360,
+    width: 400,
+  },
+  speedDial: {
+    position: 'absolute',
+    '&$directionUp': {
+      bottom: 0,
+      right: 0,
+    },
+    '&$directionRight': {
+      bottom: 0,
+      left: 0,
+    },
+    '&$directionDown': {
+      top: 0,
+      left: 0,
+    },
+    '&$directionLeft': {
+      top: 0,
+      right: 0,
+    },
+  },
+  directionUp: {},
+  directionRight: {},
+  directionDown: {},
+  directionLeft: {},
+};
+
+function SimpleSpeedDial(props) {
+  const tooltipPlacement = {
+    up: 'left',
+    right: 'top',
+    down: 'right',
+    left: 'bottom',
+  };
+  const secondaryPlacement = ['-start', '', '-end'];
+
+  return (
+    <SpeedDial icon={<SpeedDialIcon />} open {...props}>
+      {['A', 'B', 'C'].map((name, i) => (
+        <SpeedDialAction
+          key={name}
+          icon={<Avatar>{name}</Avatar>}
+          tooltipOpen
+          tooltipPlacement={`${tooltipPlacement[props.direction]}${secondaryPlacement[i]}`}
+          tooltipTitle={'Tooltip'}
+        />
+      ))}
+    </SpeedDial>
+  );
+}
+
+SimpleSpeedDial.propTypes = {
+  direction: PropTypes.string.isRequired,
+};
+
+function Directions({ classes }) {
+  const speedDialClassName = direction =>
+    clsx(classes.speedDial, classes[`direction${capitalize(direction)}`]);
+
+  return (
+    <div className={classes.root}>
+      {['up', 'right', 'down', 'left'].map(direction => (
+        <SimpleSpeedDial
+          key={direction}
+          ariaLabel={direction}
+          className={speedDialClassName(direction)}
+          direction={direction}
+        />
+      ))}
+    </div>
+  );
+}
+
+Directions.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Directions);

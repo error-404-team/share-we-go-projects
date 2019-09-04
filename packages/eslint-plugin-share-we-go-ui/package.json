@@ -1,0 +1,18 @@
+{
+  "name": "eslint-plugin-share-we-go-ui",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Custom eslint rules for Material-UI.",
+  "main": "src/index.js",
+  "dependencies": {
+    "emoji-regex": "^8.0.0"
+  },
+  "scripts": {
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/eslint-plugin-share-we-go-ui/**/*.test.js' --exclude '**/node_modules/**'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui.git"
+  },
+  "license": "MIT"
+}

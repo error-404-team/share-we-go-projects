@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "jsx": "react",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "noErrorTruncation": true,
+    "allowJs": true,
+    "paths": {
+      "share-we-go-ui": ["./packages/share-we-go-ui/src"],
+      "share-we-go-ui/*": ["./packages/share-we-go-ui/src/*"],
+      "share-we-go-lab": ["./packages/share-we-go-lab/src"],
+      "share-we-go-lab/*": ["./packages/share-we-go-lab/src/*"],
+      "share-we-go-styles": ["./packages/share-we-go-styles/src"],
+      "share-we-go-styles/*": ["./packages/share-we-go-styles/src/*"],
+      "share-we-go-system": ["./packages/share-we-go-system/src"],
+      "share-we-go-types": ["./packages/share-we-go-types"],
+      "test/*": ["./test/*"]
+    }
+  },
+  "exclude": ["**/build/"]
+}

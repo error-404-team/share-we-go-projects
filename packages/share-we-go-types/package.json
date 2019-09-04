@@ -1,0 +1,20 @@
+{
+  "name": "share-we-go-types",
+  "version": "1.0.0",
+  "description": "",
+  "types": "./index.d.ts",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "release": "npm publish --tag latest",
+    "test": "echo 'No runtime test. Type tests are run with the `typescript` script.'",
+    "typescript": "tslint -p tsconfig.json \"*.{ts,tsx}\""
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@types/react": "*"
+  }
+}
