@@ -23,7 +23,7 @@ NextComposed.propTypes = {
 };
 
 // A styled version of the Next.js Link component:
-// https://nextjs.org/docs/#with-link
+// https://nextjs.org/web-app/#with-link
 function Link(props) {
   const {
     activeClassName = 'active',

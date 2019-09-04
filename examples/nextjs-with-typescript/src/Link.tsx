@@ -34,7 +34,7 @@ interface LinkPropsBase {
 type LinkProps = LinkPropsBase & NextComposedProps & Omit<MuiLinkProps, 'ref'>;
 
 // A styled version of the Next.js Link component:
-// https://nextjs.org/docs/#with-link
+// https://nextjs.org/web-app/#with-link
 function Link(props: LinkProps) {
   const {
     activeClassName = 'active',
