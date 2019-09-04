@@ -1,7 +1,7 @@
 {
   "name": "nextjs-with-typescript",
   "version": "4.0.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "share-we-go-ui": "latest",
     "share-we-go-styles": "latest",

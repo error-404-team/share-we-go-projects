@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-unwrap-createstyles",
-  "private": true,
+  "private": false,
   "version": "4.1.0",
   "description": "unwraps createStyles call",
   "main": "src/index.js",

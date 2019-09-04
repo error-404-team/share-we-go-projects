@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "proptypes": "ts-node --skip-project ./packages/share-we-go-ui/scripts/generateProptypes.ts",
     "deduplicate": "node scripts/deduplicate.js",

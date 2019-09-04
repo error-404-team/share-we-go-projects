@@ -1,7 +1,7 @@
 {
   "name": "create-react-app-with-typescript",
   "version": "4.0.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "share-we-go-ui": "latest",
     "@types/react": "latest",

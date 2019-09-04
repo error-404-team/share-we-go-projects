@@ -1,7 +1,7 @@
 {
   "name": "gatsby",
   "version": "4.0.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "share-we-go-ui": "latest",
     "gatsby": "latest",
