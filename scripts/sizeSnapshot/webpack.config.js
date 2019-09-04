@@ -21,22 +21,22 @@ async function getSizeLimitBundles() {
     {
       name: 'share-we-go-ui/Paper',
       webpack: true,
-      path: 'packages/material-ui/build/Paper/index.js',
+      path: 'packages/share-we-go-ui/build/Paper/index.js',
     },
     {
       name: 'share-we-go-ui/Paper.esm',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Paper/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Paper/index.js',
     },
     {
       name: 'share-we-go-ui',
       webpack: true,
-      path: 'packages/material-ui/build/esm/index.js',
+      path: 'packages/share-we-go-ui/build/esm/index.js',
     },
     {
       name: 'share-we-go-ui/styles/createMuiTheme',
       webpack: true,
-      path: 'packages/material-ui/build/esm/styles/createMuiTheme.js',
+      path: 'packages/share-we-go-ui/build/esm/styles/createMuiTheme.js',
     },
     {
       name: 'share-we-go-lab',
@@ -56,52 +56,52 @@ async function getSizeLimitBundles() {
     {
       name: 'colorManipulator',
       webpack: true,
-      path: 'packages/material-ui/build/esm/styles/colorManipulator.js',
+      path: 'packages/share-we-go-ui/build/esm/styles/colorManipulator.js',
     },
     {
-      // why we use esm here: https://github.com/mui-org/material-ui/pull/13391#issuecomment-459692816
+      // why we use esm here: https://github.com/mui-org/share-we-go-ui/pull/13391#issuecomment-459692816
       name: 'Button',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Button/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Button/index.js',
     },
     {
       // vs https://bundlephobia.com/result?p=react-modal
       // vs https://bundlephobia.com/result?p=@reach/dialog
       name: 'Modal',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Modal/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Modal/index.js',
     },
     {
       // vs https://bundlephobia.com/result?p=react-popper
       name: 'share-we-go-ui/Popper',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Popper/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Popper/index.js',
     },
     {
       // vs https://bundlephobia.com/result?p=react-responsive
       // vs https://bundlephobia.com/result?p=react-media
       name: 'share-we-go-ui/useMediaQuery',
       webpack: true,
-      path: 'packages/material-ui/build/esm/useMediaQuery/index.js',
+      path: 'packages/share-we-go-ui/build/esm/useMediaQuery/index.js',
     },
     {
       // vs https://bundlephobia.com/result?p=react-focus-lock
       name: 'share-we-go-ui/TrapFocus',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Modal/TrapFocus.js',
+      path: 'packages/share-we-go-ui/build/esm/Modal/TrapFocus.js',
     },
     {
       // vs https://bundlephobia.com/result?p=react-textarea-autosize
       // vs https://bundlephobia.com/result?p=react-autosize-textarea
       name: 'share-we-go-ui/Textarea',
       webpack: true,
-      path: 'packages/material-ui/build/esm/TextareaAutosize/index.js',
+      path: 'packages/share-we-go-ui/build/esm/TextareaAutosize/index.js',
     },
     {
       // vs https://bundlephobia.com/result?p=rc-slider
       name: 'Slider',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Slider/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Slider/index.js',
     },
     {
       name: 'Rating',
@@ -112,7 +112,7 @@ async function getSizeLimitBundles() {
       // vs https://bundlephobia.com/result?p=react-portal
       name: 'Portal',
       webpack: true,
-      path: 'packages/material-ui/build/esm/Portal/index.js',
+      path: 'packages/share-we-go-ui/build/esm/Portal/index.js',
     },
     {
       name: 'web-app.main',
@@ -146,7 +146,7 @@ module.exports = async function webpackConfig() {
     plugins: [new CompressionPlugin()],
     resolve: {
       alias: {
-        'share-we-go-ui': path.join(workspaceRoot, 'packages/material-ui/build'),
+        'share-we-go-ui': path.join(workspaceRoot, 'packages/share-we-go-ui/build'),
         'share-we-go-lab': path.join(workspaceRoot, 'packages/share-we-go-lab/build'),
         'share-we-go-styles': path.join(workspaceRoot, 'packages/share-we-go-styles/build'),
         'share-we-go-system': path.join(workspaceRoot, 'packages/share-we-go-system/build'),
