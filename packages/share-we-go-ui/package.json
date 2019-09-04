@@ -1,6 +1,6 @@
 {
   "name": "share-we-go-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -30,10 +30,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
-    "share-we-go-styles": "^1.0.0",
-    "share-we-go-system": "^1.0.0",
-    "share-we-go-types": "^1.0.0",
-    "share-we-go-utils": "^1.0.0",
     "@types/react-transition-group": "^4.2.0",
     "clsx": "^1.0.2",
     "convert-css-length": "^2.0.1",
@@ -44,6 +40,10 @@
     "popper.js": "^1.14.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.0.0",
+    "share-we-go-styles": "^1.0.0",
+    "share-we-go-system": "^1.0.0",
+    "share-we-go-types": "^1.0.0",
+    "share-we-go-utils": "^1.0.0",
     "warning": "^4.0.1"
   },
   "sideEffects": false,
