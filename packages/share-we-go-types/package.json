@@ -5,6 +5,14 @@
   "types": "./index.d.ts",
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/error-404-team/share-we-go-projects.git"
+  },
+  "bugs": {
+    "url": "https://github.com/error-404-team/share-we-go-projects/issues"
+  },
+  "homepage": "https://github.com/error-404-team/share-we-go-projects/tree/master/packages/share-we-go-types",
   "scripts": {
     "release": "npm publish --tag latest",
     "test": "echo 'No runtime test. Type tests are run with the `typescript` script.'",

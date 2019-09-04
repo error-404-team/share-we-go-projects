@@ -5,6 +5,14 @@
   "main": "./src/index.js",
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/error-404-team/share-we-go-projects.git"
+  },
+  "bugs": {
+    "url": "https://github.com/error-404-team/share-we-go-projects/issues"
+  },
+  "homepage": "https://github.com/error-404-team/share-we-go-projects/tree/master/packages/share-we-go-lab",
   "scripts": {
     "build": "yarn build:cjs && yarn build:esm && yarn build:es && yarn build:copy-files",
     "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ../../babel.config.js ./src --out-dir ./build --ignore \"**/*.test.js\"",
