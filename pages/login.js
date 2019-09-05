@@ -2,7 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from '../lib/firebase' 
+import firebase from '../lib/firebase';
+import ContainerUI from '../components/ContainerUI';
 
 
 
@@ -47,17 +48,19 @@ const uiConfig = {
 const Login = () => {
     // const { classes } = useStyles();
     return (
-        <Typography component="div" style={{
-            flex: 1,
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#274D7D',
-        }}>
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-        </Typography>
+        <ContainerUI>
+            <Typography component="div" style={{
+                flex: 1,
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#274D7D',
+            }}>
+                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+            </Typography>
+        </ContainerUI>
     )
 
 }
