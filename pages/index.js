@@ -31,7 +31,7 @@ const Index = (props) => {
     return (
         <React.Fragment>
             {loading == true
-                ? <Loading />
+                ? <Loading state={loading} />
                 : <React.Fragment>
                     {auth == true
                         ? <React.Fragment>logOn</React.Fragment>
