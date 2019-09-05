@@ -31,22 +31,9 @@ const uiConfig = {
     ]
 };
 
-// กำหนด style
-// const useStyles = makeStyles(theme => ({
-//     root: {
-//         flex: 1,
-//         minHeight: '100vh',
-//         display: 'flex',
-//         flexDirection: 'column',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         backgroundColor: '#274D7D',
-//     },
-// }
-// ));
+
 
 const Login = () => {
-    // const { classes } = useStyles();
     return (
         <ContainerUI>
             <Typography component="div" style={{

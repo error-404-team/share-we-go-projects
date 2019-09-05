@@ -3,8 +3,9 @@ import Loading from './loading';
 import Login from './login';
 import firebase from "../lib/firebase";
 import { writeUserData } from '../firebase-database/write-data';
+import '../css/styles.css';
 
-const Index = (props) => {
+const Index = () => {
     const [loading, setLoding] = React.useState(true);
     const [auth, setAuth] = React.useState(false);
 

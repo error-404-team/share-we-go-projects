@@ -1,13 +1,13 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+// import Container from '@material-ui/core/Container';
 import PropTypes from 'prop-types';
 
 function ContainerUI(props) {
     return (
         <CssBaseline >
-            <Container style={{ padding: 0 }} >
+            {/* <Container style={{ padding: 0 }} > */}
                 <Typography component="div" style={{
                     backgroundColor: props.backgroundColor !== undefined
                         ? `${props.backgroundColor}`
@@ -18,7 +18,7 @@ function ContainerUI(props) {
                 }} >
                     {props.children}
                 </Typography>
-            </Container>
+            {/* </Container> */}
         </CssBaseline>
     )
 }
