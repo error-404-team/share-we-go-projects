@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-client": "next",
-    "dev-socket.io-server": "node socket.io-server.js",
+    "dev": "node socket.io-server.js",
     "socket.io-server": "SET NODE_ENV=production node socket.io-server.js",
     "client": "next start",
     "build": "next build",
