@@ -1,6 +1,6 @@
-import firebase from '../lib/firebase';
+const firebase = require('../lib/firebase-backend');
 
-export function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
+function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
 
     if (displayName === null && email === null && photoURL === null) {
         firebase.database().ref(`users/${uid}`).set({
@@ -40,7 +40,7 @@ export function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
 
 }
 
-export function writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, coords, timestamp) {
+function writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, coords, timestamp) {
     firebase.database().ref(`geolocation/${uid}/`).set({
         uid: uid,
         displayName: displayName,
@@ -56,7 +56,7 @@ export function writeGEOLocationData(uid, displayName, email, photoURL, phoneNum
             longitude: coords.longitude,
             speed: coords.speed
         },
-        timestamp: position.timestamp,
+        timestamp: timestamp,
     });
     //     console.log(`
     //     writeLocationPrivateData() : {
@@ -70,7 +70,7 @@ export function writeGEOLocationData(uid, displayName, email, photoURL, phoneNum
 
 }
 
-export function writeLocationNearbyUsersData(uid, group_share_id, displayName, photoURL, email, position, name_address) {
+function writeLocationNearbyUsersData(uid, group_share_id, displayName, photoURL, email, position, name_address) {
     firebase.database().ref(`location_near_by_users/${uid}/${group_share_id}`).set({
         group_share_id: group_share_id,
         lat: position.lat(),
@@ -83,7 +83,7 @@ export function writeLocationNearbyUsersData(uid, group_share_id, displayName, p
     );
 }
 
-export function writeSearchLocationNearbyUsersData(uid, group_share_id, displayName, photoURL, email, position, name_address) {
+function writeSearchLocationNearbyUsersData(uid, group_share_id, displayName, photoURL, email, position, name_address) {
     firebase.database().ref(`search_location_near_by_users/${uid}/${group_share_id}`).set({
         group_share_id: group_share_id,
         lat: position.lat(),
@@ -96,7 +96,7 @@ export function writeSearchLocationNearbyUsersData(uid, group_share_id, displayN
     );
 }
 
-export function writeShareMyWayNearbyUsersData(uid, group_share_id, displayName, photoURL, email, start_position, end_position, start_address, end_address) {
+function writeShareMyWayNearbyUsersData(uid, group_share_id, displayName, photoURL, email, start_position, end_position, start_address, end_address) {
     firebase.database().ref(`share_my_way_near_by_users/${uid}/${group_share_id}`).set({
         group_share_id: group_share_id,
         start_lat: start_position.lat(),
@@ -112,7 +112,7 @@ export function writeShareMyWayNearbyUsersData(uid, group_share_id, displayName,
     );
 }
 
-export function writeDestinationUsersData(uid, position, end_address) {
+function writeDestinationUsersData(uid, position, end_address) {
     firebase.database().ref(`destination_users/${uid}/`).set({
         location_id: uid,
         lat: position.lat(),
@@ -122,7 +122,7 @@ export function writeDestinationUsersData(uid, position, end_address) {
     );
 }
 
-export function writeCreateGroupShareUserData(uid, start_lat, start_lng, end_lat, end_lng, start_address, end_address, start_time, end_time, user_num) {
+function writeCreateGroupShareUserData(uid, start_lat, start_lng, end_lat, end_lng, start_address, end_address, start_time, end_time, user_num) {
     firebase.database().ref(`group_share_user/${uid}`).set({
         group_share_id: `${uid}`,
         user_num: user_num,
@@ -139,7 +139,8 @@ export function writeCreateGroupShareUserData(uid, start_lat, start_lng, end_lat
     });
 }
 
-export function addUserToGroupShareData(uid, user) {
+function addUserToGroupShareData(uid, user) {
     firebase.database().ref(`group_shareuid/group_share`).push(user);
 }
 
+module.exports = writeUserData, writeGEOLocationData, writeLocationNearbyUsersData, writeSearchLocationNearbyUsersData, writeShareMyWayNearbyUsersData, writeDestinationUsersData, writeCreateGroupShareUserData, addUserToGroupShareData;

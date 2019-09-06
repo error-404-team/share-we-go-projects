@@ -1,0 +1,6 @@
+{
+    "watch": [
+        "server.js",
+        "socket.io-server.js"
+    ]
+}
