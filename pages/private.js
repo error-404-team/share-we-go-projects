@@ -1,6 +1,7 @@
 import { Map, ConnectApiMaps } from '../lib/maps';
 import SearchMap from '../components/SearchMap';
 import SearchBar from '../components/SearchBar';
+import {writeUserData,writeGEOLocationData} from '../firebase-database/write-data';
 import '../css/map.css';
 import '../css/styles.css';
 
@@ -12,6 +13,34 @@ class Private extends React.Component {
         super(props)
         this.state = { ...props }
     }
+
+    componentDidMount() {
+
+        fetch('http://localhost:7000/position').then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        }).then(function (stories) {
+            let {uid, displayName, email, photoURL, phoneNumber, coords, timestamp} =stories;
+            writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, coords, timestamp)
+            console.log(stories);
+            
+        });
+
+        fetch('http://localhost:7000/users').then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        }).then(function (stories) {
+            let {uid, displayName, email, photoURL, phoneNumber} = stories;
+            writeUserData(uid, displayName, email, photoURL, phoneNumber)
+            console.log(stories);
+            
+        })
+    }
+
     render() {
         // ค้นหา ตัวแปล google และ position ใน this.props
         var { google } = this.props;
@@ -166,7 +195,7 @@ class Private extends React.Component {
 
                             map.setCenter(pos);
 
-                            console.log(stories);
+                            // console.log(stories);
                         });
 
                 }}
