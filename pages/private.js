@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
+import Link from 'next/link';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
@@ -152,12 +153,12 @@ const Private = function (props) {
     }
 
     function Logout() {
-        firebase.auth().signOut().then(function() {
+        firebase.auth().signOut().then(function () {
             // Sign-out successful.
             window.location.reload()
-          }).catch(function(error) {
+        }).catch(function (error) {
             // An error happened.
-          });
+        });
     }
 
     // กำหนดตัวแปล latlng
@@ -293,10 +294,11 @@ const Private = function (props) {
                     <SearchBar >
                         <SearchMap onClick={handleDrawerOpen} {...props} />
                     </SearchBar>
-
-                    <Fab color="primary" aria-label="add" className={classes.fab}>
-                        <AddIcon />
-                    </Fab>
+                    <Link href="/share_location" >
+                        <Fab color="primary" aria-label="add" className={classes.fab}>
+                            <AddIcon />
+                        </Fab>
+                    </Link>
                 </Map>
             </div>
             <Drawer
@@ -323,11 +325,11 @@ const Private = function (props) {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
+                    <ListItem button key={0}>
                         <ListItemIcon> <AccountBoxIcon /></ListItemIcon>
                         <ListItemText primary="Profile" />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button key={1}>
                         <ListItemIcon> <HistoryIcon /></ListItemIcon>
                         <ListItemText primary="History" />
                     </ListItem>
@@ -341,7 +343,7 @@ const Private = function (props) {
                         onClick={Logout}
                         variant="contained"
                         color="primary"
-                        className={classes.button}
+                        // className={classes.button}
                         style={{
                             width: '-webkit-fill-available',
                             height: '56px',
