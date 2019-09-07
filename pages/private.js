@@ -151,6 +151,14 @@ const Private = function (props) {
         setOpen(false);
     }
 
+    function Logout() {
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            window.location.reload()
+          }).catch(function(error) {
+            // An error happened.
+          });
+    }
 
     // กำหนดตัวแปล latlng
     let latlng;
@@ -330,6 +338,7 @@ const Private = function (props) {
                     width: '-webkit-fill-available'
                 }}>
                     <Button
+                        onClick={Logout}
                         variant="contained"
                         color="primary"
                         className={classes.button}
