@@ -14,6 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types'
 import { createMuiTheme } from '@material-ui/core/styles';
 import ShareLocationBar from '../components/ShareLocationBar';
+import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
+import SetDateTime from '../components/SetDateTime';
+import TravelCompanion from '../components/TravelCompanion';
+
 
 const share_location_theme = createMuiTheme({
     palette: {
@@ -69,11 +73,11 @@ function getSteps() {
 function getStepContent(stepIndex) {
     switch (stepIndex) {
         case 0:
-            return (<input type="text" />);
+            return (<PlaceAutocompleteAndDirections />);
         case 1:
-            return 'What is an ad group anyways?';
+            return (<SetDateTime />);
         case 2:
-            return 'This is the bit I really care about!';
+            return (<TravelCompanion />);
         default:
             return 'Uknown stepIndex';
     }
@@ -231,7 +235,7 @@ function ShareLocation(props) {
                         return (
 
                             <Step key={label} {...stepProps} >
-                                <StepButton 
+                                <StepButton
                                     onClick={handleStep(index)}
                                     completed={isStepComplete(index)}
                                     {...buttonProps}
@@ -256,37 +260,40 @@ function ShareLocation(props) {
                     </div>
                 ) : (
                         <div>
+
                             <ThemeProvider theme={share_location_theme}>
-                                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
                                 <div style={{
                                     position: 'fixed',
                                     bottom: '25px',
                                     width: '-webkit-fill-available'
                                 }}>
-                                    <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>Back</Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleNext}
-                                        className={classes.button}
-                                    >Next</Button>
-                                    {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                                    <center>
+                                        {/* <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>Back</Button> */}
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={handleSkip}
+                                            onClick={handleNext}
                                             className={classes.button}
-                                        >Skip</Button>
-                                    )}
+                                        >Next</Button>
+                                        {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={handleSkip}
+                                                className={classes.button}
+                                            >Skip</Button>
+                                        )}
 
-                                    {activeStep !== steps.length &&
-                                        (completed.has(activeStep) ? (
-                                            <Typography variant="caption" className={classes.completed}>Step {activeStep + 1} already completed</Typography>
-                                        ) : (
-                                                <Button variant="contained" color="primary" onClick={handleComplete}>
-                                                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                                                </Button>
-                                            ))}
+                                        {activeStep !== steps.length &&
+                                            (completed.has(activeStep) ? (
+                                                <Typography variant="caption" className={classes.completed}>Step {activeStep + 1} already completed</Typography>
+                                            ) : (
+                                                    <Button variant="contained" color="primary" onClick={handleComplete}>
+                                                        {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                                                    </Button>
+                                                ))}
+                                    </center>
                                 </div>
                             </ThemeProvider>
                         </div>
