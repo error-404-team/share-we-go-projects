@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-import MailIcon from '@material-ui/icons/Mail';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import HistoryIcon from '@material-ui/icons/History';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -20,6 +21,7 @@ import { Map, ConnectApiMaps } from '../lib/maps';
 import SearchMap from '../components/SearchMap';
 import SearchBar from '../components/SearchBar';
 import { writeUserData, writeGEOLocationData } from '../firebase-database/write-data';
+import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
 
@@ -60,7 +62,7 @@ const useStyles = makeStyles(theme => ({
         width: drawerWidth,
     },
     drawerHeader: {
-        display: 'flex',
+        display: 'contents',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
         ...theme.mixins.toolbar,
@@ -89,6 +91,7 @@ const useStyles = makeStyles(theme => ({
     },
     bigAvatar: {
         margin: 10,
+        marginTop: 50,
         width: 60,
         height: 60,
     },
@@ -100,7 +103,11 @@ const Private = function (props) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState({});
-    const [position, setPosition] = React.useState({});
+    // const [, setPosition] = React.useState({});
+    // var starCountRef = firebase.database().ref('users/' + postId + '/starCount');
+
+    // var user;
+    // var position;
 
     fetch('http://localhost:7000/position').then(function (response) {
         if (response.status >= 400) {
@@ -110,8 +117,9 @@ const Private = function (props) {
     }).then(function (stories) {
         let { uid, displayName, email, photoURL, phoneNumber, coords, timestamp } = stories;
         writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, coords, timestamp)
-        setPosition(stories);
-        console.log(stories);
+        // setPosition(stories);
+        // console.log(stories);
+        // position[stories]
 
     });
 
@@ -123,9 +131,15 @@ const Private = function (props) {
     }).then(function (stories) {
         let { uid, displayName, email, photoURL, phoneNumber } = stories;
         writeUserData(uid, displayName, email, photoURL, phoneNumber)
-        setUsers(stories);
-        console.log(stories);
 
+        // console.log(stories);
+
+    })
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            setUsers(user);
+        }
     })
 
 
@@ -156,6 +170,7 @@ const Private = function (props) {
 
     }
 
+    // console.log(user);
 
 
     return (
@@ -286,33 +301,44 @@ const Private = function (props) {
                 }}
             >
                 <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawerClose} style={{position: "absolute"}}>
+                    <IconButton onClick={handleDrawerClose} style={{ position: "absolute" }}>
                         {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
                     <div>
                         <Grid container justify="center" alignItems="center">
                             <Avatar alt="Remy Sharp" src={users.photoURL} className={classes.bigAvatar} />
                         </Grid>
+                        <center style={{ marginBottom: '10px' }}>
+                            <span>{users.displayName}</span>
+                        </center>
                     </div>
                 </div>
                 <Divider />
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
+                    <ListItem button>
+                        <ListItemIcon> <AccountBoxIcon /></ListItemIcon>
+                        <ListItemText primary="Profile" />
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemIcon> <HistoryIcon /></ListItemIcon>
+                        <ListItemText primary="History" />
+                    </ListItem>
                 </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
+                <div style={{
+                    position: "absolute",
+                    bottom: 0,
+                    width: '-webkit-fill-available'
+                }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        style={{
+                            width: '-webkit-fill-available',
+                            height: '56px',
+                            borderRadius: '0px'
+                        }}>Logout</Button>
+                </div>
             </Drawer>
         </Fragment>
     )
