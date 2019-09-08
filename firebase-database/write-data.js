@@ -1,6 +1,6 @@
 import firebase from '../lib/firebase';
 
-export function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
+export function writeUserData(uid, displayName, email, photoURL, phoneNumber, sex, age) {
 
     if (displayName === null && email === null && photoURL === null) {
         firebase.database().ref(`users/${uid}`).set({
@@ -8,7 +8,9 @@ export function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
             displayName: phoneNumber,
             email: email,
             photoURL: "https://img.icons8.com/metro/52/000000/gender-neutral-user.png",
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            sex:sex,
+            age:age
         }, function (error) {
             if (error) {
                 console.log(error);
