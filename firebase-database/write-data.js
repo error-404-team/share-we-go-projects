@@ -56,7 +56,7 @@ export function writeGEOLocationData(uid, displayName, email, photoURL, phoneNum
             longitude: coords.longitude,
             speed: coords.speed
         },
-        timestamp: position.timestamp,
+        timestamp: timestamp,
     });
     //     console.log(`
     //     writeLocationPrivateData() : {

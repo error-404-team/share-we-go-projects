@@ -49,7 +49,7 @@ class Index extends React.Component {
                     phoneNumber: phoneNumber,
                 }
 
-                // เขียนข้อมูล user ให้ database
+                // // เขียนข้อมูล user ให้ database
                 socket.emit('users', userData)
                 // console.log(userData);
 
