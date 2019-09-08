@@ -325,14 +325,18 @@ const Private = function (props) {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button key={0}>
-                        <ListItemIcon> <AccountBoxIcon /></ListItemIcon>
-                        <ListItemText primary="Profile" />
-                    </ListItem>
-                    <ListItem button key={1}>
-                        <ListItemIcon> <HistoryIcon /></ListItemIcon>
-                        <ListItemText primary="History" />
-                    </ListItem>
+                    <Link href="/profile">
+                        <ListItem button key={0}>
+                            <ListItemIcon> <AccountBoxIcon /></ListItemIcon>
+                            <ListItemText primary="Profile" />
+                        </ListItem>
+                    </Link>
+                    <Link href="/history">
+                        <ListItem button key={1}>
+                            <ListItemIcon> <HistoryIcon /></ListItemIcon>
+                            <ListItemText primary="History" />
+                        </ListItem>
+                    </Link>
                 </List>
                 <div style={{
                     position: "absolute",
