@@ -17,7 +17,7 @@ import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
-import FinishedStep from '../components/FinishedStep';
+import Link from 'next/link';
 
 
 // const share_location_theme = createMuiTheme({
@@ -254,8 +254,24 @@ function ShareLocation(props) {
             <div>
                 {allStepsCompleted() ? (
                     <div>
-                        <FinishedStep />
-                        <Button onClick={handleReset}>Reset</Button>
+                        <center style={{
+                            marginTop: "25%"
+                        }}>
+                            <h1>สร้างการแชร์เส้นทาง</h1>
+                            {/* <br/> */}
+                            <h1>เสร็จสิ้น</h1>
+                        </center>
+                        <div style={{
+                            position: "fixed",
+                            bottom: '25px',
+                            width: '-webkit-fill-available'
+                        }}>
+                            <center >
+                                <Link href="/share_group">
+                                    <Button variant="contained" color="primary" onClick={handleReset}>ปิด</Button>
+                                </Link>
+                            </center>
+                        </div>
                     </div>
                 ) : (
                         <div>
