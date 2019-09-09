@@ -25,6 +25,7 @@ import { writeUserData, writeGEOLocationData } from '../firebase-database/write-
 import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
+import '../css/share-location-bar.css';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
