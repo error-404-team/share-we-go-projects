@@ -46,8 +46,17 @@ export default function Personalform() {
         <Typography variant="subtitle2" color="textSecondary" component="p">
           -
           </Typography>
-
       </CardActions>
+
+      <CardActions>
+        <Typography gutterBottom variant="subtitle2" component="h2">
+          ที่อยู่ปัจจุบัน
+          </Typography>
+        <Typography variant="subtitle2" color="textSecondary" component="p">
+          -
+          </Typography>
+      </CardActions>
+
     </CardContent>
 
   );

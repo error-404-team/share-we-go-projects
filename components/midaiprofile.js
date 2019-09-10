@@ -6,7 +6,6 @@ import Box from '@material-ui/core/Box';
 import firebase from "../lib/firebase";
 
 
-
 const useStyles = makeStyles({
   bigAvatar: {
     margin: 50,
