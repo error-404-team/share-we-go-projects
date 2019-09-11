@@ -62,7 +62,7 @@ export default function Personalform() {
         {email}
       </Typography>
 
-     <Typography gutterBottom variant="subtitle2" component="h2">
+  <Typography gutterBottom variant="subtitle2" component="h2">
         เบอร์โทรศัพท์
           </Typography>
       <Typography variant="h5" color="textSecondary" component="p">
@@ -86,9 +86,17 @@ export default function Personalform() {
           {age}
           </Typography>
       </CardActions>
-
+      
+      <CardActions>
+        <Typography gutterBottom variant="subtitle2" component="h2">
+          ที่อยู่ปัจจุบัน
+          </Typography>
+        <Typography variant="subtitle2" color="textSecondary" component="p">
+          -
+          </Typography>
+      </CardActions>
 
     </CardContent>
 
   );
-  }
+}
