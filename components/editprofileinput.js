@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { writeUserData } from '../firebase-database/write-data';
 import firebase from "../lib/firebase";
 
 const useStyles = makeStyles(theme => ({
@@ -14,59 +16,88 @@ const useStyles = makeStyles(theme => ({
     width: 200,
   },
 }));
-
-export default function InputEditProfileName() {
+export default function InputEditProfile() {
   const classes = useStyles();
 
+  function pullform() {
+    firebase.auth().onAuthStateChanged((user) => {
+
+      if (user) {
+        let uid = user.uid;
+  // กำหนดชื่อตัวแปล และ แทนค่าลงในตัวแปล      
+        
+        let name = document.getElementById("name");
+        let displayName = name.value;
+
+        let mail = document.getElementById("mail");
+        let email = mail.value;
+
+        let photo = document.getElementById("photo");
+        let photoURL = photo.value;
+
+        let phone = document.getElementById("phone");
+        let phoneNumber = phone.value;
+
+        let sexy = document.getElementById("sexy");
+        let sex= sexy.value;
+
+        let ryu= document.getElementById("ryu");
+        let age = ryu.value;
+
+
+        writeUserData(uid, displayName, email, photoURL, phoneNumber, sex, age)
+
+      }
+    })
+    // console.log(a.value)
+
+  }
+
   return (
-  
+
+    <React.Fragment>
       <TextField
         label="ชื่อ"
-        id="margin-none"
-        defaultValue="ชื่อผู้ใช้"
-        className={classes.textField}
-      />
- );
-}
-
-export default function InputEditProfileSex() {
-  const classes = useStyles();
-
-  return (
-  
-      <TextField
-        label="เพศ"
-        id="margin-none"
-        defaultValue="-"
-        className={classes.textField}
-      />
- );
-}
-
-export default function InputEditProfileAge() {
-  const classes = useStyles();
-
-  return (
-  
-      <TextField
-        label="อายุ"
-        id="margin-none"
+        id="name"
         defaultValue=""
         className={classes.textField}
       />
- );
-}
-
-export default function InputEditProfileName() {
-  const classes = useStyles();
-
-  return (
-  
       <TextField
-        label="สถานที่"
-        id="margin-none"
-        defaultValue="ที่อยู่"
+        label="e-mail"
+        id="email"
+        defaultValue=""
         className={classes.textField}
       />
- );
+      <TextField
+        label="เบอร์โทรศัพท์"
+        id="phoneNumber"
+        defaultValue=""
+        className={classes.textField}
+      />
+
+      <TextField
+        label="เพศ"
+        id="sex"
+        defaultValue=""
+        className={classes.textField}
+      />
+
+      <TextField
+        label="อายุ"
+        id="age"
+        defaultValue=""
+        className={classes.textField}
+      />
+
+      <TextField
+        label="สถานที่อยู่"
+        id="when"
+        defaultValue=""
+        className={classes.textField}
+      />
+
+      <Button type="pullform" onClick={pullform}>บันทึก</Button>
+
+    </React.Fragment>
+  );
 }

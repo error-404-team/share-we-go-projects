@@ -1,11 +1,12 @@
 import React from 'react';
-import InputEditProfileName from "./components/editprofileinput";
-
+import InputEditProfile from "../components/editprofileinput";
+import Button from '@material-ui/core/Button';
 function Editprofile () {
     return (
         <React.Fragment>
 
-            <InputEditProfileName></InputEditProfileName>
+            <InputEditProfile></InputEditProfile>
+
         </React.Fragment>
 
     );
