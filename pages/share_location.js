@@ -15,17 +15,18 @@ import PropTypes from 'prop-types'
 import { createMuiTheme } from '@material-ui/core/styles';
 import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
-import SetDateTime from '../components/SetDateTime';
+import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
+import Link from 'next/link';
 
 
-const share_location_theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: 'rgba(255, 255, 255, 0)',
-        }
-    },
-});
+// const share_location_theme = createMuiTheme({
+//     palette: {
+//         primary: {
+//             main: 'rgba(255, 255, 255, 0)',
+//         }
+//     },
+// });
 
 // function QontoStepIcon(props) {
 //     const classes = useQontoStepIconStyles();
@@ -75,7 +76,7 @@ function getStepContent(stepIndex) {
         case 0:
             return (<PlaceAutocompleteAndDirections />);
         case 1:
-            return (<SetDateTime />);
+            return (<CustomDateTimePicker />);
         case 2:
             return (<TravelCompanion />);
         default:
@@ -98,8 +99,8 @@ const useStyles = makeStyles(theme => ({
         display: 'inline-block',
     },
     instructions: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
+        // marginTop: theme.spacing(1),
+        // marginBottom: theme.spacing(1),
     },
 }));
 
@@ -253,49 +254,63 @@ function ShareLocation(props) {
             <div>
                 {allStepsCompleted() ? (
                     <div>
-                        <Typography className={classes.instructions}>
-                            All steps completed - you&apos;re finished
-              </Typography>
-                        <Button onClick={handleReset}>Reset</Button>
+                        <center style={{
+                            marginTop: "25%"
+                        }}>
+                            <h1>สร้างการแชร์เส้นทาง</h1>
+                            {/* <br/> */}
+                            <h1>เสร็จสิ้น</h1>
+                        </center>
+                        <div style={{
+                            position: "fixed",
+                            bottom: '25px',
+                            width: '-webkit-fill-available'
+                        }}>
+                            <center >
+                                <Link href="/share_group">
+                                    <Button variant="contained" color="primary" onClick={handleReset}>ปิด</Button>
+                                </Link>
+                            </center>
+                        </div>
                     </div>
                 ) : (
                         <div>
 
-                            <ThemeProvider theme={share_location_theme}>
-                                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-                                <div style={{
-                                    position: 'fixed',
-                                    bottom: '25px',
-                                    width: '-webkit-fill-available'
-                                }}>
-                                    <center>
-                                        {/* <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>Back</Button> */}
+                            {/* <ThemeProvider theme={share_location_theme}> */}
+                            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                            <div style={{
+                                position: 'fixed',
+                                bottom: '25px',
+                                width: '-webkit-fill-available'
+                            }}>
+                                <center>
+                                    {/* <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>Back</Button> */}
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        className={classes.button}
+                                    >Next</Button>
+                                    {isStepOptional(activeStep) && !completed.has(activeStep) && (
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={handleNext}
+                                            onClick={handleSkip}
                                             className={classes.button}
-                                        >Next</Button>
-                                        {isStepOptional(activeStep) && !completed.has(activeStep) && (
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={handleSkip}
-                                                className={classes.button}
-                                            >Skip</Button>
-                                        )}
+                                        >Skip</Button>
+                                    )}
 
-                                        {activeStep !== steps.length &&
-                                            (completed.has(activeStep) ? (
-                                                <Typography variant="caption" className={classes.completed}>Step {activeStep + 1} already completed</Typography>
-                                            ) : (
-                                                    <Button variant="contained" color="primary" onClick={handleComplete}>
-                                                        {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                                                    </Button>
-                                                ))}
-                                    </center>
-                                </div>
-                            </ThemeProvider>
+                                    {activeStep !== steps.length &&
+                                        (completed.has(activeStep) ? (
+                                            <Typography variant="caption" className={classes.completed}>Step {activeStep + 1} already completed</Typography>
+                                        ) : (
+                                                <Button variant="contained" color="primary" onClick={handleComplete}>
+                                                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                                                </Button>
+                                            ))}
+                                </center>
+                            </div>
+                            {/* </ThemeProvider> */}
                         </div>
                     )}
             </div>

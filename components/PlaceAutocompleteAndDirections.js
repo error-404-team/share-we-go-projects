@@ -114,7 +114,7 @@ function PlaceAutocompleteAndDirections(props) {
             setStyle={{
                 position: "absolute",
                 overflow: "hidden",
-                height: "70%",
+                height: "85%",
                 width: "100%",
             }}
             opts={{
