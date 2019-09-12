@@ -16,34 +16,42 @@ export default function Personalform() {
       firebase.database().ref('users/' + user.uid + '/displayName').on('value', function (params) {
         setDisplayName(params.val())
         console.log(params.val());
-    
+      })
+    }
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/email').on('value', function (mail) {
         setDisplayName(mail.val())
         console.log(mail.val());
+      })
+    }
 
     if (user) {
-       console.log(user);
+      console.log(user);
       firebase.database().ref('users/' + user.uid + '/phoneNumber').on('value', function (phoneNum) {
         setDisplayName(phoneNum.val())
         console.log(phoneNum.val());
+      })
+    }
 
-  if (user) {
-       console.log(user);
+    if (user) {
+      console.log(user);
       firebase.database().ref('users/' + user.uid + '/sex').on('value', function (sexy) {
         setDisplayName(sexy.val())
         console.log(sexy.val());
+      })
+    }
 
-  if (user) {
-       console.log(user);
+    if (user) {
+      console.log(user);
       firebase.database().ref('users/' + user.uid + '/age').on('value', function (age) {
         setDisplayName(age.val())
         console.log(age.val());
-     })
+      })
     }
   })
-   
+
+
 
   return (
 
@@ -54,7 +62,7 @@ export default function Personalform() {
       <Typography variant="h5" color="textSecondary" component="p">
         {displayName}
       </Typography>
-      
+
       <Typography gutterBottom variant="subtitle2" component="h2">
         E-mail
           </Typography>
@@ -62,7 +70,7 @@ export default function Personalform() {
         {email}
       </Typography>
 
-  <Typography gutterBottom variant="subtitle2" component="h2">
+      <Typography gutterBottom variant="subtitle2" component="h2">
         เบอร์โทรศัพท์
           </Typography>
       <Typography variant="h5" color="textSecondary" component="p">
@@ -75,7 +83,7 @@ export default function Personalform() {
           </Typography>
         <Typography variant="subtitle2" color="textSecondary" component="p">
           {sex}
-          </Typography>
+        </Typography>
       </CardActions>
 
       <CardActions>
@@ -84,7 +92,7 @@ export default function Personalform() {
           </Typography>
         <Typography variant="subtitle2" color="textSecondary" component="p">
           {age}
-          </Typography>
+        </Typography>
       </CardActions>
 
     </CardContent>
