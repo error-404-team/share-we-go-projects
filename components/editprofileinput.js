@@ -56,6 +56,13 @@ export default function InputEditProfile() {
   return (
 
     <React.Fragment>
+      <Button>
+        <Box>
+    <Grid container justify="center" alignItems="center">
+      <Avatar src={photoURL} className={classes.bigAvatar} />
+    </Grid>
+        </Box>
+      </Button>
       <TextField
         label="ชื่อ"
         id="name"
