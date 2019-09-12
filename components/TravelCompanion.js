@@ -45,6 +45,20 @@ export default function RadioButtonsGroup() {
                         <FormControlLabel value="3" control={<Radio color="primary" />} label="+3 คน" />
 
                     </RadioGroup>
+
+                    <FormLabel component="legend">Select gender</FormLabel>
+                    <RadioGroup
+                        aria-label="gender"
+                        name="gender1"
+                        className={classes.group}
+                        value={value}
+                        onChange={handleChange}
+                    >
+                        <FormControlLabel value="Male" control={<Radio color="primary" />} label="ชาย" />
+                        <FormControlLabel value="Female" control={<Radio color="primary" />} label="หญิง " />
+                        <FormControlLabel value="Male and Female" control={<Radio color="primary" />} label="ทุกเพศ " />
+
+                    </RadioGroup>
                 </FormControl>
             </center>
         </div>

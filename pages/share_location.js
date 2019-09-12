@@ -74,10 +74,14 @@ function getSteps() {
 function getStepContent(stepIndex) {
     switch (stepIndex) {
         case 0:
-            return (<PlaceAutocompleteAndDirections />);
+            // หน้าสร้างเเชร์ Form 1 ต้นทาง-ปลายทาง 
+            return (<PlaceAutocompleteAndDirections />); 
+  
         case 1:
+            // หน้าสร้างเชร์ ตั้งค่าเวลา Form 2
             return (<CustomDateTimePicker />);
         case 2:
+            // หน้าสร้างเชร์ จำนวนเพื่อนร่วมทาง (ขาดเพศ) 
             return (<TravelCompanion />);
         default:
             return 'Uknown stepIndex';
