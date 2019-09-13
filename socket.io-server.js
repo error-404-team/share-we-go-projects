@@ -10,14 +10,17 @@ const nextHandler = nextApp.getRequestHandler()
 // fake DB
 var position;
 var users;
+var originDestinationRoute;
+var boardingTime;
+var numberOfTravel;
 
 // socket.io server
 io.on('connection', socket => {
   socket.on('position', (data) => {
-     position = data
+    position = data
 
     // console.log(data);
-    
+
     socket.broadcast.emit('position', data)
   });
 
@@ -28,6 +31,30 @@ io.on('connection', socket => {
 
     socket.broadcast.emit('users', data)
   })
+
+  socket.on('origin_destination_route', (data) => {
+    originDestinationRoute = data
+
+    // console.log(data);
+
+    socket.broadcast.emit('origin_destination_route', data)
+  })
+
+  socket.on('boarding_time', (data => {
+    boardingTime = data
+
+    // console.log(data);
+
+    socket.broadcast.emit('boarding_time', data)
+  }))
+
+  socket.on('number_of_travel', (data => {
+    numberOfTravel = data
+
+    console.log(data);
+
+    socket.broadcast.emit('number_of_travel', data)
+  }))
 })
 
 nextApp.prepare().then(() => {
@@ -38,6 +65,25 @@ nextApp.prepare().then(() => {
   app.get('/users', (req, res) => {
     res.json(users)
   })
+
+  app.get('/origin_destination_route', (req, res) => {
+    res.json(originDestinationRoute)
+    console.log(originDestinationRoute);
+    
+  })
+
+  app.get('/boarding_time', (req, res) => {
+    res.json(boardingTime)
+    // console.log(originDestinationRoute);
+    
+  })
+
+  app.get('/number_of_travel', (req, res) => {
+    res.json(numberOfTravel)
+    // console.log(originDestinationRoute);
+    
+  })
+
 
   app.get('*', (req, res) => {
     return nextHandler(req, res)
