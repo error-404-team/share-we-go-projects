@@ -13,7 +13,7 @@ export function writeUserData(uid, displayName, email, photoURL, phoneNumber, se
             age: age
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -31,7 +31,7 @@ export function writeUserData(uid, displayName, email, photoURL, phoneNumber, se
             phoneNumber: phoneNumber
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -60,7 +60,7 @@ export function writeGEOLocationData(uid, displayName, email, photoURL, phoneNum
         },
         timestamp: timestamp,
     });
-    //     console.log(`
+    // console.log(`
     //     writeLocationPrivateData() : {
     //         position: {
     //         lat:${position.lat},

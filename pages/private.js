@@ -181,7 +181,7 @@ const Private = function (props) {
 
     }
 
-    console.log(map);
+    // console.log(map);
 
 
     return (

@@ -42,7 +42,7 @@ class SearchMap extends React.Component {
         // รับค่า ที่ถ่ายทอดมาจาก this.props.classes ให้อยู่ในตัวแปล classes
         const { classes } = this.props
 
-      console.log(this.props.map);
+      // console.log(this.props.map);
       
         
         return (

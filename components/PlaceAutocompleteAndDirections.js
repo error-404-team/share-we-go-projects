@@ -119,7 +119,7 @@ function PlaceAutocompleteAndDirections(props) {
 
                 } else {
                     //     alert('Directions request failed due to ' + status);
-                    console.log(response, status);
+                    // console.log(response, status);
 
                 }
             });

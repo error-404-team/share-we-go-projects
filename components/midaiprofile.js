@@ -21,10 +21,10 @@ const [photoURL, setPhotoURL] = useState('https://www.google.com/url?sa=i&source
   firebase.auth().onAuthStateChanged((user) => {
 
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/photoURL').on('value', function (photo) {
         setPhotoURL(photo.val())
-        console.log(photo.val());
+        // console.log(photo.val());
 
       })
     }
