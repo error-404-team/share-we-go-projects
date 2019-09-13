@@ -6,6 +6,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import io from 'socket.io-client';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -22,11 +23,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function RadioButtonsGroup() {
     const classes = useStyles();
-    const [value, setValue] = React.useState('female');
+    const [value, setValue] = React.useState('MaleAndFemale');
+
+    const socket = io('http://localhost:7000/');
 
     function handleChange(event) {
         setValue(event.target.value);
     }
+    
+    socket.emit('gender', value)
 
     return (
         <div className={classes.root}>
@@ -43,7 +48,7 @@ export default function RadioButtonsGroup() {
                     >
                         <FormControlLabel value="Male" control={<Radio color="primary" />} label="ชาย" />
                         <FormControlLabel value="Female" control={<Radio color="primary" />} label="หญิง " />
-                        <FormControlLabel value="Male and Female" control={<Radio color="primary" />} label="ทุกเพศ "  />
+                        <FormControlLabel value="MaleAndFemale" control={<Radio color="primary" />} label="ทุกเพศ "  />
 
                     </RadioGroup>
                 </FormControl>
