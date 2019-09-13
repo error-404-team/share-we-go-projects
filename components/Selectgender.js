@@ -32,7 +32,8 @@ export default function RadioButtonsGroup() {
         <div className={classes.root}>
             <center>
                 <FormControl component="fieldset" className={classes.formControl}>
-                    <FormLabel component="legend">Travel Companion</FormLabel>
+                    
+                    <FormLabel component="legend">Select gender</FormLabel>
                     <RadioGroup
                         aria-label="gender"
                         name="gender1"
@@ -40,13 +41,11 @@ export default function RadioButtonsGroup() {
                         value={value}
                         onChange={handleChange}
                     >
-                        <FormControlLabel value="1" control={<Radio color="primary" />} label="1 คน" />
-                        <FormControlLabel value="2" control={<Radio color="primary" />} label="2 คน" />
-                        <FormControlLabel value="3" control={<Radio color="primary" />} label="3 คน" />
+                        <FormControlLabel value="Male" control={<Radio color="primary" />} label="ชาย" />
+                        <FormControlLabel value="Female" control={<Radio color="primary" />} label="หญิง " />
+                        <FormControlLabel value="Male and Female" control={<Radio color="primary" />} label="ทุกเพศ "  />
 
                     </RadioGroup>
-
-                   
                 </FormControl>
             </center>
         </div>
