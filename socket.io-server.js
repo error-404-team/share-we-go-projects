@@ -13,6 +13,7 @@ var users;
 var originDestinationRoute;
 var boardingTime;
 var numberOfTravel;
+var gender;
 
 // socket.io server
 io.on('connection', socket => {
@@ -55,6 +56,14 @@ io.on('connection', socket => {
 
     socket.broadcast.emit('number_of_travel', data)
   }))
+
+  socket.on('gender', (data => {
+    gender = data
+
+    console.log(data);
+
+    socket.broadcast.emit('gender', data)
+  }))
 })
 
 nextApp.prepare().then(() => {
@@ -80,6 +89,12 @@ nextApp.prepare().then(() => {
 
   app.get('/number_of_travel', (req, res) => {
     res.json(numberOfTravel)
+    // console.log(originDestinationRoute);
+    
+  })
+
+  app.get('/gender', (req, res) => {
+    res.json(gender)
     // console.log(originDestinationRoute);
     
   })
