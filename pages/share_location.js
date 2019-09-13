@@ -17,6 +17,7 @@ import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
+import Selectgender from '../components/Selectgender'; 
 import Link from 'next/link';
 
 
@@ -68,7 +69,7 @@ import Link from 'next/link';
 
 
 function getSteps() {
-    return ['ปลายทาง', 'เวลา', 'ผู้ร่วมทาง'];
+    return ['ปลายทาง', 'เวลา', 'ผู้ร่วมทาง','เพศ'];
 }
 
 function getStepContent(stepIndex) {
@@ -83,6 +84,11 @@ function getStepContent(stepIndex) {
         case 2:
             // หน้าสร้างเชร์ จำนวนเพื่อนร่วมทาง (ขาดเพศ) 
             return (<TravelCompanion />);
+
+        case 3: 
+        //หน้าเเชร์เลือกเพศ
+            return (<Selectgender />);
+
         default:
             return 'Uknown stepIndex';
     }
