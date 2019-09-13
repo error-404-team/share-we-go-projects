@@ -30,6 +30,8 @@ export default function RadioButtonsGroup() {
     function handleChange(event) {
         setValue(event.target.value);
     }
+    
+    socket.emit('gender', value)
 
     return (
         <div className={classes.root}>

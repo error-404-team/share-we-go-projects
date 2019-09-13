@@ -17,8 +17,15 @@ import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
-import Selectgender from '../components/Selectgender'; 
+import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
+import firebase from '../lib/firebase';
+import {
+    writeCreateGroupShareUserDataHost,
+    writeCreateGroupShareUserDataDateTime,
+    writeCreateGroupShareUserDataNumberOfTravel,
+    writeCreateGroupShareUserDataGender
+} from '../firebase-database/write-data'
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -73,15 +80,15 @@ require('isomorphic-fetch');
 
 
 function getSteps() {
-    return ['เส้นทาง', 'วันเวลา', 'จำนวน','เพศ'];
+    return ['เส้นทาง', 'วันเวลา', 'จำนวน', 'เพศ'];
 }
 
 function getStepContent(stepIndex) {
     switch (stepIndex) {
         case 0:
             // หน้าสร้างเเชร์ Form 1 ต้นทาง-ปลายทาง 
-            return (<PlaceAutocompleteAndDirections />); 
-  
+            return (<PlaceAutocompleteAndDirections />);
+
         case 1:
             // หน้าสร้างเชร์ ตั้งค่าเวลา Form 2
             return (<CustomDateTimePicker />);
@@ -89,8 +96,8 @@ function getStepContent(stepIndex) {
             // หน้าสร้างเชร์ จำนวนเพื่อนร่วมทาง (ขาดเพศ) 
             return (<TravelCompanion />);
 
-        case 3: 
-        //หน้าเเชร์เลือกเพศ
+        case 3:
+            //หน้าเเชร์เลือกเพศ
             return (<Selectgender />);
 
         default:
@@ -128,7 +135,49 @@ function ShareLocation(props) {
     // const [router, setRouter] = useState(new Set());
     // const [boardingTime, setBoardingTime] = useState(new Set());
     // const [numberOfTravel, setNumberOfTravel] = useState(new Set());
+    // const [gender, setNumberOfTravel] = useState(new Set());
     const steps = getSteps();
+
+
+
+    function Router(data) {
+        console.log(data);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                writeCreateGroupShareUserDataHost(user.uid, data)
+            }
+        })
+        // return data
+    };
+
+
+    function BoardingTime(data) {
+        console.log(data);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                writeCreateGroupShareUserDataDateTime(user.uid, data)
+            }
+        })
+        // return data
+    };
+    function NumberOfTravel(data) {
+        console.log(data);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                writeCreateGroupShareUserDataNumberOfTravel(user.uid, data)
+            }
+        })
+        // return data
+    };
+    function Gender(data) {
+        console.log(data);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                writeCreateGroupShareUserDataGender(user.uid, data)
+            }
+        })
+        // return data
+    };
 
     fetch('http://localhost:7000/origin_destination_route').then(function (response) {
         if (response.status >= 400) {
@@ -136,8 +185,8 @@ function ShareLocation(props) {
         }
         return response.json();
     }).then(function (data) {
-        // setRouter(data)
-        console.log(data);
+        Router(data)
+        // console.log(data);
 
     })
 
@@ -147,8 +196,8 @@ function ShareLocation(props) {
         }
         return response.json();
     }).then(function (data) {
-        // setBoardingTime(data)
-        console.log(data);
+        BoardingTime(data)
+        // console.log(data);
 
     })
 
@@ -158,10 +207,24 @@ function ShareLocation(props) {
         }
         return response.json();
     }).then(function (data) {
-        // setNumberOfTravel(data)
-        console.log(data);
+        NumberOfTravel(data)
+        // console.log(data);
 
     })
+
+    fetch('http://localhost:7000/gender').then(function (response) {
+        if (response.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    }).then(function (data) {
+        Gender(data)
+        // console.log(data);
+
+    })
+
+
+    // console.log(Router);
 
     function totalSteps() {
         return getSteps().length;
@@ -310,6 +373,7 @@ function ShareLocation(props) {
                             <h1>สร้างการแชร์เส้นทาง</h1>
                             {/* <br/> */}
                             <h1>เสร็จสิ้น</h1>
+                            <h1>{Router()}</h1>
                         </center>
                         <div style={{
                             position: "fixed",
