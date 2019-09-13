@@ -21,7 +21,7 @@ export default function Personalform() {
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/email').on('value', function (mail) {
-        setDisplayName(mail.val())
+        setDisplayName(mail.val());
         console.log(mail.val());
       })
     }
@@ -52,9 +52,9 @@ export default function Personalform() {
   })
 
 
-
   return (
 
+    <React.Fragment>
     <CardContent>
       <Typography gutterBottom variant="subtitle2" component="h2">
         ชื่อ
@@ -67,14 +67,14 @@ export default function Personalform() {
         E-mail
           </Typography>
       <Typography variant="h5" color="textSecondary" component="p">
-        {email}
+       {/* {email} */}
       </Typography>
 
       <Typography gutterBottom variant="subtitle2" component="h2">
         เบอร์โทรศัพท์
           </Typography>
       <Typography variant="h5" color="textSecondary" component="p">
-        {phoneNumber}
+       {/* {phoneNumber} */}
       </Typography>
 
       <CardActions>
@@ -82,7 +82,7 @@ export default function Personalform() {
           เพศ
           </Typography>
         <Typography variant="subtitle2" color="textSecondary" component="p">
-          {sex}
+         {/* {sex} */}
         </Typography>
       </CardActions>
 
@@ -91,11 +91,11 @@ export default function Personalform() {
           อายุ
           </Typography>
         <Typography variant="subtitle2" color="textSecondary" component="p">
-          {age}
+         {/* {age} */}
         </Typography>
       </CardActions>
 
     </CardContent>
-
+</React.Fragment>
   );
 }
