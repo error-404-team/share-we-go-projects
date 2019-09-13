@@ -7,16 +7,20 @@ function PlaceAutocompleteAndDirections(props) {
     // const [map,setMap] = React.useState({});
     // const [google,setGoogle] = React.useState({});
 
-    function initMap(google, map) {
-        // var map = new google.maps.Map(docType, {
-        //     mapTypeControl: false,
-        //     center: { lat: -33.8688, lng: 151.2195 },
-        //     zoom: 13
-        // });
+    // function initMap(google, map) {
+    //     // var map = new google.maps.Map(docType, {
+    //     //     mapTypeControl: false,
+    //     //     center: { lat: -33.8688, lng: 151.2195 },
+    //     //     zoom: 13
+    //     // });
 
-        new AutocompleteDirectionsHandler(google, map);
-    }
+    //     new AutocompleteDirectionsHandler(google, map);
+    // }
 
+    const [originRoute, setOriginRoute] = React.useState()
+    const [destinationRoute, setDestinationRoute] = React.useState()
+    const originSearchInput = React.useRef(null);
+    const destinationSearchInput = React.useRef(null);
 
     /**
      * @constructor
@@ -108,11 +112,28 @@ function PlaceAutocompleteAndDirections(props) {
                 if (status === 'OK') {
                     me.directionsRenderer.setDirections(response);
                 } else {
-                    alert('Directions request failed due to ' + status);
+                    //     alert('Directions request failed due to ' + status);
+                    console.log(response,status);
+
                 }
             });
     };
 
+    function originRouteUpdate(e) {
+        setOriginRoute(e.target.value);
+    }
+
+    function destinationRouteUpdate(e) {
+        setDestinationRoute(e.target.value);
+    }
+
+    // function onFocusOrigin() {
+    //     originSearchInput.value = ''
+    // }
+
+    // function onFocusDestination() {
+    //     destinationSearchInput.value = ''
+    // }
 
     return (
         <Map google={props.google}
@@ -125,7 +146,7 @@ function PlaceAutocompleteAndDirections(props) {
             opts={{
                 zoom: 15,
                 center: { lat: -33.8688, lng: 151.2195 },
-                disableDefaultUI: false,
+                disableDefaultUI: true,
                 styles: [{
                     featureType: 'poi.business',
                     stylers: [{ visibility: 'on' }]
@@ -137,17 +158,30 @@ function PlaceAutocompleteAndDirections(props) {
                 }]
             }}
             DrawingOnMap={(google, map) => {
-                initMap(google, map)
+                // initMap(google, map)
                 //    setGoogle(google);
                 //    setMap(map)
+                new AutocompleteDirectionsHandler(google, map);
             }}
         >
             <div style={{ display: 'block' }}>
-                <input id="origin-input" className="controls" type="text"
+                <input
+                    ref={originSearchInput}
+                    onChange={originRouteUpdate}
+                    // onFocus={onFocusOrigin}
+                    id="origin-input"
+                    className="controls"
+                    type="text"
                     placeholder="Enter an origin location"
                     style={{ zIndex: 0, position: 'relative', top: '50px', }}
                 />
-                <input id="destination-input" className="controls" type="text"
+                <input
+                    ref={destinationSearchInput}
+                    onChange={destinationRouteUpdate}
+                    // onFocus={onFocusDestination}
+                    id="destination-input"
+                    className="controls"
+                    type="text"
                     placeholder="Enter a destination location" />
 
                 <div id="mode-selector" className="controls">
@@ -167,6 +201,6 @@ function PlaceAutocompleteAndDirections(props) {
 }
 
 export default ConnectApiMaps({
-    apiKey: "AIzaSyCrGaroYIOPAu9IakE6gEzY2sa5t23mCpQ",
+    apiKey: "AIzaSyCfdx1_dkKY9BejzU-We23YqfEynZtAIJc",
     libraries: ['places', 'geometry'],
 })(PlaceAutocompleteAndDirections)

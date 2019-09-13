@@ -189,6 +189,6 @@ function FinishedStep(props) {
 }
 
 export default ConnectApiMaps({
-  apiKey: "AIzaSyCrGaroYIOPAu9IakE6gEzY2sa5t23mCpQ",
+  apiKey: "AIzaSyCfdx1_dkKY9BejzU-We23YqfEynZtAIJc",
   libraries: ['places', 'geometry'],
 })(FinishedStep)
