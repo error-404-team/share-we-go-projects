@@ -69,7 +69,7 @@ import Link from 'next/link';
 
 
 function getSteps() {
-    return ['ปลายทาง', 'เวลา', 'ผู้ร่วมทาง','เพศ'];
+    return ['เส้นทาง', 'วันเวลา', 'จำนวน','เพศ'];
 }
 
 function getStepContent(stepIndex) {
