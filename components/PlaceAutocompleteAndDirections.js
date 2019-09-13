@@ -1,4 +1,5 @@
 import React from 'react';
+import io from 'socket.io-client';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import '../css/place-autocomplete-and-directions.css';
 
@@ -21,6 +22,8 @@ function PlaceAutocompleteAndDirections(props) {
     const [destinationRoute, setDestinationRoute] = React.useState()
     const originSearchInput = React.useRef(null);
     const destinationSearchInput = React.useRef(null);
+
+    const socket = io('http://localhost:7000/');
 
     /**
      * @constructor
@@ -111,13 +114,17 @@ function PlaceAutocompleteAndDirections(props) {
             function (response, status) {
                 if (status === 'OK') {
                     me.directionsRenderer.setDirections(response);
+                    // console.log(response);
+                    socket.emit('origin_destination_route', response)
+
                 } else {
                     //     alert('Directions request failed due to ' + status);
-                    console.log(response,status);
+                    console.log(response, status);
 
                 }
             });
     };
+
 
     function originRouteUpdate(e) {
         setOriginRoute(e.target.value);

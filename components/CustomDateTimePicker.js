@@ -1,5 +1,6 @@
 import 'date-fns';
 import React from 'react';
+import io from 'socket.io-client';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 // import SnoozeIcon from "@material-ui/icons/Snooze";
@@ -54,8 +55,17 @@ export default function CustomDateTimePicker() {
   // The first commit of Material-UI
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
+  const socket = io('http://localhost:7000/');
+
   function handleDateChange(date) {
     setSelectedDate(date);
+
+    const timer = {
+      start_time: new Date(),
+      end_time: date
+    }
+
+    socket.emit('boarding_time', timer)
   }
 
   return (

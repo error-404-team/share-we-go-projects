@@ -19,6 +19,10 @@ import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
 import Link from 'next/link';
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
+
 
 // const share_location_theme = createMuiTheme({
 //     palette: {
@@ -111,7 +115,43 @@ function ShareLocation(props) {
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set());
     const [skipped, setSkipped] = useState(new Set());
+    // const [router, setRouter] = useState(new Set());
+    // const [boardingTime, setBoardingTime] = useState(new Set());
+    // const [numberOfTravel, setNumberOfTravel] = useState(new Set());
     const steps = getSteps();
+
+    fetch('http://localhost:7000/origin_destination_route').then(function (response) {
+        if (response.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    }).then(function (data) {
+        // setRouter(data)
+        console.log(data);
+
+    })
+
+    fetch('http://localhost:7000/boarding_time').then(function (response) {
+        if (response.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    }).then(function (data) {
+        // setBoardingTime(data)
+        console.log(data);
+
+    })
+
+    fetch('http://localhost:7000/number_of_travel').then(function (response) {
+        if (response.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    }).then(function (data) {
+        // setNumberOfTravel(data)
+        console.log(data);
+
+    })
 
     function totalSteps() {
         return getSteps().length;
