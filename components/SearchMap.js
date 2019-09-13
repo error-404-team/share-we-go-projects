@@ -38,10 +38,11 @@ class SearchMap extends React.Component {
 
     render() {
         // รับค่า ที่ถ่ายทอดมาจาก this.state.google ให้อยู่ในตัวแปล google
-        const { google } = this.state;
+        const { google,map } = this.state;
         // รับค่า ที่ถ่ายทอดมาจาก this.props.classes ให้อยู่ในตัวแปล classes
         const { classes } = this.props
 
+      console.log(this.props.map);
       
         
         return (

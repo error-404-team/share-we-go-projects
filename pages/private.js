@@ -105,7 +105,8 @@ const Private = function (props) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState({});
-    // const [, setPosition] = React.useState({});
+    const [map, setMap] = React.useState({});
+    // const [google, setGoogle] = React.useState({});
     // var starCountRef = firebase.database().ref('users/' + postId + '/starCount');
 
     // var user;
@@ -180,7 +181,7 @@ const Private = function (props) {
 
     }
 
-    // console.log(user);
+    console.log(map);
 
 
     return (
@@ -212,7 +213,8 @@ const Private = function (props) {
                             this.img = img;
                             this.setMap(map);
 
-
+                            setMap(map)
+                            // setGoogle(google)
 
                         }
 
@@ -293,7 +295,7 @@ const Private = function (props) {
                     }}
                 >
                     <SearchBar >
-                        <SearchMap onClick={handleDrawerOpen} {...props} />
+                        <SearchMap onClick={handleDrawerOpen} map={map} {...props} />
                     </SearchBar>
                     <Link href="/share_location" >
                         <Fab color="primary" aria-label="add" className={classes.fab}>
@@ -365,6 +367,6 @@ const Private = function (props) {
 
 
 export default ConnectApiMaps({
-    apiKey: "AIzaSyCrGaroYIOPAu9IakE6gEzY2sa5t23mCpQ",
+    apiKey: "AIzaSyCfdx1_dkKY9BejzU-We23YqfEynZtAIJc",
     libraries: ['places', 'geometry'],
 })(Private)
