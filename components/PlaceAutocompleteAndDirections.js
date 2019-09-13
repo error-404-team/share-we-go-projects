@@ -137,11 +137,11 @@ function PlaceAutocompleteAndDirections(props) {
         >
             <div style={{ display: 'block' }}>
                 <input id="origin-input" className="controls" type="text"
-                    placeholder="ต้นทาง"   
+                    placeholder="ต้นทาง" required
                     style={{ zIndex: 0, position: 'relative', top: '50px', }}
                 />
                 <input id="destination-input" className="controls" type="text"
-                    placeholder="ปลายทาง" />
+                    placeholder="ปลายทาง" required />
 
                 <div id="mode-selector" className="controls">
                     <input type="radio" name="type" id="changemode-walking" />
