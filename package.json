@@ -1,7 +1,6 @@
 {
   "name": "share-we-go-projects",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev-client": "next",
@@ -52,5 +51,9 @@
     "babel-plugin-inline-react-svg": "^1.1.0",
     "babel-plugin-inline-dotenv": "^1.5.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "description": ""
 }
