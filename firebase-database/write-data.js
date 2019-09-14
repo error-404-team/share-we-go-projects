@@ -9,8 +9,8 @@ export function writeUserData(uid, displayName, email, photoURL, phoneNumber, se
             email: email,
             photoURL: "https://img.icons8.com/metro/52/000000/gender-neutral-user.png",
             phoneNumber: phoneNumber,
-            sex:sex,
-            age:age
+            sex: sex,
+            age: age
         }, function (error) {
             if (error) {
                 console.log(error);
@@ -139,6 +139,27 @@ export function writeCreateGroupShareUserData(uid, start_lat, start_lng, end_lat
         end_lng: end_lng
 
     });
+
+}
+
+export function writeCreateGroupShareUserDataHost(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/host`).set({
+        geocoded_waypoints: data.geocoded_waypoints,
+        request: data.request,
+        routes: data.routes
+    })
+}
+
+export function writeCreateGroupShareUserDataDateTime(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/date_time`).set({ data })
+}
+
+export function writeCreateGroupShareUserDataNumberOfTravel(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/number_of_travel`).set({ data })
+}
+
+export function writeCreateGroupShareUserDataGender(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/gender`).set({ data })
 }
 
 export function addUserToGroupShareData(uid, user) {
