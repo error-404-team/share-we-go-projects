@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     width: 200,
   },
 }));
-function InputEditProfile() {
+export default function InputEditProfile() {
   const classes = useStyles();
 
   function pullform() {
