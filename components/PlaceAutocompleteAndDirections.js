@@ -85,6 +85,7 @@ function PlaceAutocompleteAndDirections(props) {
 
         autocomplete.addListener('place_changed', function () {
             var place = autocomplete.getPlace();
+            console.log(place);
 
             if (!place.place_id) {
                 alert('Please select an option from the dropdown list.');

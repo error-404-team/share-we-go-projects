@@ -166,3 +166,6 @@ export function addUserToGroupShareData(uid, user) {
     firebase.database().ref(`group_shareuid/group_share`).push(user);
 }
 
+export function writeCreateGroupShareUserDataHeader(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/header`).set({ data })
+}

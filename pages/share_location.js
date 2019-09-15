@@ -24,7 +24,8 @@ import {
     writeCreateGroupShareUserDataHost,
     writeCreateGroupShareUserDataDateTime,
     writeCreateGroupShareUserDataNumberOfTravel,
-    writeCreateGroupShareUserDataGender
+    writeCreateGroupShareUserDataGender,
+    writeCreateGroupShareUserDataHeader
 } from '../firebase-database/write-data'
 
 require('es6-promise').polyfill();
@@ -183,8 +184,8 @@ function ShareLocation(props) {
                     setBoardingTime(users.date_time.data);
                     setNumberOfTravel(users.number_of_travel);
                     setGender(users.gender);
-
                 });
+                writeCreateGroupShareUserDataHeader(user.uid,user);
             }
         })
         // return data
