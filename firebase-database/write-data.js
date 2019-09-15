@@ -167,5 +167,18 @@ export function addUserToGroupShareData(uid, user) {
 }
 
 export function writeCreateGroupShareUserDataHeader(uid, data) {
-    firebase.database().ref(`group_share_user/${uid}/header`).set({ data })
+    firebase.database().ref(`group_share_user/${uid}/header`).set({
+        displayName: data.displayName,
+        email: data.email,
+        isAnonymous: data.isAnonymous,
+        metadata: data.metadata,
+        phoneNumber: data.phoneNumber,
+        photoURL: data.photoURL,
+        providerData: data.providerData,
+        ra: data.ra,
+        refreshToken: data.refreshToken,
+        u: data.u,
+        uid: data.uid,
+        _lat: data._lat
+    })
 }

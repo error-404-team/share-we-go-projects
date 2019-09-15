@@ -20,6 +20,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Chat from '../components/Chat';
+import firebase from '../lib/firebase';
 import '../css/place-autocomplete-and-directions.css';
 
 
@@ -53,79 +54,83 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function initMap(google, map) {
-  // this.map = map;
-  var markerArray = [];
+function AutocompleteDirectionsHandler(google, map) {
+  this.map = map;
+  this.originPlaceId = null;
+  this.destinationPlaceId = null;
+  this.travelMode = 'WALKING';
+  this.directionsService = new google.maps.DirectionsService;
+  this.directionsRenderer = new google.maps.DirectionsRenderer;
+  this.directionsRenderer.setMap(this.map);
 
-  var modeSelector = document.getElementById('mode-selector');
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+  var me = this
 
-  var directionsService = new google.maps.DirectionsService;
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+        var data = (snapshot.val());
+        
+        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+        me.setupClickListener(data.host.request.travelMode);
 
-  // Create a renderer for directions and bind it to the map.
-  var directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
-
-  // Instantiate an info window to hold step text.
-  var stepDisplay = new google.maps.InfoWindow;
-
-  // Display the route between the initial start and end selections.
-  calculateAndDisplayRoute(directionsRenderer, directionsService, markerArray, stepDisplay, map);
-
-  var onChangeHandler = function () {
-    calculateAndDisplayRoute(
-      directionsRenderer, directionsService, markerArray, stepDisplay, map);
-  };
-}
-
-function calculateAndDisplayRoute(directionsRenderer, directionsService,
-  markerArray, stepDisplay, map) {
-  // First, remove any existing markers from the map.
-  for (var i = 0; i < markerArray.length; i++) {
-    markerArray[i].setMap(null);
-  }
-
-  // Retrieve the start and end locations and create a DirectionsRequest using
-  // WALKING directions.
-  directionsService.route({
-    origin: "penn station, new york, ny",
-    destination: "260 Broadway New York NY 10007",
-    travelMode: 'WALKING'
-  }, function (response, status) {
-    // Route the directions and pass the response to a function to create
-    // markers for each step.
-    if (status === 'OK') {
-      // document.getElementById('warnings-panel').innerHTML =
-      //   '<b>' + response.routes[0].warnings + '</b>';
-      // directionsRenderer.setDirections(response);
-      // showSteps(response, markerArray, stepDisplay, map);
-    } else {
-      window.alert('Directions request failed due to ' + status);
+      })
     }
-  });
-}
-
-function showSteps(directionResult, markerArray, stepDisplay, map) {
-  // For each step, place a marker, and add the text to the marker's infowindow.
-  // Also attach the marker to an array so we can keep track of it and remove it
-  // when calculating new routes.
-  var myRoute = directionResult.routes[0].legs[0];
-  for (var i = 0; i < myRoute.steps.length; i++) {
-    var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
-    marker.setMap(map);
-    marker.setPosition(myRoute.steps[i].start_location);
-    attachInstructionText(
-      stepDisplay, marker, myRoute.steps[i].instructions, map);
   }
+  )
 }
 
-function attachInstructionText(stepDisplay, marker, text, map) {
-  google.maps.event.addListener(marker, 'click', function () {
-    // Open an info window when the marker is clicked on, containing the text
-    // of the step.
-    stepDisplay.setContent(text);
-    stepDisplay.open(map, marker);
-  });
-}
+// Sets a listener on a radio button to change the filter type on Places
+// Autocomplete.
+AutocompleteDirectionsHandler.prototype.setupClickListener = function (mode) {
+  var me = this;
+
+  me.travelMode = mode;
+  me.route();
+};
+
+AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
+  place, mode) {
+  var me = this;
+
+  console.log(place);
+
+  if (!place) {
+    alert('Please select an option from the dropdown list.');
+    return;
+  }
+  if (mode === 'ORIG') {
+    me.originPlaceId = place;
+  } else {
+    me.destinationPlaceId = place;
+  }
+  me.route();
+};
+
+AutocompleteDirectionsHandler.prototype.route = function () {
+  if (!this.originPlaceId || !this.destinationPlaceId) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route(
+    {
+      origin: { 'placeId': this.originPlaceId },
+      destination: { 'placeId': this.destinationPlaceId },
+      travelMode: this.travelMode
+    },
+    function (response, status) {
+      if (status === 'OK') {
+        me.directionsRenderer.setDirections(response);
+        // console.log(response);
+
+      } else {
+            alert('Directions request failed due to ' + status);
+        // console.log(response, status);
+
+      }
+    });
+};
 
 function FinishedStep(props) {
   const classes = useStyles();
@@ -153,7 +158,7 @@ function FinishedStep(props) {
         }]
       }}
       DrawingOnMap={(google, map) => {
-        initMap(google, map)
+       new AutocompleteDirectionsHandler(google, map)
       }}
     >
       <div style={{ display: 'block' }}>
@@ -171,8 +176,8 @@ function FinishedStep(props) {
             <MenuIcon />
           </IconButton>
           {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}> */}
-            {/* <QuestionAnswerIcon /> */}
-            <Chat />
+          {/* <QuestionAnswerIcon /> */}
+          <Chat />
           {/* </Fab> */}
           <div className={classes.grow} />
           <IconButton color="inherit">

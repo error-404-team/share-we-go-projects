@@ -137,7 +137,7 @@ function ShareLocation(props) {
     const [boardingTime, setBoardingTime] = useState(new Set());
     const [numberOfTravel, setNumberOfTravel] = useState(new Set());
     const [gender, setGender] = useState(new Set());
-     const [shareGroupData, setShareGroupData] = useState(new Set());
+    const [shareGroupData, setShareGroupData] = useState(new Set());
     const steps = getSteps();
 
 
@@ -165,6 +165,8 @@ function ShareLocation(props) {
     function numberOfTravels(data) {
         // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
+            console.log(user);
+            
             if (user) {
                 writeCreateGroupShareUserDataNumberOfTravel(user.uid, data)
             }
@@ -176,6 +178,7 @@ function ShareLocation(props) {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataGender(user.uid, data)
+                writeCreateGroupShareUserDataHeader(user.uid, user);
                 firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
                     var users = (snapshot.val());
                     console.log(users);
@@ -185,7 +188,6 @@ function ShareLocation(props) {
                     setNumberOfTravel(users.number_of_travel);
                     setGender(users.gender);
                 });
-                writeCreateGroupShareUserDataHeader(user.uid,user);
             }
         })
         // return data
