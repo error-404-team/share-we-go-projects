@@ -17,14 +17,7 @@ var gender;
 
 // socket.io server
 io.on('connection', socket => {
-  socket.on('position', (data) => {
-    position = data
-
-    // console.log(data);
-
-    socket.broadcast.emit('position', data)
-  });
-
+ 
   socket.on('users', (data) => {
     users = data
 
@@ -67,10 +60,6 @@ io.on('connection', socket => {
 })
 
 nextApp.prepare().then(() => {
-  app.get('/position', (req, res) => {
-    res.json(position)
-  })
-
   app.get('/users', (req, res) => {
     res.json(users)
   })

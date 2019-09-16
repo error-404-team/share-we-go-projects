@@ -38,6 +38,7 @@
     "pretty-format": "^24.9.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
+    "react-chat-widget": "^2.1.4-1",
     "react-dom": "^16.9.0",
     "react-firebaseui": "^4.0.0",
     "react-spring": "^8.0.27",

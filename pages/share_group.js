@@ -1,28 +1,18 @@
 import React from 'react';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Avatar from '@material-ui/core/Avatar';
-import MenuIcon from '@material-ui/icons/Menu';
-// import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import Chat from '../components/Chat';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
-import '../css/place-autocomplete-and-directions.css';
+// import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
+import 'react-chat-widget/lib/styles.css';
+// import '../css/place-autocomplete-and-directions.css';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -31,26 +21,17 @@ const useStyles = makeStyles(theme => ({
   paper: {
     paddingBottom: 50,
   },
-  list: {
-    marginBottom: theme.spacing(2),
-  },
-  subheader: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  appBar: {
-    top: 'auto',
-    bottom: 0,
+  root: {
+    flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
   },
-  fabButton: {
-    position: 'absolute',
-    zIndex: 1,
-    top: -30,
-    left: 0,
-    right: 0,
-    margin: '0 auto',
+  list: {
+    marginBottom: theme.spacing(2),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -69,7 +50,7 @@ function AutocompleteDirectionsHandler(google, map) {
     if (user) {
       firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
         var data = (snapshot.val());
-        
+
         me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
         me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
         me.setupClickListener(data.host.request.travelMode);
@@ -125,7 +106,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         // console.log(response);
 
       } else {
-            alert('Directions request failed due to ' + status);
+        alert('Directions request failed due to ' + status);
         // console.log(response, status);
 
       }
@@ -135,60 +116,61 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 function FinishedStep(props) {
   const classes = useStyles();
 
+  function handleNewUserMessage (newMessage)  {
+    console.log(`New message incoming! ${newMessage}`);
+    // Now send the message throught the backend API
+  }
   return (
-    <Map google={props.google}
-      setStyle={{
-        position: "absolute",
-        overflow: "hidden",
-        height: "100%",
-        width: "100%",
-      }}
-      opts={{
-        zoom: 15,
-        center: { lat: -33.8688, lng: 151.2195 },
-        disableDefaultUI: true,
-        styles: [{
-          featureType: 'poi.business',
-          stylers: [{ visibility: 'on' }]
-        },
-        {
-          featureType: 'transit',
-          elementType: 'labels.icon',
-          stylers: [{ visibility: 'off' }]
-        }]
-      }}
-      DrawingOnMap={(google, map) => {
-       new AutocompleteDirectionsHandler(google, map)
-      }}
-    >
-      <div style={{ display: 'block' }}>
-        <div id="mode-selector" className="controls">
-          <p>ต้นทาง: -</p>
-          <br />
-          <p>ปลายทาง: -</p>
-          <br />
-          <p>เวลา: -</p>
-        </div>
-      </div>
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="open drawer">
-            <MenuIcon />
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position="static">
+        <Toolbar variant="dense">
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <ArrowBackIosIcon />
           </IconButton>
-          {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}> */}
-          {/* <QuestionAnswerIcon /> */}
-          <Chat />
-          {/* </Fab> */}
-          <div className={classes.grow} />
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
-          <IconButton edge="end" color="inherit">
+          <Typography variant="h6" color="inherit">
+            Photos
+        </Typography>
+        <div className={classes.grow} />
+        <IconButton edge="end" color="inherit">
             <MoreIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
-    </Map>
+      <Map google={props.google}
+        setStyle={{
+          position: "absolute",
+          overflow: "hidden",
+          height: "100%",
+          width: "100%",
+        }}
+        opts={{
+          zoom: 15,
+          center: { lat: -33.8688, lng: 151.2195 },
+          disableDefaultUI: true,
+          styles: [{
+            featureType: 'poi.business',
+            stylers: [{ visibility: 'on' }]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }]
+          }]
+        }}
+        DrawingOnMap={(google, map) => {
+          new AutocompleteDirectionsHandler(google, map)
+        }}
+      >
+
+      </Map>
+      {/* <Widget
+          handleNewUserMessage={this.handleNewUserMessage}
+          // profileAvatar={logo}
+          title="My new awesome title"
+          subtitle="And my cool subtitle"
+        /> */}
+    </div>
   )
 
 }

@@ -166,7 +166,7 @@ function ShareLocation(props) {
         // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
             console.log(user);
-            
+
             if (user) {
                 writeCreateGroupShareUserDataNumberOfTravel(user.uid, data)
             }
@@ -178,7 +178,11 @@ function ShareLocation(props) {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataGender(user.uid, data)
-                writeCreateGroupShareUserDataHeader(user.uid, user);
+                firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                    var users = (snapshot.val());
+                    writeCreateGroupShareUserDataHeader(user.uid, users);
+                });
+
                 firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
                     var users = (snapshot.val());
                     console.log(users);
