@@ -19,7 +19,7 @@ import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
 import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
-import correct from '../../share-we-go-projects/image/correct.png'
+import geno from '../../share-we-go-projects/image/geno.jpg'
 import firebase from '../lib/firebase';
 import {
     writeCreateGroupShareUserDataHost,
@@ -406,7 +406,7 @@ function ShareLocation(props) {
                             <hr></hr>
                             <h2>สร้างการแชร์เส้นทาง</h2>
                             <h2>เสร็จสิ้น</h2>
-                            <img src={correct}  width="20" height='70'  ></img>
+                            <img src="geno.jpg"></img>
                             <hr></hr>
                             </body>
                             
@@ -431,7 +431,9 @@ function ShareLocation(props) {
                             <br></br>
                             <b>ปิดการแชร์:</b> {boardingTime.end_time}
                             <br></br>
+                            <center>
                             <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
+                            </center>
                             <br></br>
                             <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
                         </body>
