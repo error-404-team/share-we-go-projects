@@ -17,9 +17,10 @@ import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
+import geno from '../image/geno.svg'
 import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
-import geno from '../../share-we-go-projects/image/geno.jpg'
+
 import firebase from '../lib/firebase';
 import {
     writeCreateGroupShareUserDataHost,
@@ -401,12 +402,11 @@ function ShareLocation(props) {
                         <center style={{
                             marginTop: "5%"
                         }}>
-                            
                             <body bgcolor= "dddddd" shadow="5">
                             <hr></hr>
                             <h2>สร้างการแชร์เส้นทาง</h2>
                             <h2>เสร็จสิ้น</h2>
-                            <img src="geno.jpg"></img>
+                            <img src={geno} width='50' height='50' align="right"></img>
                             <hr></hr>
                             </body>
                             
@@ -427,15 +427,15 @@ function ShareLocation(props) {
                             <center>
                             <h2>ข้อมูลการแชร์</h2>
                             </center>
+                            <center>
                             <b>เริ่มการแชร์:</b> {boardingTime.start_time}
                             <br></br>
                             <b>ปิดการแชร์:</b> {boardingTime.end_time}
                             <br></br>
-                            <center>
                             <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
-                            </center>
-                            <br></br>
+                            
                             <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
+                            </center>
                         </body>
                         
                         <div style={{
