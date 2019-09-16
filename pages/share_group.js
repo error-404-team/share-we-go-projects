@@ -12,6 +12,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
 import BottonClickToMenu from '../components/bottonShare_group'
+
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
 import 'react-chat-widget/lib/styles.css';
@@ -199,6 +201,10 @@ function FinishedStep(props) {
         }}
       >
           <BottonClickToMenu ></BottonClickToMenu>
+
+         
+          <QuestionAnswerIcon></QuestionAnswerIcon>
+        
       </Map>
       {/* <Widget
           handleNewUserMessage={this.handleNewUserMessage}
