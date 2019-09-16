@@ -19,6 +19,7 @@ import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
 import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
+import correct from '../../share-we-go-projects/image/correct.png'
 import firebase from '../lib/firebase';
 import {
     writeCreateGroupShareUserDataHost,
@@ -398,17 +399,43 @@ function ShareLocation(props) {
                 {allStepsCompleted() ? (
                     <div>
                         <center style={{
-                            marginTop: "25%"
+                            marginTop: "5%"
                         }}>
-                            <h1>สร้างการแชร์เส้นทาง</h1>
-                            <h1>เสร็จสิ้น</h1>
-                            <p>ต้นทาง: {routes.start_address}</p>
-                            <p>ปลายทาง: {routes.end_address}</p>
-                            <p>เริ่มการแชร์: {boardingTime.start_time}</p>
-                            <p>ปิดการแชร์: {boardingTime.end_time}</p>
-                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: {numberOfTravel} คน</p>
-                            <p>ต้องการร่วมเดินทางกับเพศ: {gender}</p>
+                            
+                            <body bgcolor= "dddddd" shadow="5">
+                            <hr></hr>
+                            <h2>สร้างการแชร์เส้นทาง</h2>
+                            <h2>เสร็จสิ้น</h2>
+                            <img src={correct}  width="20" height='70'  ></img>
+                            <hr></hr>
+                            </body>
+                            
                         </center>
+                        <br></br>
+                        <body bgcolor= "#F5F5F5">
+                            <center>
+                            <h2>ต้นทาง - ปลายทาง</h2>
+                            </center>
+                            
+                           <center>
+                            <b>ต้นทาง:</b> {routes.start_address}
+                            <br></br>
+                            <b>ปลายทาง:</b> {routes.end_address}
+                            </center>
+                        </body>
+                        <body bgcolor= "#F5F5F5">
+                            <center>
+                            <h2>ข้อมูลการแชร์</h2>
+                            </center>
+                            <b>เริ่มการแชร์:</b> {boardingTime.start_time}
+                            <br></br>
+                            <b>ปิดการแชร์:</b> {boardingTime.end_time}
+                            <br></br>
+                            <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
+                            <br></br>
+                            <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
+                        </body>
+                        
                         <div style={{
                             position: "fixed",
                             bottom: '25px',

@@ -6,8 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import TextFieldMargins from '../components/textbox1'
 import TextFieldMargins2 from '../components/textbox2'
 import geno from '../../share-we-go-projects/image/geno.jpg'
-// import ing from '../image/ing.jpg'
-// import bent from '../image/bent.jpg'
+import ing from '../../share-we-go-projects/image/ing.jpg'
+import bent from '../../share-we-go-projects/image/bent.jpg'
 
 
 
