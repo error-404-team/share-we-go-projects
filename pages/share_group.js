@@ -14,6 +14,9 @@ import firebase from '../lib/firebase';
 import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 const useStyles = makeStyles(theme => ({
   text: {
     padding: theme.spacing(2, 2, 0),
@@ -113,10 +116,11 @@ AutocompleteDirectionsHandler.prototype.route = function () {
     });
 };
 
+
 function FinishedStep(props) {
   const classes = useStyles();
 
-  function handleNewUserMessage (newMessage)  {
+  function handleNewUserMessage(newMessage) {
     console.log(`New message incoming! ${newMessage}`);
     // Now send the message throught the backend API
   }
@@ -131,8 +135,8 @@ function FinishedStep(props) {
           <Typography variant="h6" color="inherit">
             Photos
         </Typography>
-        <div className={classes.grow} />
-        <IconButton edge="end" color="inherit">
+          <div className={classes.grow} />
+          <IconButton edge="end" color="inherit">
             <MoreIcon />
           </IconButton>
         </Toolbar>
@@ -160,6 +164,89 @@ function FinishedStep(props) {
         }}
         DrawingOnMap={(google, map) => {
           new AutocompleteDirectionsHandler(google, map)
+
+
+          function CustomMarker(latlng, map, args, img) {
+            this.latlng = latlng;
+            this.args = args;
+            this.img = img;
+            this.setMap(map);
+
+            // setMap(map)
+            // setGoogle(google)
+
+          }
+
+          CustomMarker.prototype = new window.google.maps.OverlayView();
+
+          CustomMarker.prototype.onAdd = function () {
+            var self = this;
+            var div = this.div;
+            if (!div) {
+              // Generate marker html
+              div = this.div = document.createElement('div');
+              div.className = 'custom-marker';
+              div.style.position = 'absolute';
+              var innerDiv = document.createElement('div');
+              innerDiv.className = 'custom-marker-inner';
+              innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
+              div.appendChild(innerDiv);
+
+              if (typeof (self.args.marker_id) !== 'undefined') {
+                div.dataset.marker_id = self.args.marker_id;
+              }
+
+              google.maps.event.addDomListener(div, "click", function (event) {
+                google.maps.event.trigger(self, "click");
+              });
+
+              var panes = this.getPanes();
+              panes.overlayImage.appendChild(div);
+            }
+          };
+
+          CustomMarker.prototype.draw = function () {
+            // มี bug icon ไม่เกาะ map
+            if (this.div) {
+              // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
+              let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
+
+              this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
+              // console.log(this.pos);
+              this.div.style.left = this.pos.x + 'px';
+              this.div.style.top = this.pos.y + 'px';
+            }
+          };
+
+          CustomMarker.prototype.getPosition = function () {
+            return this.latlng;
+          };
+
+          firebase.auth().onAuthStateChanged((user) => {
+            firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
+              let stories = (snapshot.val());
+
+              var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+
+              var marker1 = new CustomMarker(
+                myLatlng,
+                map,
+                {},
+                stories.photoURL
+              );
+
+              var pos = {
+                lat: stories.coords.latitude,
+                lng: stories.coords.longitude
+              };
+
+              marker1.latlng = { lat: pos.lat, lng: pos.lng };
+              marker1.draw();
+
+              map.setCenter(pos);
+
+            })
+          })
         }}
       >
 

@@ -152,7 +152,7 @@ const Private = function (props) {
             // An error happened.
         });
     }
-   
+
 
     if (latlng == undefined) {
         // แทนค่า ตัวแปล latlng ลงไป
@@ -161,6 +161,63 @@ const Private = function (props) {
     }
 
     // console.log(map);
+
+
+    function CustomMarker(latlng, map, args, img) {
+        this.latlng = latlng;
+        this.args = args;
+        this.img = img;
+        this.setMap(map);
+
+        setMap(map)
+        // setGoogle(google)
+
+    }
+
+    CustomMarker.prototype = new google.maps.OverlayView();
+
+    CustomMarker.prototype.onAdd = function () {
+        var self = this;
+        var div = this.div;
+        if (!div) {
+            // Generate marker html
+            div = this.div = document.createElement('div');
+            div.className = 'custom-marker';
+            div.style.position = 'absolute';
+            var innerDiv = document.createElement('div');
+            innerDiv.className = 'custom-marker-inner';
+            innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
+            div.appendChild(innerDiv);
+
+            if (typeof (self.args.marker_id) !== 'undefined') {
+                div.dataset.marker_id = self.args.marker_id;
+            }
+
+            google.maps.event.addDomListener(div, "click", function (event) {
+                google.maps.event.trigger(self, "click");
+            });
+
+            var panes = this.getPanes();
+            panes.overlayImage.appendChild(div);
+        }
+    };
+
+    CustomMarker.prototype.draw = function () {
+        // มี bug icon ไม่เกาะ map
+        if (this.div) {
+            // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
+            let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
+
+            this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
+            // console.log(this.pos);
+            this.div.style.left = this.pos.x + 'px';
+            this.div.style.top = this.pos.y + 'px';
+        }
+    };
+
+    CustomMarker.prototype.getPosition = function () {
+        return this.latlng;
+    };
 
 
     return (
@@ -186,69 +243,13 @@ const Private = function (props) {
                     }}
                     setCenter={new google.maps.LatLng(latlng.lat, latlng.lng)}
                     DrawingOnMap={(google, map) => {
-                        function CustomMarker(latlng, map, args, img) {
-                            this.latlng = latlng;
-                            this.args = args;
-                            this.img = img;
-                            this.setMap(map);
-
-                            setMap(map)
-                            // setGoogle(google)
-
-                        }
-
-                        CustomMarker.prototype = new google.maps.OverlayView();
-
-                        CustomMarker.prototype.onAdd = function () {
-                            var self = this;
-                            var div = this.div;
-                            if (!div) {
-                                // Generate marker html
-                                div = this.div = document.createElement('div');
-                                div.className = 'custom-marker';
-                                div.style.position = 'absolute';
-                                var innerDiv = document.createElement('div');
-                                innerDiv.className = 'custom-marker-inner';
-                                innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
-                                div.appendChild(innerDiv);
-
-                                if (typeof (self.args.marker_id) !== 'undefined') {
-                                    div.dataset.marker_id = self.args.marker_id;
-                                }
-
-                                google.maps.event.addDomListener(div, "click", function (event) {
-                                    google.maps.event.trigger(self, "click");
-                                });
-
-                                var panes = this.getPanes();
-                                panes.overlayImage.appendChild(div);
-                            }
-                        };
-
-                        CustomMarker.prototype.draw = function () {
-                            // มี bug icon ไม่เกาะ map
-                            if (this.div) {
-                                // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
-                                let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
-
-                                this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
-                                // console.log(this.pos);
-                                this.div.style.left = this.pos.x + 'px';
-                                this.div.style.top = this.pos.y + 'px';
-                            }
-                        };
-
-                        CustomMarker.prototype.getPosition = function () {
-                            return this.latlng;
-                        };
 
                         fetch('http://localhost:7000/users').then(function (response) {
                             if (response.status >= 400) {
                                 throw new Error("Bad response from server");
                             }
                             return response.json();
-                        })
-                            .then(function (stories) {
+                        }).then(function (stories) {
                                 var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
                                 var marker1 = new CustomMarker(
