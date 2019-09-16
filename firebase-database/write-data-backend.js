@@ -11,7 +11,7 @@ function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
             phoneNumber: phoneNumber
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -29,7 +29,7 @@ function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
             phoneNumber: phoneNumber
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -41,7 +41,7 @@ function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
 }
 
 function writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, coords, timestamp) {
-    firebase.database().ref(`geolocation/${uid}/`).set({
+    firebase.database().ref(`geo-location/${uid}/`).set({
         uid: uid,
         displayName: displayName,
         email: email,
@@ -57,8 +57,14 @@ function writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, co
             speed: coords.speed
         },
         timestamp: timestamp,
+    }, function (error) {
+        if (error) {
+            // console.log(error);
+        } else {
+            // Data saved successfully!
+        }
     });
-    //     console.log(`
+    // console.log(`
     //     writeLocationPrivateData() : {
     //         position: {
     //         lat:${position.lat},
@@ -143,4 +149,11 @@ function addUserToGroupShareData(uid, user) {
     firebase.database().ref(`group_shareuid/group_share`).push(user);
 }
 
-module.exports = writeUserData, writeGEOLocationData, writeLocationNearbyUsersData, writeSearchLocationNearbyUsersData, writeShareMyWayNearbyUsersData, writeDestinationUsersData, writeCreateGroupShareUserData, addUserToGroupShareData;
+module.exports = writeUserData;
+module.exports = writeGEOLocationData;
+module.exports = writeLocationNearbyUsersData;
+module.exports = writeSearchLocationNearbyUsersData;
+module.exports = writeShareMyWayNearbyUsersData;
+module.exports = writeDestinationUsersData;
+module.exports = writeCreateGroupShareUserData;
+module.exports = addUserToGroupShareData;

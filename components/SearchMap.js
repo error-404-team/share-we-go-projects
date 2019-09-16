@@ -5,25 +5,11 @@ import { ThemeProvider, withStyles } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import HomeIcon from '@material-ui/icons/Home';
-import Link from 'next/link';
-// import { useRouter } from 'next/router';
-
-// import SearchIcon from '@material-ui/icons/Search';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
-
+import MenuIcon from '@material-ui/icons/Menu';
 import Autocomplete from '../lib/maps/components/Places/Autocomplete';
 
 // const router = useRouter();
 
-// กำหนด  theme view
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: 'rgba(22, 109, 202, 0.81)',
-        }
-    },
-});
 
 class SearchMap extends React.Component {
 
@@ -52,19 +38,19 @@ class SearchMap extends React.Component {
 
     render() {
         // รับค่า ที่ถ่ายทอดมาจาก this.state.google ให้อยู่ในตัวแปล google
-        const { google } = this.state;
+        const { google,map } = this.state;
         // รับค่า ที่ถ่ายทอดมาจาก this.props.classes ให้อยู่ในตัวแปล classes
         const { classes } = this.props
 
+      // console.log(this.props.map);
       
         
         return (
             <Paper className={classes.root} elevation={2} >
-                <Link href='/home'>
-                    <IconButton className={classes.iconButton} aria-label="Menu">
-                        <HomeIcon />
+                    <IconButton onClick={this.props.onClick} className={classes.iconButton} aria-label="Menu">
+                        <MenuIcon />
                     </IconButton>
-                </Link>
+                <Divider className={classes.divider} />
                 <Autocomplete
                     map={this.props.map}
                     google={google}
@@ -75,14 +61,6 @@ class SearchMap extends React.Component {
                         width: '-webkit-fill-available',
                     }}
                 />
-                <Divider className={classes.divider} />
-                <ThemeProvider theme={theme}>
-                    <Link href='/share_location' >
-                        <IconButton color="primary" className={classes.iconButton}>
-                            <AddLocationIcon />
-                        </IconButton>
-                    </Link>
-                </ThemeProvider>
             </Paper>
         )
     }
@@ -114,7 +92,8 @@ const styles = {
 
 SearchMap.propsTypes = {
     google: PropsTypes.object,
-    map: PropsTypes.object
+    map: PropsTypes.object,
+    onClick: PropsTypes.func
 }
 
 
