@@ -135,8 +135,8 @@ function ShareLocation(props) {
     const [skipped, setSkipped] = useState(new Set());
     const [routes, setRoutes] = useState(new Set());
     const [boardingTime, setBoardingTime] = useState(new Set());
-    const [numberOfTravel, setNumberOfTravel] = useState(new Set());
-    const [gender, setGender] = useState(new Set());
+    const [numberOfTravel, setNumberOfTravel] = useState("");
+    const [gender, setGender] = useState("");
     const [shareGroupData, setShareGroupData] = useState(new Set());
     const steps = getSteps();
 
@@ -178,19 +178,19 @@ function ShareLocation(props) {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataGender(user.uid, data)
-                firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
-                    var users = (snapshot.val());
-                    writeCreateGroupShareUserDataHeader(user.uid, users);
-                });
 
                 firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
-                    var users = (snapshot.val());
+                    let users = (snapshot.val());
                     console.log(users);
                     setShareGroupData(users);
                     setRoutes(users.host.routes[0].legs[0]);
-                    setBoardingTime(users.date_time.data);
+                    setBoardingTime(users.date_time);
                     setNumberOfTravel(users.number_of_travel);
                     setGender(users.gender);
+                });
+                firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                    let users = (snapshot.val());
+                    writeCreateGroupShareUserDataHeader(user.uid, users);
                 });
             }
         })
@@ -406,8 +406,8 @@ function ShareLocation(props) {
                             <p>ปลายทาง: {routes.end_address}</p>
                             <p>เริ่มการแชร์: {boardingTime.start_time}</p>
                             <p>ปิดการแชร์: {boardingTime.end_time}</p>
-                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: {numberOfTravel.data} คน</p>
-                            <p>ต้องการร่วมเดินทางกับเพศ: {gender.data}</p>
+                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: {numberOfTravel} คน</p>
+                            <p>ต้องการร่วมเดินทางกับเพศ: {gender}</p>
                         </center>
                         <div style={{
                             position: "fixed",
