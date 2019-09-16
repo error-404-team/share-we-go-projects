@@ -226,16 +226,16 @@ function FinishedStep(props) {
             firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
               let stories = (snapshot.val());
 
-              var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+              let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-              var marker1 = new CustomMarker(
+              let marker1 = new CustomMarker(
                 myLatlng,
                 map,
                 {},
                 stories.photoURL
               );
 
-              var pos = {
+              let pos = {
                 lat: stories.coords.latitude,
                 lng: stories.coords.longitude
               };
@@ -245,6 +245,36 @@ function FinishedStep(props) {
 
               map.setCenter(pos);
 
+            })
+
+            // join
+            firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
+              let keys = (snapshot.val());
+              keys.map((key) => {
+                firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
+                  let stories = (snapshot.val());
+
+                  let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+
+                  let marker1 = new CustomMarker(
+                    myLatlng,
+                    map,
+                    {},
+                    stories.photoURL
+                  );
+    
+                  let pos = {
+                    lat: stories.coords.latitude,
+                    lng: stories.coords.longitude
+                  };
+    
+                  marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                  marker1.draw();
+    
+                  map.setCenter(pos);
+                })
+              })
+             
             })
           })
         }}
