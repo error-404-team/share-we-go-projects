@@ -1,14 +1,21 @@
 import React from 'react';
+import Router,{ useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
+import { shareLocation } from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
 import 'react-chat-widget/lib/styles.css';
@@ -37,6 +44,37 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
 }));
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})(props => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 function AutocompleteDirectionsHandler(google, map) {
   this.map = map;
@@ -119,24 +157,67 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function FinishedStep(props) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const router = useRouter()
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        shareLocation(user.uid,false)
+        setAnchorEl(null);
+        setTimeout(() => router.push('/'), 100)
+      }
+  })
+  }
+
+  function goBack() {
+    setTimeout(() => router.push('/'), 100)
+  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
+
+      {/* app-bar */}
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
             Photos
         </Typography>
           <div className={classes.grow} />
-          <IconButton edge="end" color="inherit">
+          <IconButton onClick={handleClick} edge="end" color="inherit">
             <MoreIcon />
           </IconButton>
+
+          {/* menu */}
+          <StyledMenu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <StyledMenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <CloseIcon />
+                </ListItemIcon>
+                <ListItemText primary="ยกเลิก" />
+            </StyledMenuItem>
+          </StyledMenu>
+          {/* end-menu */}
+
         </Toolbar>
       </AppBar>
+      {/* end-app-bar */}
+
+      {/* map */}
       <Map google={props.google}
         setStyle={{
           position: "absolute",
@@ -276,8 +357,9 @@ function FinishedStep(props) {
           })
         }}
       >
-
       </Map>
+      {/* end-map */}
+
       {/* <Widget
           handleNewUserMessage={this.handleNewUserMessage}
           // profileAvatar={logo}
