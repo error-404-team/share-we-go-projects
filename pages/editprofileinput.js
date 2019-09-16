@@ -41,7 +41,14 @@ export default function InputEditProfile() {
   const [age, setAge] = useState('-');
 
   function MybuttonSave() {
-    console.log(1);
+    const  name = dName ;
+    console.log(dName);
+    const mail = demail ;
+    console.log(demail);
+    const phoneNumber = dphoneNumber;
+    console.log(dphoneNumber);
+    
+    
     
     
   }
@@ -88,31 +95,31 @@ export default function InputEditProfile() {
         let uid = user.uid;
   // กำหนดชื่อตัวแปล และ แทนค่าลงในตัวแปล      
         
-        // let name = document.getElementById("name");
-        // let dName = name.value;
+        let name = document.getElementById("name");
+        let dName = name.value;
 
-        // let mail = document.getElementById("mail");
-        // let demail = mail.value;
+        let mail = document.getElementById("mail");
+        let demail = mail.value;
 
-        // let photo = document.getElementById("photo");
-        // let dphotoURL = photo.value;
+        let photo = document.getElementById("photo");
+        let dphotoURL = photo.value;
 
-        // let phone = document.getElementById("phone");
-        // let dphoneNumber = phone.value;
+        let phone = document.getElementById("phoneNumber");
+        let dphoneNumber = phone.value;
 
-        // let sexy = document.getElementById("sexy");
-        // let dsex= sexy.value;
+        let sexy = document.getElementById("sexy");
+        let dsex= sexy.value;
 
-        // let ryu= document.getElementById("ryu");
-        // let dage = ryu.value;
+        let ryu = document.getElementById("ryu");
+        let dage = ryu.value;
 
 
-        // writeUserData(uid, displayName, email, photoURL, phoneNumber, sex, age)
+        writeUserData(uid, displayName, email, photoURL, phoneNumber, sex, age)
 
       }
     })
     // console.log(a.value)
-
+  
   return (
     <React.Fragment>
       <AppBar position="static" >
@@ -149,28 +156,28 @@ export default function InputEditProfile() {
       <TextField
         label="เบอร์โทรศัพท์"
         id="dphoneNumber"
-        defaultValue=""
+        Value=""
         className={classes.textField}
       />
 
       <TextField
         label="เพศ"
         id="dsex"
-        defaultValue=""
+        Value=""
         className={classes.textField}
       />
 
       <TextField
         label="อายุ"
         id="dage"
-        defaultValue=""
+        Value=""
         className={classes.textField}
       />
 {/* 
       <TextField
         label="สถานที่อยู่"
         id="when"
-        defaultValue=""
+        Value=""
         className={classes.textField}
       /> */}
 
