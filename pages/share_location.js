@@ -26,6 +26,7 @@ import {
     writeCreateGroupShareUserDataNumberOfTravel,
     writeCreateGroupShareUserDataGender,
     writeCreateGroupShareUserDataHeader,
+    writeCreateGroupShareUserDataKeys,
     shareLocation
 } from '../firebase-database/write-data'
 
@@ -193,6 +194,7 @@ function ShareLocation(props) {
                     let users = (snapshot.val());
                     writeCreateGroupShareUserDataHeader(user.uid, users);
                     shareLocation(user.uid, true)
+                    writeCreateGroupShareUserDataKeys(user.uid)
                 });
             }
         })

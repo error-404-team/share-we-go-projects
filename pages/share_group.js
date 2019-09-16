@@ -120,10 +120,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 function FinishedStep(props) {
   const classes = useStyles();
 
-  function handleNewUserMessage(newMessage) {
-    console.log(`New message incoming! ${newMessage}`);
-    // Now send the message throught the backend API
-  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -250,31 +246,32 @@ function FinishedStep(props) {
             // join
             firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
               let keys = (snapshot.val());
-              keys.map((key) => {
-                firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
-                  let stories = (snapshot.val());
+              if (keys !== null) {
+                keys.map((key) => {
+                  firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let stories = (snapshot.val());
 
-                  let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+                    let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-                  let marker1 = new CustomMarker(
-                    myLatlng,
-                    map,
-                    {},
-                    stories.photoURL
-                  );
-    
-                  let pos = {
-                    lat: stories.coords.latitude,
-                    lng: stories.coords.longitude
-                  };
-    
-                  marker1.latlng = { lat: pos.lat, lng: pos.lng };
-                  marker1.draw();
-    
-                  map.setCenter(pos);
+                    let marker1 = new CustomMarker(
+                      myLatlng,
+                      map,
+                      {},
+                      stories.photoURL
+                    );
+
+                    let pos = {
+                      lat: stories.coords.latitude,
+                      lng: stories.coords.longitude
+                    };
+
+                    marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                    marker1.draw();
+
+                    map.setCenter(pos);
+                  })
                 })
-              })
-             
+              }
             })
           })
         }}
