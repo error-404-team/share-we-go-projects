@@ -49,7 +49,7 @@ export default function App() {
         <React.Fragment>
             <AppBar position="static" >
                 <Toolbar variant="dense" >
-                    <Link href="/index">
+                    <Link href="/private">
                     <IconButton edge="start" color="inherit" aria-label="menu">
                         <ArrowBackIcon />
                     </IconButton>

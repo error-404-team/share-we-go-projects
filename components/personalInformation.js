@@ -8,6 +8,10 @@ import firebase from "../lib/firebase";
 export default function Personalform() {
 
   const [displayName, setDisplayName] = useState('-');
+  const [email, setEmail] = useState('-');
+  const [phoneNumberd, setphoneNumber] = useState('-');
+  const [sex, setSex] = useState('-');
+  const [age, setAge] = useState('-');
 
   firebase.auth().onAuthStateChanged((user) => {
 
@@ -21,7 +25,7 @@ export default function Personalform() {
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/email').on('value', function (mail) {
-        setDisplayName(mail.val());
+        setEmail(mail.val());
         console.log(mail.val());
       })
     }
@@ -29,7 +33,7 @@ export default function Personalform() {
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/phoneNumber').on('value', function (phoneNum) {
-        setDisplayName(phoneNum.val())
+        setphoneNumber(phoneNum.val())
         console.log(phoneNum.val());
       })
     }
@@ -37,7 +41,7 @@ export default function Personalform() {
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/sex').on('value', function (sexy) {
-        setDisplayName(sexy.val())
+        setSex(sexy.val())
         console.log(sexy.val());
       })
     }
@@ -45,7 +49,7 @@ export default function Personalform() {
     if (user) {
       console.log(user);
       firebase.database().ref('users/' + user.uid + '/age').on('value', function (age) {
-        setDisplayName(age.val())
+        setAge(age.val())
         console.log(age.val());
       })
     }
@@ -67,7 +71,7 @@ export default function Personalform() {
         E-mail
           </Typography>
       <Typography variant="h5" color="textSecondary" component="p">
-       {/* {email} */}
+       {email}
       </Typography>
 
       <Typography gutterBottom variant="subtitle2" component="h2">
