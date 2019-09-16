@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
+import BottonClickToMenu from '../components/bottonShare_group'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
 import 'react-chat-widget/lib/styles.css';
@@ -197,7 +198,7 @@ function FinishedStep(props) {
           new AutocompleteDirectionsHandler(google, map)
         }}
       >
-
+          <BottonClickToMenu ></BottonClickToMenu>
       </Map>
       {/* <Widget
           handleNewUserMessage={this.handleNewUserMessage}
