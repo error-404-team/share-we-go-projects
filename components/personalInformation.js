@@ -12,41 +12,41 @@ export default function Personalform() {
   firebase.auth().onAuthStateChanged((user) => {
 
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/displayName').on('value', function (params) {
         setDisplayName(params.val())
-        console.log(params.val());
+        // console.log(params.val());
       })
     }
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/email').on('value', function (mail) {
         setDisplayName(mail.val());
-        console.log(mail.val());
+        // console.log(mail.val());
       })
     }
 
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/phoneNumber').on('value', function (phoneNum) {
         setDisplayName(phoneNum.val())
-        console.log(phoneNum.val());
+        // console.log(phoneNum.val());
       })
     }
 
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/sex').on('value', function (sexy) {
         setDisplayName(sexy.val())
-        console.log(sexy.val());
+        // console.log(sexy.val());
       })
     }
 
     if (user) {
-      console.log(user);
+      // console.log(user);
       firebase.database().ref('users/' + user.uid + '/age').on('value', function (age) {
         setDisplayName(age.val())
-        console.log(age.val());
+        // console.log(age.val());
       })
     }
   })

@@ -85,6 +85,7 @@ function PlaceAutocompleteAndDirections(props) {
 
         autocomplete.addListener('place_changed', function () {
             var place = autocomplete.getPlace();
+            console.log(place);
 
             if (!place.place_id) {
                 alert('Please select an option from the dropdown list.');
@@ -119,7 +120,7 @@ function PlaceAutocompleteAndDirections(props) {
 
                 } else {
                     //     alert('Directions request failed due to ' + status);
-                    console.log(response, status);
+                    // console.log(response, status);
 
                 }
             });

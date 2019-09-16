@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Router from 'next/router';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { ThemeProvider, withStyles } from '@material-ui/styles';
+// import { ThemeProvider, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import Stepper from '@material-ui/core/Stepper';
@@ -24,7 +24,8 @@ import {
     writeCreateGroupShareUserDataHost,
     writeCreateGroupShareUserDataDateTime,
     writeCreateGroupShareUserDataNumberOfTravel,
-    writeCreateGroupShareUserDataGender
+    writeCreateGroupShareUserDataGender,
+    writeCreateGroupShareUserDataHeader
 } from '../firebase-database/write-data'
 
 require('es6-promise').polyfill();
@@ -132,16 +133,17 @@ function ShareLocation(props) {
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set());
     const [skipped, setSkipped] = useState(new Set());
-    // const [router, setRouter] = useState(new Set());
-    // const [boardingTime, setBoardingTime] = useState(new Set());
-    // const [numberOfTravel, setNumberOfTravel] = useState(new Set());
-    // const [gender, setNumberOfTravel] = useState(new Set());
+    const [routes, setRoutes] = useState(new Set());
+    const [boardingTime, setBoardingTime] = useState(new Set());
+    const [numberOfTravel, setNumberOfTravel] = useState(new Set());
+    const [gender, setGender] = useState(new Set());
+    const [shareGroupData, setShareGroupData] = useState(new Set());
     const steps = getSteps();
 
 
 
-    function Router(data) {
-        console.log(data);
+    function routerTravels(data) {
+        // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataHost(user.uid, data)
@@ -151,8 +153,8 @@ function ShareLocation(props) {
     };
 
 
-    function BoardingTime(data) {
-        console.log(data);
+    function boardingTimes(data) {
+        // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataDateTime(user.uid, data)
@@ -160,69 +162,40 @@ function ShareLocation(props) {
         })
         // return data
     };
-    function NumberOfTravel(data) {
-        console.log(data);
+    function numberOfTravels(data) {
+        // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
+            console.log(user);
+
             if (user) {
                 writeCreateGroupShareUserDataNumberOfTravel(user.uid, data)
             }
         })
         // return data
     };
-    function Gender(data) {
-        console.log(data);
+    function genders(data) {
+        // console.log(data);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 writeCreateGroupShareUserDataGender(user.uid, data)
+                firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                    var users = (snapshot.val());
+                    writeCreateGroupShareUserDataHeader(user.uid, users);
+                });
+
+                firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+                    var users = (snapshot.val());
+                    console.log(users);
+                    setShareGroupData(users);
+                    setRoutes(users.host.routes[0].legs[0]);
+                    setBoardingTime(users.date_time.data);
+                    setNumberOfTravel(users.number_of_travel);
+                    setGender(users.gender);
+                });
             }
         })
         // return data
     };
-
-    fetch('http://localhost:7000/origin_destination_route').then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    }).then(function (data) {
-        Router(data)
-        // console.log(data);
-
-    })
-
-    fetch('http://localhost:7000/boarding_time').then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    }).then(function (data) {
-        BoardingTime(data)
-        // console.log(data);
-
-    })
-
-    fetch('http://localhost:7000/number_of_travel').then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    }).then(function (data) {
-        NumberOfTravel(data)
-        // console.log(data);
-
-    })
-
-    fetch('http://localhost:7000/gender').then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    }).then(function (data) {
-        Gender(data)
-        // console.log(data);
-
-    })
-
 
     // console.log(Router);
 
@@ -288,6 +261,61 @@ function ShareLocation(props) {
         const newCompleted = new Set(completed);
         newCompleted.add(activeStep);
         setCompleted(newCompleted);
+        console.log(activeStep);
+
+        if (activeStep === 0) {
+            fetch('http://localhost:7000/origin_destination_route').then(function (response) {
+                if (response.status >= 400) {
+                    throw new Error("Bad response from server");
+                }
+                return response.json();
+            }).then(function (data) {
+                routerTravels(data)
+                console.log(data);
+
+            })
+        }
+
+        if (activeStep === 1) {
+            fetch('http://localhost:7000/boarding_time').then(function (response) {
+                if (response.status >= 400) {
+                    throw new Error("Bad response from server");
+                }
+                return response.json();
+            }).then(function (data) {
+                boardingTimes(data)
+                // console.log(data);
+
+            })
+        }
+
+        if (activeStep === 2) {
+            fetch('http://localhost:7000/number_of_travel').then(function (response) {
+                if (response.status >= 400) {
+                    throw new Error("Bad response from server");
+                }
+                return response.json();
+            }).then(function (data) {
+                numberOfTravels(data)
+                // console.log(data);
+
+            })
+        }
+
+        if (activeStep === 3) {
+            fetch('http://localhost:7000/gender').then(function (response) {
+                if (response.status >= 400) {
+                    throw new Error("Bad response from server");
+                }
+                return response.json();
+            }).then(function (data) {
+                genders(data)
+
+                // console.log(data);
+
+            })
+        }
+
 
         /**
          * Sigh... it would be much nicer to replace the following if conditional with
@@ -324,6 +352,8 @@ function ShareLocation(props) {
             handleBack();
         }
     }
+
+
 
     return (
         <div className={classes.root}>
@@ -371,9 +401,13 @@ function ShareLocation(props) {
                             marginTop: "25%"
                         }}>
                             <h1>สร้างการแชร์เส้นทาง</h1>
-                            {/* <br/> */}
                             <h1>เสร็จสิ้น</h1>
-                            <h1>{Router()}</h1>
+                            <p>ต้นทาง: {routes.start_address}</p>
+                            <p>ปลายทาง: {routes.end_address}</p>
+                            <p>เริ่มการแชร์: {boardingTime.start_time}</p>
+                            <p>ปิดการแชร์: {boardingTime.end_time}</p>
+                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: {numberOfTravel.data} คน</p>
+                            <p>ต้องการร่วมเดินทางกับเพศ: {gender.data}</p>
                         </center>
                         <div style={{
                             position: "fixed",

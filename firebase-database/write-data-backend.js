@@ -11,7 +11,7 @@ function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
             phoneNumber: phoneNumber
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -29,7 +29,7 @@ function writeUserData(uid, displayName, email, photoURL, phoneNumber) {
             phoneNumber: phoneNumber
         }, function (error) {
             if (error) {
-                console.log(error);
+                // console.log(error);
             } else {
                 // Data saved successfully!
             }
@@ -59,12 +59,12 @@ function writeGEOLocationData(uid, displayName, email, photoURL, phoneNumber, co
         timestamp: timestamp,
     }, function (error) {
         if (error) {
-            console.log(error);
+            // console.log(error);
         } else {
             // Data saved successfully!
         }
     });
-    //     console.log(`
+    // console.log(`
     //     writeLocationPrivateData() : {
     //         position: {
     //         lat:${position.lat},
