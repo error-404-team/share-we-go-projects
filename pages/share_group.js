@@ -3,6 +3,8 @@ import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -115,11 +117,37 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function FinishedStep(props) {
   const classes = useStyles();
+  const [
+    mobileMoreAnchorEl,
+    setMobileMoreAnchorEl
+  ] = React.useState(null);
 
-  function handleNewUserMessage (newMessage)  {
-    console.log(`New message incoming! ${newMessage}`);
-    // Now send the message throught the backend API
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  function handleMobileMenuClose() {
+    setMobileMoreAnchorEl(null);
   }
+  function handleMobileMenuOpen(event) {
+    setMobileMoreAnchorEl(event.currentTarget);
+  }
+
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem onClick={() => setMobileMoreAnchorEl(null)}>
+        <p>ยกเลิก</p>
+      </MenuItem>
+    </Menu>
+  );
+  
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -129,12 +157,19 @@ function FinishedStep(props) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            กลุ่มเเชร์ 
         </Typography>
         <div className={classes.grow} />
-        <IconButton edge="end" color="inherit">
-            <MoreIcon />
-          </IconButton>
+        <IconButton
+        aria-label="Show more"
+        aria-controls={mobileMenuId}
+        aria-haspopup="true"
+        onClick={handleMobileMenuOpen}
+        color="inherit"
+      >
+        <MoreIcon />
+      </IconButton>
+      {renderMobileMenu}
         </Toolbar>
       </AppBar>
       <Map google={props.google}
