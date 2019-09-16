@@ -30,15 +30,15 @@ export default function ContainedButtons() {
 
   return (
     <div>
-      <Button variant="contained" className={classes.button}>
+      {/* <Button variant="contained" className={classes.button}>
         เรียกรถ
       </Button>
-      <Button variant="contained" color="primary" className={classes.button}>
+      <Button variant="contained" color="inherit" className={classes.button}>
         เเชท
-      </Button>
-     
+      </Button> */}
+    
       <div>
-      <Fab color="primary" aria-label="add" className={classes.fab}>
+      <Fab color="primary" color="inherit" aria-label="add" className={classes.fab}>
           <LocalTaxiIcon />
         </Fab>
       </div>
