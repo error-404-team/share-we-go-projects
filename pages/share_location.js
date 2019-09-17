@@ -20,6 +20,9 @@ import TravelCompanion from '../components/TravelCompanion';
 import geno from '../image/geno.svg'
 import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
+import CommuteIcon from '@material-ui/icons/Commute';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 import firebase from '../lib/firebase';
 import {
@@ -400,41 +403,39 @@ function ShareLocation(props) {
                 {allStepsCompleted() ? (
                     <div>
                         <center style={{
-                            marginTop: "5%"
+                            // marginTop: "0%"
                         }}>
-                            <body bgcolor= "dddddd" shadow="5">
-                            <hr></hr>
-                            <h2>สร้างการแชร์เส้นทาง</h2>
-                            <h2>เสร็จสิ้น</h2>
-                            <img src={geno} width='50' height='50' align="right"></img>
+                            
+                            <body bgcolor= "99FF99" shadow="5">
+                            <h2>แชร์เส้นทางเสร็จสิ้น <CheckCircleIcon></CheckCircleIcon></h2>
+                            
                             <hr></hr>
                             </body>
                             
+                            
                         </center>
                         <br></br>
-                        <body bgcolor= "#F5F5F5">
+                        <body bgcolor= "#DCDCDC">
                             <center>
-                            <h2>ต้นทาง - ปลายทาง</h2>
-                            </center>
-                            
-                           <center>
+                            <hr border="5" shadow="5"></hr>
+
+                            <body>
+                                <div>
+                            <h2><CommuteIcon align></CommuteIcon> ต้นทาง - ปลายทาง</h2>
+                                </div>
                             <b>ต้นทาง:</b> {routes.start_address}
                             <br></br>
                             <b>ปลายทาง:</b> {routes.end_address}
-                            </center>
-                        </body>
-                        <body bgcolor= "#F5F5F5">
-                            <center>
-                            <h2>ข้อมูลการแชร์</h2>
-                            </center>
-                            <center>
+                            <br></br>
+                             <h2><RecentActorsIcon></RecentActorsIcon> ข้อมูลการแชร์</h2>
                             <b>เริ่มการแชร์:</b> {boardingTime.start_time}
                             <br></br>
                             <b>ปิดการแชร์:</b> {boardingTime.end_time}
                             <br></br>
                             <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
-                            
                             <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
+                            <hr border="5" shadow="5"></hr>
+                            </body>
                             </center>
                         </body>
                         
