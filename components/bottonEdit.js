@@ -14,7 +14,7 @@ export default function BottonEdit() {
   const classes = useStyles();
 
   return (
-    <Link href="/editprofile">
+    <Link href="/editprofileinput">
   <Button href="#text-buttons" className={classes.button}>
     <BorderColorIcon></BorderColorIcon>แก้ไขข้อมูล
     </Button>
