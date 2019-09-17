@@ -17,14 +17,7 @@ var gender;
 
 // socket.io server
 io.on('connection', socket => {
-  socket.on('position', (data) => {
-    position = data
-
-    // console.log(data);
-
-    socket.broadcast.emit('position', data)
-  });
-
+ 
   socket.on('users', (data) => {
     users = data
 
@@ -52,7 +45,7 @@ io.on('connection', socket => {
   socket.on('number_of_travel', (data => {
     numberOfTravel = data
 
-    console.log(data);
+    // console.log(data);
 
     socket.broadcast.emit('number_of_travel', data)
   }))
@@ -60,24 +53,20 @@ io.on('connection', socket => {
   socket.on('gender', (data => {
     gender = data
 
-    console.log(data);
+    // console.log(data);
 
     socket.broadcast.emit('gender', data)
   }))
 })
 
 nextApp.prepare().then(() => {
-  app.get('/position', (req, res) => {
-    res.json(position)
-  })
-
   app.get('/users', (req, res) => {
     res.json(users)
   })
 
   app.get('/origin_destination_route', (req, res) => {
     res.json(originDestinationRoute)
-    console.log(originDestinationRoute);
+    // console.log(originDestinationRoute);
     
   })
 
@@ -106,6 +95,6 @@ nextApp.prepare().then(() => {
 
   server.listen(7000, (err) => {
     if (err) throw err
-    console.log('> Ready on http://localhost:7000')
+    // console.log('> Ready on http://localhost:7000')
   })
 })

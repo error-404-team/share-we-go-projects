@@ -36,31 +36,26 @@ class Index extends React.Component {
             if (user) {
 
                 // รับค่าจาก firebase auth
-                const { uid, displayName, email, photoURL, phoneNumber } = user;
+                // const { uid, displayName, email, photoURL, phoneNumber } = user;
 
                 // กำหนดค่า ตัวแปล authenticate = true
                 this.setState({ auth: true })
 
-                var userData = {
-                    uid: uid,
-                    displayName: displayName,
-                    email: email,
-                    photoURL: photoURL,
-                    phoneNumber: phoneNumber,
-                }
-
-                // // เขียนข้อมูล user ให้ database
-                socket.emit('users', userData)
-                // console.log(userData);
-
                 if (navigator.geolocation) {
                     navigator.geolocation.watchPosition(function (position) {
                         var data = {
-                            uid: uid,
-                            displayName: displayName,
-                            email: email,
-                            photoURL: photoURL,
-                            phoneNumber: phoneNumber,
+                            displayName: user.displayName,
+                            email: user.email,
+                            isAnonymous: user.isAnonymous,
+                            metadata: user.metadata,
+                            phoneNumber: user.phoneNumber,
+                            photoURL: user.photoURL,
+                            providerData: user.providerData,
+                            ra: user.ra,
+                            refreshToken: user.refreshToken,
+                            u: user.u,
+                            uid: user.uid,
+                            _lat: user._lat,
                             coords: {
                                 accuracy: position.coords.accuracy,
                                 altitude: position.coords.altitude,
@@ -69,13 +64,12 @@ class Index extends React.Component {
                                 latitude: position.coords.latitude,
                                 longitude: position.coords.longitude,
                                 speed: position.coords.speed
-                            },
-                            timestamp: position.timestamp,
+                            }
                         };
 
 
                         // console.log(data);
-                        socket.emit('position', data)
+                        socket.emit('users', data)
 
                     }, function () {
                         handleLocationError(true, infoWindow, map.getCenter());
