@@ -1,27 +1,28 @@
 import React from 'react';
+import Router,{ useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Avatar from '@material-ui/core/Avatar';
-import MenuIcon from '@material-ui/icons/Menu';
-// import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
+import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import Chat from '../components/Chat';
-import '../css/place-autocomplete-and-directions.css';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import firebase from '../lib/firebase';
+import { shareLocation } from '../firebase-database/write-data'
+// import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
+import 'react-chat-widget/lib/styles.css';
+// import '../css/place-autocomplete-and-directions.css';
+
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -30,160 +31,342 @@ const useStyles = makeStyles(theme => ({
   paper: {
     paddingBottom: 50,
   },
-  list: {
-    marginBottom: theme.spacing(2),
-  },
-  subheader: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  appBar: {
-    top: 'auto',
-    bottom: 0,
+  root: {
+    flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
   },
-  fabButton: {
-    position: 'absolute',
-    zIndex: 1,
-    top: -30,
-    left: 0,
-    right: 0,
-    margin: '0 auto',
+  list: {
+    marginBottom: theme.spacing(2),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
-function initMap(google, map) {
-  // this.map = map;
-  var markerArray = [];
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})(props => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
 
-  var modeSelector = document.getElementById('mode-selector');
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
-  var directionsService = new google.maps.DirectionsService;
+function AutocompleteDirectionsHandler(google, map) {
+  this.map = map;
+  this.originPlaceId = null;
+  this.destinationPlaceId = null;
+  this.travelMode = 'WALKING';
+  this.directionsService = new google.maps.DirectionsService;
+  this.directionsRenderer = new google.maps.DirectionsRenderer;
+  this.directionsRenderer.setMap(this.map);
 
-  // Create a renderer for directions and bind it to the map.
-  var directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+  var me = this
 
-  // Instantiate an info window to hold step text.
-  var stepDisplay = new google.maps.InfoWindow;
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+        var data = (snapshot.val());
 
-  // Display the route between the initial start and end selections.
-  calculateAndDisplayRoute(directionsRenderer, directionsService, markerArray, stepDisplay, map);
+        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+        me.setupClickListener(data.host.request.travelMode);
 
-  var onChangeHandler = function () {
-    calculateAndDisplayRoute(
-      directionsRenderer, directionsService, markerArray, stepDisplay, map);
-  };
-}
-
-function calculateAndDisplayRoute(directionsRenderer, directionsService,
-  markerArray, stepDisplay, map) {
-  // First, remove any existing markers from the map.
-  for (var i = 0; i < markerArray.length; i++) {
-    markerArray[i].setMap(null);
-  }
-
-  // Retrieve the start and end locations and create a DirectionsRequest using
-  // WALKING directions.
-  directionsService.route({
-    origin: "penn station, new york, ny",
-    destination: "260 Broadway New York NY 10007",
-    travelMode: 'WALKING'
-  }, function (response, status) {
-    // Route the directions and pass the response to a function to create
-    // markers for each step.
-    if (status === 'OK') {
-      // document.getElementById('warnings-panel').innerHTML =
-      //   '<b>' + response.routes[0].warnings + '</b>';
-      // directionsRenderer.setDirections(response);
-      // showSteps(response, markerArray, stepDisplay, map);
-    } else {
-      window.alert('Directions request failed due to ' + status);
+      })
     }
-  });
-}
-
-function showSteps(directionResult, markerArray, stepDisplay, map) {
-  // For each step, place a marker, and add the text to the marker's infowindow.
-  // Also attach the marker to an array so we can keep track of it and remove it
-  // when calculating new routes.
-  var myRoute = directionResult.routes[0].legs[0];
-  for (var i = 0; i < myRoute.steps.length; i++) {
-    var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
-    marker.setMap(map);
-    marker.setPosition(myRoute.steps[i].start_location);
-    attachInstructionText(
-      stepDisplay, marker, myRoute.steps[i].instructions, map);
   }
+  )
 }
 
-function attachInstructionText(stepDisplay, marker, text, map) {
-  google.maps.event.addListener(marker, 'click', function () {
-    // Open an info window when the marker is clicked on, containing the text
-    // of the step.
-    stepDisplay.setContent(text);
-    stepDisplay.open(map, marker);
-  });
-}
+// Sets a listener on a radio button to change the filter type on Places
+// Autocomplete.
+AutocompleteDirectionsHandler.prototype.setupClickListener = function (mode) {
+  var me = this;
+
+  me.travelMode = mode;
+  me.route();
+};
+
+AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
+  place, mode) {
+  var me = this;
+
+  console.log(place);
+
+  if (!place) {
+    alert('Please select an option from the dropdown list.');
+    return;
+  }
+  if (mode === 'ORIG') {
+    me.originPlaceId = place;
+  } else {
+    me.destinationPlaceId = place;
+  }
+  me.route();
+};
+
+AutocompleteDirectionsHandler.prototype.route = function () {
+  if (!this.originPlaceId || !this.destinationPlaceId) {
+    return;
+  }
+  var me = this;
+
+  this.directionsService.route(
+    {
+      origin: { 'placeId': this.originPlaceId },
+      destination: { 'placeId': this.destinationPlaceId },
+      travelMode: this.travelMode
+    },
+    function (response, status) {
+      if (status === 'OK') {
+        me.directionsRenderer.setDirections(response);
+        // console.log(response);
+
+      } else {
+        alert('Directions request failed due to ' + status);
+        // console.log(response, status);
+
+      }
+    });
+};
+
 
 function FinishedStep(props) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const router = useRouter()
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        shareLocation(user.uid,false)
+        setAnchorEl(null);
+        setTimeout(() => router.push('/'), 100)
+      }
+  })
+  }
+
+  function goBack() {
+    setTimeout(() => router.push('/'), 100)
+  }
 
   return (
-    <Map google={props.google}
-      setStyle={{
-        position: "absolute",
-        overflow: "hidden",
-        height: "100%",
-        width: "100%",
-      }}
-      opts={{
-        zoom: 15,
-        center: { lat: -33.8688, lng: 151.2195 },
-        disableDefaultUI: true,
-        styles: [{
-          featureType: 'poi.business',
-          stylers: [{ visibility: 'on' }]
-        },
-        {
-          featureType: 'transit',
-          elementType: 'labels.icon',
-          stylers: [{ visibility: 'off' }]
-        }]
-      }}
-      DrawingOnMap={(google, map) => {
-        initMap(google, map)
-      }}
-    >
-      <div style={{ display: 'block' }}>
-        <div id="mode-selector" className="controls">
-          <p>ต้นทาง: -</p>
-          <br />
-          <p>ปลายทาง: -</p>
-          <br />
-          <p>เวลา: -</p>
-        </div>
-      </div>
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="open drawer">
-            <MenuIcon />
+    <div className={classes.root}>
+      <CssBaseline />
+
+      {/* app-bar */}
+      <AppBar position="static">
+        <Toolbar variant="dense">
+          <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <ArrowBackIosIcon />
           </IconButton>
-          {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}> */}
-            {/* <QuestionAnswerIcon /> */}
-            <Chat />
-          {/* </Fab> */}
+          <Typography variant="h6" color="inherit">
+            Photos
+        </Typography>
           <div className={classes.grow} />
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
-          <IconButton edge="end" color="inherit">
+          <IconButton onClick={handleClick} edge="end" color="inherit">
             <MoreIcon />
           </IconButton>
+
+          {/* menu */}
+          <StyledMenu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <StyledMenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <CloseIcon />
+                </ListItemIcon>
+                <ListItemText primary="ยกเลิก" />
+            </StyledMenuItem>
+          </StyledMenu>
+          {/* end-menu */}
+
         </Toolbar>
       </AppBar>
-    </Map>
+      {/* end-app-bar */}
+
+      {/* map */}
+      <Map google={props.google}
+        setStyle={{
+          position: "absolute",
+          overflow: "hidden",
+          height: "100%",
+          width: "100%",
+        }}
+        opts={{
+          zoom: 15,
+          center: { lat: -33.8688, lng: 151.2195 },
+          disableDefaultUI: true,
+          styles: [{
+            featureType: 'poi.business',
+            stylers: [{ visibility: 'on' }]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }]
+          }]
+        }}
+        DrawingOnMap={(google, map) => {
+          new AutocompleteDirectionsHandler(google, map)
+
+
+          function CustomMarker(latlng, map, args, img) {
+            this.latlng = latlng;
+            this.args = args;
+            this.img = img;
+            this.setMap(map);
+
+            // setMap(map)
+            // setGoogle(google)
+
+          }
+
+          CustomMarker.prototype = new window.google.maps.OverlayView();
+
+          CustomMarker.prototype.onAdd = function () {
+            var self = this;
+            var div = this.div;
+            if (!div) {
+              // Generate marker html
+              div = this.div = document.createElement('div');
+              div.className = 'custom-marker';
+              div.style.position = 'absolute';
+              var innerDiv = document.createElement('div');
+              innerDiv.className = 'custom-marker-inner';
+              innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
+              div.appendChild(innerDiv);
+
+              if (typeof (self.args.marker_id) !== 'undefined') {
+                div.dataset.marker_id = self.args.marker_id;
+              }
+
+              google.maps.event.addDomListener(div, "click", function (event) {
+                google.maps.event.trigger(self, "click");
+              });
+
+              var panes = this.getPanes();
+              panes.overlayImage.appendChild(div);
+            }
+          };
+
+          CustomMarker.prototype.draw = function () {
+            // มี bug icon ไม่เกาะ map
+            if (this.div) {
+              // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
+              let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
+
+              this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
+              // console.log(this.pos);
+              this.div.style.left = this.pos.x + 'px';
+              this.div.style.top = this.pos.y + 'px';
+            }
+          };
+
+          CustomMarker.prototype.getPosition = function () {
+            return this.latlng;
+          };
+
+          firebase.auth().onAuthStateChanged((user) => {
+            firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
+              let stories = (snapshot.val());
+
+              let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+
+              let marker1 = new CustomMarker(
+                myLatlng,
+                map,
+                {},
+                stories.photoURL
+              );
+
+              let pos = {
+                lat: stories.coords.latitude,
+                lng: stories.coords.longitude
+              };
+
+              marker1.latlng = { lat: pos.lat, lng: pos.lng };
+              marker1.draw();
+
+              map.setCenter(pos);
+
+            })
+
+            // join
+            firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
+              let keys = (snapshot.val());
+              if (keys !== null) {
+                keys.map((key) => {
+                  firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let stories = (snapshot.val());
+
+                    let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+
+                    let marker1 = new CustomMarker(
+                      myLatlng,
+                      map,
+                      {},
+                      stories.photoURL
+                    );
+
+                    let pos = {
+                      lat: stories.coords.latitude,
+                      lng: stories.coords.longitude
+                    };
+
+                    marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                    marker1.draw();
+
+                    map.setCenter(pos);
+                  })
+                })
+              }
+            })
+          })
+        }}
+      >
+      </Map>
+      {/* end-map */}
+
+      {/* <Widget
+          handleNewUserMessage={this.handleNewUserMessage}
+          // profileAvatar={logo}
+          title="My new awesome title"
+          subtitle="And my cool subtitle"
+        /> */}
+    </div>
   )
 
 }
