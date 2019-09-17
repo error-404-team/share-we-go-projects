@@ -18,7 +18,15 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   fab: {
-    margin: theme.spacing(1),
+    position: 'absolute',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+  },
+
+  fabtwo: {
+    position: 'absolute',
+        bottom: theme.spacing(11),
+        right: theme.spacing(2),
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
@@ -38,7 +46,7 @@ export default function ContainedButtons() {
       </Button> */}
     
       <div>
-      <Fab color="primary" color="inherit" aria-label="add" className={classes.fab}>
+      <Fab color="inherit" aria-label="add" className={classes.fabtwo}>
           <LocalTaxiIcon />
         </Fab>
       </div>
