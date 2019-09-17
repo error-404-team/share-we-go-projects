@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Router from 'next/router';
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -13,17 +14,23 @@ import Box from '@material-ui/core/Box';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import Button from '@material-ui/core/Button';
 
-import Personalform from "../components/personalInformation";
+// import Personalform from "../components/personalInformation";
 
-import Link from "next/link";
+// import Link from "next/link";
 import firebase from "../lib/firebase";
+import { InputBase } from '@material-ui/core';
+
+import { writeUserDataEdit } from '../firebase-database/write-data'
 
 const useStyles = makeStyles({
-  bigAvatar: {
-    margin: 50,
-    width: 200,
-    height: 200
-  },
+    bigAvatar: {
+        margin: 50,
+        width: 200,
+        height: 200
+    },
+    title: {
+        fontSize: 14,
+    },
 
 });
 
@@ -31,16 +38,100 @@ export default function App() {
 
     const classes = useStyles();
     const [photoURL, setPhotoURL] = useState('https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiTltSo4MDkAhURUI8KHffBDJUQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.onlinewebfonts.com%2Ficon%2F227642&psig=AOvVaw0nPTqj6ZudRIcCKQWYbHEk&ust=1568015831780316');
-
     const [displayName, setDisplayName] = useState('-');
-    
+    const [email, setEmail] = useState('-');
+    const [phoneNumber, setPhoneNumber] = useState('-');
+    const [sex, setSex] = useState('-');
+    const [age, setAge] = useState('-');
+    const [statusEdit, setStatusEdit] = useState(true);
+
+    const displayNameInput = React.useRef(null);
+    const emailInput = React.useRef(null);
+    const phoneNumberInput = React.useRef(null);
+    const sexInput = React.useRef(null);
+    const ageInput = React.useRef(null);
+
+    function displayNameInputUpdate(e) {
+        setDisplayName(e.target.value)
+    }
+
+    function emailNameInputUpdate(e) {
+        setEmail(e.target.value)
+    }
+
+    function phoneNumberInputUpdate(e) {
+        setPhoneNumber(e.target.value)
+    }
+
+    function sexInputUpdate(e) {
+        setSex(e.target.value)
+    }
+
+    function ageInputUpdate(e) {
+        setAge(e.target.value)
+    }
+
+    function goBack() {
+        Router.back()
+    }
+
+    function onEdit() {
+
+        setStatusEdit(false)
+    }
+
+    function onSave() {
+        firebase.auth().onAuthStateChanged((user) => {
+            let data = {
+                uid: user.uid,
+                displayName: displayName,
+                email: email,
+                photoURL: photoURL,
+                phoneNumber: phoneNumber,
+                sex: sex,
+                age: age
+            }
+            writeUserDataEdit(user.uid, data)
+        })
+        setStatusEdit(true)
+    }
+
     firebase.auth().onAuthStateChanged((user) => {
 
         if (user) {
             console.log(user);
-            firebase.database().ref('users/' + user.uid + '/photoURL').on('value', function (photo) {
-                setPhotoURL(photo.val())
-                console.log(photo.val());
+            firebase.database().ref('users/' + user.uid).on('value', function (user) {
+                let data = (user.val())
+                if (data.photoURL !== null) {
+
+                    setPhotoURL(data.photoURL);
+                }
+
+                if (data.displayName !== null) {
+
+                    setDisplayName(data.displayName);
+                }
+
+                if (data.email !== null) {
+
+                    setEmail(data.email);
+                }
+
+                if (data.phoneNumber !== null) {
+
+                    setPhoneNumber(data.phoneNumber);
+                }
+
+                if (data.sex !== null) {
+
+                    setSex(data.sex);
+                }
+
+                if (data.age !== null) {
+
+                    setAge(data.age);
+                }
+                // console.log(photo.val());
 
             })
         }
@@ -49,11 +140,9 @@ export default function App() {
         <React.Fragment>
             <AppBar position="static" >
                 <Toolbar variant="dense" >
-                    <Link href="/private">
-                    <IconButton edge="start" color="inherit" aria-label="menu">
+                    <IconButton onClick={goBack} edge="start" color="inherit" aria-label="menu">
                         <ArrowBackIcon />
                     </IconButton>
-                    </Link>
                     <Typography variant="h6" color="inherit">
                         ข้อมูลผู้ใช้
                      </Typography>
@@ -61,19 +150,32 @@ export default function App() {
 
             </AppBar>
 
-    <Box>
-        <Grid container justify="center" alignItems="center">
-      <Avatar src={photoURL} className={classes.bigAvatar} />
-        </Grid>
-    </Box>
+            <Box>
+                <Grid container justify="center" alignItems="center">
+                    <Avatar src={photoURL} className={classes.bigAvatar} />
+                </Grid>
+            </Box>
+            {statusEdit === true
+                ? (
+                    <IconButton onClick={onEdit}  >
+                        <BorderColorIcon></BorderColorIcon>
+                        <span>แก้ไขข้อมูล</span>
+                    </IconButton >
+                )
+                : (
+                    <Button onClick={onSave}>บันทึก</Button>
+                )
+            }
 
-    <Link href="/editprofileinput">
-        <Button href="#text-buttons" >
-            <BorderColorIcon></BorderColorIcon>แก้ไขข้อมูล
-        </Button>
-     </Link>
 
-    <Personalform></Personalform>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+                <p>ชื่อ: <InputBase ref={displayNameInput} onChange={displayNameInputUpdate} type="text" disabled={statusEdit} value={displayName} /> </p>
+                <p>E-mail: <InputBase ref={emailInput} onChange={emailNameInputUpdate} type="text" disabled={statusEdit} value={email} /></p>
+                <p>เบอร์โทรศัพท์: <InputBase ref={phoneNumberInput} onChange={phoneNumberInputUpdate} type="number" disabled={statusEdit} value={phoneNumber} /></p>
+                <p>เพศ: <InputBase ref={sexInput} onChange={sexInputUpdate} type="text" disabled={statusEdit} value={sex} /></p>
+                <p>อายุ: <InputBase ref={ageInput} onChange={ageInputUpdate} type="number" disabled={statusEdit} value={age} /></p>
+            </Typography>
+            {/* <Personalform></Personalform> */}
 
         </React.Fragment>
 
