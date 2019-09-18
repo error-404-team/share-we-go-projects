@@ -306,6 +306,26 @@ const Private = function (props) {
                                             marker1.draw();
 
                                             map.setCenter(pos);
+
+                                            var contentString = `
+                                            <h1>ข้อมูลการแชร์</h1>
+                                            <p>ต้นทาง: ${stories.host.routes[0].legs[0].start_address}</p>
+                                            <p>ปลายทาง: ${stories.host.routes[0].legs[0].end_address}</p>
+                                            <p>เริ่มการแชร์: ${stories.date_time.start_time}</p>
+                                            <p>ปิดการแชร์: ${stories.date_time.end_time}</p>
+                                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: ${stories.number_of_travel} คน</p>
+                                            <p>ต้องการร่วมเดินทางกับเพศ: ${stories.gender}</p>
+                                            <button>เข้าร่วม</button>
+                                            `;
+            
+                                        var infowindow = new google.maps.InfoWindow({
+                                            content: ""
+                                        });
+            
+                                        marker1.addListener('click', function () {
+                                            infowindow.setContent( contentString)
+                                            infowindow.open(map, marker1);
+                                        });
                                         }
 
                                     })

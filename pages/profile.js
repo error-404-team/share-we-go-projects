@@ -44,7 +44,7 @@ export default function App() {
     const [displayName, setDisplayName] = useState('-');
     const [email, setEmail] = useState('-');
     const [phoneNumber, setPhoneNumber] = useState('-');
-    const [sex, setSex] = useState({ currency: 'null' });
+    const [sex, setSex] = useState('');
     const [age, setAge] = useState('-');
     const [statusEdit, setStatusEdit] = useState(true);
 
@@ -56,7 +56,7 @@ export default function App() {
 
     const currencies = [
         {
-            value: 'null',
+            value: '',
             label: 'ไม่ระบุ',
         },
         {
@@ -142,7 +142,7 @@ export default function App() {
 
                 if (data.sex !== null) {
 
-                    setSex({ currency: data.sex });
+                    setSex(data.sex);
                 }
 
                 if (data.age !== null) {
@@ -189,13 +189,13 @@ export default function App() {
             <Typography className={classes.title} color="textSecondary" gutterBottom>
                 <p>ชื่อ: <InputBase ref={displayNameInput} onChange={displayNameInputUpdate} type="text" disabled={statusEdit} value={displayName} /> </p>
                 <p>E-mail: <InputBase ref={emailInput} onChange={emailNameInputUpdate} type="text" disabled={statusEdit} value={email} /></p>
-                <p>เบอร์โทรศัพท์: <InputBase ref={phoneNumberInput} onChange={phoneNumberInputUpdate} type="number" disabled={statusEdit} value={phoneNumber} /></p>
+                <p>เบอร์โทรศัพท์: <InputBase ref={phoneNumberInput} onChange={phoneNumberInputUpdate} type="text" disabled={statusEdit} value={phoneNumber} /></p>
                 <p>เพศ: <TextField
                     id="outlined-select-currency"
                     select
                     disabled={statusEdit}
-                    value={sex.currency}
-                    onChange={sexInputUpdate('currency')}
+                    value={sex}
+                    onChange={sexInputUpdate}
                     SelectProps={{
                         MenuProps: {
                             className: classes.menu,
@@ -208,7 +208,7 @@ export default function App() {
                         </MenuItem>
                     ))}
                 </TextField></p>
-                <p>อายุ: <InputBase ref={ageInput} onChange={ageInputUpdate} type="number" disabled={statusEdit} value={age} /></p>
+                <p>อายุ: <InputBase ref={ageInput} onChange={ageInputUpdate} type="text" disabled={statusEdit} value={age} /></p>
             </Typography>
             {/* <Personalform></Personalform> */}
 
