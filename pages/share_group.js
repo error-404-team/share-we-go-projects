@@ -18,7 +18,7 @@ import firebase from '../lib/firebase';
 import { shareLocation } from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
-import 'react-chat-widget/lib/styles.css';
+// import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
 require('es6-promise').polyfill();

@@ -82,7 +82,7 @@ export default function App() {
     }
 
     const sexInputUpdate = name => e => {
-        setSex({ ...sex, [name]: event.target.value })
+        setSex({ ...sex, [name]: e.target.value })
     }
 
     function ageInputUpdate(e) {
@@ -106,7 +106,7 @@ export default function App() {
                 displayName: displayName,
                 email: email,
                 photoURL: photoURL,
-                // phoneNumber: phoneNumber,
+                phoneNumber: phoneNumber,
                 sex: sex,
                 age: age
             })
@@ -119,7 +119,7 @@ export default function App() {
         if (user) {
             // console.log(user);
             firebase.database().ref('users/' + user.uid).on('value', function (user) {
-                let data = (user.val())
+                const data = (user.val())
                 if (data.photoURL !== null) {
 
                     setPhotoURL(data.photoURL);
