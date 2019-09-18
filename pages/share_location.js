@@ -30,7 +30,9 @@ import {
     writeCreateGroupShareUserDataDateTime,
     writeCreateGroupShareUserDataNumberOfTravel,
     writeCreateGroupShareUserDataGender,
-    writeCreateGroupShareUserDataHeader
+    writeCreateGroupShareUserDataHeader,
+    writeCreateGroupShareUserDataKeys,
+    shareLocation
 } from '../firebase-database/write-data'
 
 require('es6-promise').polyfill();
@@ -196,6 +198,8 @@ function ShareLocation(props) {
                 firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
                     let users = (snapshot.val());
                     writeCreateGroupShareUserDataHeader(user.uid, users);
+                    shareLocation(user.uid, true)
+                    writeCreateGroupShareUserDataKeys(user.uid)
                 });
             }
         })

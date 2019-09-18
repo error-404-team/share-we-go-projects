@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
+import GroupIcon from '@material-ui/icons/Group';
 import Fab from '@material-ui/core/Fab';
 import HistoryIcon from '@material-ui/icons/History';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -106,6 +107,7 @@ const Private = function (props) {
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState({});
     const [map, setMap] = React.useState({});
+    const [statusShare, setStatusShare] = React.useState(false)
     // const [google, setGoogle] = React.useState({});
     // var starCountRef = firebase.database().ref('users/' + postId + '/starCount');
 
@@ -152,7 +154,7 @@ const Private = function (props) {
             // An error happened.
         });
     }
-   
+
 
     if (latlng == undefined) {
         // แทนค่า ตัวแปล latlng ลงไป
@@ -247,40 +249,108 @@ const Private = function (props) {
                                 throw new Error("Bad response from server");
                             }
                             return response.json();
+                        }).then(function (stories) {
+                            var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+
+                            var marker1 = new CustomMarker(
+                                myLatlng,
+                                map,
+                                {},
+                                stories.photoURL
+                            );
+
+                            var pos = {
+                                lat: stories.coords.latitude,
+                                lng: stories.coords.longitude
+                            };
+
+                            marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                            marker1.draw();
+
+                            map.setCenter(pos);
+
+                            // console.log(stories);
+                        });
+
+                        firebase.auth().onAuthStateChanged((user) => {
+                            if (user) {
+                                firebase.database().ref(`/group_share_user/${user.uid}/share`).once('value').then(function (snapshot) {
+                                    let status = (snapshot.val());
+                                    setStatusShare(status)
+                                })
+                            }
                         })
-                            .then(function (stories) {
-                                var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-                                var marker1 = new CustomMarker(
-                                    myLatlng,
-                                    map,
-                                    {},
-                                    stories.photoURL
-                                );
+                        firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
+                            let keys = (snapshot.val());
+                            if (keys !== null) {
+                                keys.map((key) => {
+                                    firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
+                                        let stories = (snapshot.val());
+                                        if (stories.share === true) {
+                                            let myLatlng = new google.maps.LatLng(stories.header.coords.latitude, stories.header.coords.longitude);
 
-                                var pos = {
-                                    lat: stories.coords.latitude,
-                                    lng: stories.coords.longitude
-                                };
+                                            let marker1 = new CustomMarker(
+                                                myLatlng,
+                                                map,
+                                                {},
+                                                stories.header.photoURL
+                                            );
 
-                                marker1.latlng = { lat: pos.lat, lng: pos.lng };
-                                marker1.draw();
+                                            let pos = {
+                                                lat: stories.header.coords.latitude,
+                                                lng: stories.header.coords.longitude
+                                            };
 
-                                map.setCenter(pos);
+                                            marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                                            marker1.draw();
 
-                                // console.log(stories);
-                            });
+                                            map.setCenter(pos);
+
+                                            var contentString = `
+                                            <h1>ข้อมูลการแชร์</h1>
+                                            <p>ต้นทาง: ${stories.host.routes[0].legs[0].start_address}</p>
+                                            <p>ปลายทาง: ${stories.host.routes[0].legs[0].end_address}</p>
+                                            <p>เริ่มการแชร์: ${stories.date_time.start_time}</p>
+                                            <p>ปิดการแชร์: ${stories.date_time.end_time}</p>
+                                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: ${stories.number_of_travel} คน</p>
+                                            <p>ต้องการร่วมเดินทางกับเพศ: ${stories.gender}</p>
+                                            <button>เข้าร่วม</button>
+                                            `;
+            
+                                        var infowindow = new google.maps.InfoWindow({
+                                            content: ""
+                                        });
+            
+                                        marker1.addListener('click', function () {
+                                            infowindow.setContent( contentString)
+                                            infowindow.open(map, marker1);
+                                        });
+                                        }
+
+                                    })
+                                })
+                            }
+                        })
 
                     }}
                 >
                     <SearchBar >
                         <SearchMap onClick={handleDrawerOpen} map={map} {...props} />
                     </SearchBar>
-                    <Link href="/share_location" >
-                        <Fab color="primary" aria-label="add" className={classes.fab}>
-                            <AddIcon />
-                        </Fab>
-                    </Link>
+                    {statusShare === true
+                        ? (<Link href="/share_group" >
+                            <Fab color="primary" aria-label="add" className={classes.fab}>
+                                <GroupIcon />
+                            </Fab>
+                        </Link>)
+                        : (<Link href="/share_location" >
+                            <Fab color="primary" aria-label="add" className={classes.fab}>
+                                <AddIcon />
+                            </Fab>
+                        </Link>)
+                    }
+
                 </Map>
             </div>
             <Drawer
