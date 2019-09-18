@@ -126,3 +126,7 @@ export function joinGroupShare(hid, uid, data) {
     firebase.database().ref(`group_share_user/${hid}/join/user/${uid}`).set(data);
     firebase.database().ref(`group_share_user/${hid}/join/keys`).set([uid])
 }
+
+export function writeHistory(uid,data) {
+    firebase.database().ref(`history/${uid}`).push(data)
+}
