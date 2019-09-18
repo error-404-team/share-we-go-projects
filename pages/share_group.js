@@ -1,5 +1,5 @@
 import React from 'react';
-import Router,{ useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,10 +15,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
-import { shareLocation } from '../firebase-database/write-data'
+import { shareLocation, writeHistory } from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
-import 'react-chat-widget/lib/styles.css';
+// import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
 require('es6-promise').polyfill();
@@ -167,11 +167,16 @@ function FinishedStep(props) {
   function handleClose() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        shareLocation(user.uid,false)
+        firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+          let data = (snapshot.val());
+          writeHistory(user.uid, data)
+        })
+
+        shareLocation(user.uid, false)
         setAnchorEl(null);
         setTimeout(() => router.push('/'), 100)
       }
-  })
+    })
   }
 
   function goBack() {
@@ -205,10 +210,10 @@ function FinishedStep(props) {
             onClose={handleClose}
           >
             <StyledMenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <CloseIcon />
-                </ListItemIcon>
-                <ListItemText primary="ยกเลิก" />
+              <ListItemIcon>
+                <CloseIcon />
+              </ListItemIcon>
+              <ListItemText primary="ยกเลิก" />
             </StyledMenuItem>
           </StyledMenu>
           {/* end-menu */}
