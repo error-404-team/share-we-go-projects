@@ -59,10 +59,14 @@ export default function CustomDateTimePicker() {
 
   function handleDateChange(date) {
     setSelectedDate(date);
+    console.log(date);
+    var d = new Date();
 
+    const days = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
+    const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม ", "เมษายน", "พฤษภาคม ", "มิถุนายน ", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]
     const timer = {
-      start_time: new Date(),
-      end_time: date
+      start_time: `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`,
+      end_time: `${days[date.getDay()]} ${date.getDate()} ${months[d.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
     }
 
     socket.emit('boarding_time', timer)
@@ -80,7 +84,7 @@ export default function CustomDateTimePicker() {
               // label="Keyboard with error handler"
               onError={console.log}
               minDate={new Date()}
-              format="yyyy/MM/dd hh:mm a"
+              format="dd/MM/yyyy hh:mm a"
               ampm={false}
 
             />
