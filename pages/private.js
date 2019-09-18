@@ -307,19 +307,30 @@ const Private = function (props) {
 
                                             map.setCenter(pos);
 
-                                            var contentString = `
-                                            <h1>ข้อมูลการแชร์</h1>
-                                            <p>ต้นทาง: ${stories.host.routes[0].legs[0].start_address}</p>
-                                            <p>ปลายทาง: ${stories.host.routes[0].legs[0].end_address}</p>
-                                            <p>เริ่มการแชร์: ${stories.date_time.start_time}</p>
-                                            <p>ปิดการแชร์: ${stories.date_time.end_time}</p>
-                                            <p>ต้องการผู้ร่วมเดินทางเพิ่ม: ${stories.number_of_travel} คน</p>
-                                            <p>ต้องการร่วมเดินทางกับเพศ: ${stories.gender}</p>
-                                            <button>เข้าร่วม</button>
-                                            `;
+                                            var contentString =
+                                            '<center>'+
+                                            '<h2>ข้อมูลการแชร์</h2>'+
+                                            '</center>'+
+                                            '<hr></hr>'+
+                                            '<u style="font-size: 15px">ต้นทาง:</u></<u><b>' +  stories.host.routes[0].legs[0].start_address+'</b>'+
+                                            '<br></br>'+
+                                            '<u style="font-size: 15px">ปลายทาง:</u></<u><b> '+stories.host.routes[0].legs[0].end_address+'</b>'+
+                                            '<br></br>'+
+                                            '<u style="font-size: 15px">เริ่มแชร์เมื่อ:</u></<u><b>'+stories.date_time.start_time+'</b>'+
+                                            '<br></br>'+
+                                            '<u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>'+stories.date_time.end_time+'</b>'+
+                                            '<br></br>'+
+                                            '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>'+stories.number_of_travel+' คน </b>'+
+                                            '<br></br>'+
+                                            '<u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b>'+stories.gender+'</b>'+
+                                            '<hr></hr>'+
+                                            '<center><button style="background-color: lime; font-size: 17px">เข้าร่วม</button></center>'
+                                            
+                                            ;
             
                                         var infowindow = new google.maps.InfoWindow({
-                                            content: ""
+                                            content: "",
+                                            maxWidth: 500
                                         });
             
                                         marker1.addListener('click', function () {
