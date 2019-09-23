@@ -25,194 +25,200 @@ import { InputBase } from '@material-ui/core';
 
 import { writeUserDataEdit } from '../firebase-database/write-data'
 
-const useStyles = makeStyles({
-    bigAvatar: {
-        margin: 50,
-        width: 200,
-        height: 200
-    },
-    title: {
-        fontSize: 14,
-    },
 
-});
+export default class Profile extends React.Component {
 
-export default function App() {
+    constructor(props) {
+        super(props)
 
-    const classes = useStyles();
-    const [photoURL, setPhotoURL] = useState('https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiTltSo4MDkAhURUI8KHffBDJUQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.onlinewebfonts.com%2Ficon%2F227642&psig=AOvVaw0nPTqj6ZudRIcCKQWYbHEk&ust=1568015831780316');
-    const [displayName, setDisplayName] = useState('-');
-    const [email, setEmail] = useState('-');
-    const [phoneNumber, setPhoneNumber] = useState('-');
-    const [sex, setSex] = useState('');
-    const [age, setAge] = useState('-');
-    const [statusEdit, setStatusEdit] = useState(true);
-
-    const displayNameInput = React.useRef(null);
-    const emailInput = React.useRef(null);
-    const phoneNumberInput = React.useRef(null);
-    const sexInput = React.useRef(null);
-    const ageInput = React.useRef(null);
-
-    const currencies = [
-        {
-            value: '',
-            label: 'ไม่ระบุ',
-        },
-        {
-            value: 'man',
-            label: 'Man',
-        },
-        {
-            value: 'women',
-            label: 'Women',
+        this.state = {
+            photoURL: 'https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiTltSo4MDkAhURUI8KHffBDJUQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.onlinewebfonts.com%2Ficon%2F227642&psig=AOvVaw0nPTqj6ZudRIcCKQWYbHEk&ust=1568015831780316',
+            displayName: '-',
+            email: '-',
+            phoneNumber: '-',
+            sex: '',
+            age: '-',
+            statusEdit: true,
+            currencies: [
+                {
+                    value: '',
+                    label: 'ไม่ระบุ',
+                },
+                {
+                    value: 'man',
+                    label: 'Man',
+                },
+                {
+                    value: 'women',
+                    label: 'Women',
+                }
+            ]
         }
-    ];
 
-    function displayNameInputUpdate(e) {
-        setDisplayName(e.target.value)
+        this.displayNameInput = React.createRef()
+        this.emailInput = React.createRef()
+        this.sexInput = React.createRef()
+        this.ageInput = React.createRef()
     }
 
-    function emailNameInputUpdate(e) {
-        setEmail(e.target.value)
+
+    displayNameInputUpdate(e) {
+        this.setState({ displayName: e.target.value })
     }
 
-    function phoneNumberInputUpdate(e) {
-        setPhoneNumber(e.target.value)
+    emailNameInputUpdate(e) {
+        this.setState({ email: e.target.value })
     }
 
-    const sexInputUpdate = name => e => {
-        setSex({ ...sex, [name]: e.target.value })
+    phoneNumberInputUpdate(e) {
+        this.setState({ phoneNumber: e.target.value })
     }
 
-    function ageInputUpdate(e) {
-        setAge(e.target.value)
+    sexInputUpdate = (e) => {
+        this.setState({ sex: e.target.value })
     }
 
-    function goBack() {
+    ageInputUpdate(e) {
+        this.setState({ age: e.target.value })
+    }
+
+    goBack() {
         Router.back()
     }
 
-    function onEdit() {
+    onEdit() {
 
-        setStatusEdit(false)
+        this.setState({ statusEdit: false })
     }
 
 
-    function onSave() {
+    onSave() {
+        let data = {
+            displayName: this.state.displayName,
+            email: this.state.email,
+            photoURL: this.state.photoURL,
+            phoneNumber: this.state.phoneNumber,
+            sex: this.state.sex,
+            age: this.state.age
+        }
+
         firebase.auth().onAuthStateChanged((user) => {
 
-            writeUserDataEdit(user.uid, {
-                displayName: displayName,
-                email: email,
-                photoURL: photoURL,
-                phoneNumber: phoneNumber,
-                sex: sex,
-                age: age
-            })
+            writeUserDataEdit(user.uid, data)
         })
-        setStatusEdit(true)
+        this.setState({ statusEdit: true })
     }
 
-    firebase.auth().onAuthStateChanged((user) => {
+    componentDidMount() {
+        const me = this;
+        firebase.auth().onAuthStateChanged((user) => {
 
-        if (user) {
-            // console.log(user);
-            firebase.database().ref('users/' + user.uid).on('value', function (user) {
-                const data = (user.val())
-                if (data.photoURL !== null) {
+            if (user) {
+                // console.log(user);
+                firebase.database().ref('users/' + user.uid).on('value', function (user) {
+                    const data = (user.val())
+                    if (data.photoURL !== null) {
 
-                    setPhotoURL(data.photoURL);
-                }
+                        me.setState({ photoURL: data.photoURL });
+                    }
 
-                if (data.displayName !== null) {
+                    if (data.displayName !== null) {
 
-                    setDisplayName(data.displayName);
-                }
+                        me.setState({ displayName: data.displayName });
+                    }
 
-                if (data.email !== null) {
+                    if (data.email !== null) {
 
-                    setEmail(data.email);
-                }
+                        me.setState({ email: data.email });
+                    }
 
-                if (data.phoneNumber !== null) {
+                    if (data.phoneNumber !== null) {
 
-                    setPhoneNumber(data.phoneNumber);
-                }
+                        me.setState({ phoneNumber: data.phoneNumber });
+                    }
 
-                if (data.sex !== null) {
+                    if (data.sex !== null) {
 
-                    setSex(data.sex);
-                }
+                        me.setState({ sex: data.sex });
+                    }
 
-                if (data.age !== null) {
+                    if (data.age !== null) {
 
-                    setAge(data.age);
-                }
-                // console.log(photo.val());
+                        me.setState({ age: data.age });
+                    }
+                    // console.log(photo.val());
 
-            })
-        }
-    })
-    return (
-        <React.Fragment>
-            <AppBar position="static" >
-                <Toolbar variant="dense" >
-                    <IconButton onClick={goBack} edge="start" color="inherit" aria-label="menu">
-                        <ArrowBackIcon />
-                    </IconButton>
-                    <Typography variant="h6" color="inherit">
-                        ข้อมูลผู้ใช้
-                     </Typography>
-                </Toolbar>
-
-            </AppBar>
-
-            <Box>
-                <Grid container justify="center" alignItems="center">
-                    <Avatar src={photoURL} className={classes.bigAvatar} />
-                </Grid>
-            </Box>
-            {statusEdit === true
-                ? (
-                    <IconButton onClick={onEdit}  >
-                        <BorderColorIcon></BorderColorIcon>
-                        <span>แก้ไขข้อมูล</span>
-                    </IconButton >
-                )
-                : (
-                    <Button onClick={onSave}>บันทึก</Button>
-                )
+                })
             }
+        })
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <AppBar position="static" >
+                    <Toolbar variant="dense" >
+                        <IconButton onClick={this.goBack.bind(this)} edge="start" color="inherit" aria-label="menu">
+                            <ArrowBackIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit">
+                            ข้อมูลผู้ใช้
+                     </Typography>
+                    </Toolbar>
+
+                </AppBar>
+
+                <Box>
+                    <Grid container justify="center" alignItems="center">
+                        <Avatar src={this.state.photoURL}
+                            style={{
+                                margin: 50,
+                                width: 200,
+                                height: 200
+                            }} />
+                    </Grid>
+                </Box>
+                {this.state.statusEdit === true
+                    ? (
+                        <IconButton onClick={this.onEdit.bind(this)}  >
+                            <BorderColorIcon></BorderColorIcon>
+                            <span>แก้ไขข้อมูล</span>
+                        </IconButton >
+                    )
+                    : (
+                        <Button onClick={this.onSave.bind(this)}>บันทึก</Button>
+                    )
+                }
 
 
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                <p>ชื่อ: <InputBase ref={displayNameInput} onChange={displayNameInputUpdate} type="text" disabled={statusEdit} value={displayName} /> </p>
-                <p>E-mail: <InputBase ref={emailInput} onChange={emailNameInputUpdate} type="text" disabled={statusEdit} value={email} /></p>
-                <p>เบอร์โทรศัพท์: <InputBase ref={phoneNumberInput} onChange={phoneNumberInputUpdate} type="text" disabled={statusEdit} value={phoneNumber} /></p>
-                <p>เพศ: <TextField
-                    id="outlined-select-currency"
-                    select
-                    disabled={statusEdit}
-                    value={sex}
-                    onChange={sexInputUpdate}
-                    SelectProps={{
-                        MenuProps: {
-                            className: classes.menu,
-                        },
-                    }}
-                >
-                    {currencies.map(option => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField></p>
-                <p>อายุ: <InputBase ref={ageInput} onChange={ageInputUpdate} type="text" disabled={statusEdit} value={age} /></p>
-            </Typography>
-            {/* <Personalform></Personalform> */}
+                <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
+                    <p>ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </p>
+                    <p>E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></p>
+                    <p>เบอร์โทรศัพท์: <InputBase ref={this.phoneNumberInput} onChange={this.phoneNumberInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.phoneNumber} /></p>
+                    <p>เพศ: <TextField
+                        id="outlined-select-currency"
+                        select
+                        disabled={this.state.statusEdit}
+                        value={this.state.sex}
+                        onChange={this.sexInputUpdate.bind(this)}
+                        SelectProps={{
+                            MenuProps: {
+                                // className: classes.menu,
+                            },
+                        }}
+                    >
+                        {this.state.currencies.map(option => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField></p>
+                    <p>อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></p>
+                </Typography>
+                {/* <Personalform></Personalform> */}
 
-        </React.Fragment>
+            </React.Fragment>
 
-    );
+        );
+    }
 }
