@@ -342,8 +342,9 @@ function FinishedStep(props) {
               let hid = (snapshot.val());
               firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
                 let keysJoin = (snapshot.val());
+                console.log(Object.keys(keysJoin).length);
 
-                keysJoin.map((key) => {
+                Object.keys(keysJoin).map((key) => {
                   firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
                     let dataJoin = (snapshot.val());
                     let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);

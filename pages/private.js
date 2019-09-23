@@ -295,7 +295,7 @@ const Private = function (props) {
                         firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
                             let keys = (snapshot.val());
                             if (keys !== null) {
-                                keys.map((key) => {
+                                Object.keys(keys).map((key) => {
                                     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
                                         let stories = (snapshot.val());
                                         if (stories.share === true) {
@@ -331,7 +331,7 @@ const Private = function (props) {
                                                 '<br></br>' +
                                                 '<u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>' + stories.date_time.end_time + '</b>' +
                                                 '<br></br>' +
-                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>' + stories.number_of_travel + ' คน </b>' +
+                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>'+ Object.keys(stories.join.keys).length +'/'+ stories.number_of_travel + ' คน </b>' +
                                                 '<br></br>' +
                                                 '<u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b>' + stories.gender + '</b>' +
                                                 '<hr></hr>' +

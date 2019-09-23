@@ -119,7 +119,7 @@ export function writeCreateGroupShareUserDataHeaderAndWay(uid, data) {
 }
 
 export function writeCreateGroupShareUserDataKeys(uid) {
-    firebase.database().ref(`group_share_user/keys`).set([uid])
+    firebase.database().ref(`group_share_user/keys/${uid}`).set(uid)
 }
 
 export function shareLocation(uid, data) {
@@ -128,7 +128,8 @@ export function shareLocation(uid, data) {
 
 export function joinGroupShare(hid, uid, data) {
     firebase.database().ref(`group_share_user/${hid}/join/user/${uid}`).set(data);
-    firebase.database().ref(`group_share_user/${hid}/join/keys`).set([uid])
+    
+    firebase.database().ref(`group_share_user/${hid}/join/keys/${uid}`).set(uid)
 }
 
 export function writeHistory(uid, data) {
