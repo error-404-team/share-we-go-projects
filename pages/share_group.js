@@ -166,6 +166,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 function FinishedStep(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [joinUser, setJoinUser] = React.useState({})
   const router = useRouter()
 
   function handleClick(event) {
@@ -190,6 +191,9 @@ function FinishedStep(props) {
   function goBack() {
     setTimeout(() => router.push('/'), 100)
   }
+
+  console.log(joinUser);
+
 
   return (
     <div className={classes.root}>
@@ -347,8 +351,8 @@ function FinishedStep(props) {
                 Object.keys(keysJoin).map((key) => {
                   firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
                     let dataJoin = (snapshot.val());
+                    setJoinUser([dataJoin])
                     let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
-
                     let marker1 = new CustomMarker(
                       myLatlng,
                       map,
@@ -374,13 +378,7 @@ function FinishedStep(props) {
       >
       </Map>
       {/* end-map */}
-
-      {/* <Widget
-          handleNewUserMessage={this.handleNewUserMessage}
-          // profileAvatar={logo}
-          title="My new awesome title"
-          subtitle="And my cool subtitle"
-        /> */}
+    
     </div>
   )
 

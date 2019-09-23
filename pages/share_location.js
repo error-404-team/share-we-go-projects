@@ -406,43 +406,37 @@ function ShareLocation(props) {
             <div>
                 {allStepsCompleted() ? (
                     <div>
-                        <center style={{
-                            // marginTop: "0%"
-                        }}>
-                            
-                            <body bgcolor= "99FF99" shadow="5">
-                            <h2>แชร์เส้นทางเสร็จสิ้น <CheckCircleIcon></CheckCircleIcon></h2>
-                            
-                            <hr></hr>
-                            </body>
-                            
-                            
+                        <center>
+                            <div bgcolor="99FF99" shadow="5">
+                                <h2>แชร์เส้นทางเสร็จสิ้น <CheckCircleIcon></CheckCircleIcon></h2>
+                                <hr />
+                            </div>
                         </center>
-                        <br></br>
-                        <body bgcolor= "#DCDCDC">
+                        <br/>
+                        <div bgcolor="#DCDCDC">
                             <center>
-                            <hr border="5" shadow="5"></hr>
+                                <hr border="5" shadow="5"/>
 
-                            <body>
                                 <div>
-                            <h2><CommuteIcon align></CommuteIcon> ต้นทาง - ปลายทาง</h2>
+                                    <div>
+                                        <h2><CommuteIcon align></CommuteIcon> ต้นทาง - ปลายทาง</h2>
+                                    </div>
+                                    <b>ต้นทาง:</b> {routes.start_address}
+                                    <br/>
+                                    <b>ปลายทาง:</b> {routes.end_address}
+                                    <br/>
+                                    <h2><RecentActorsIcon></RecentActorsIcon> ข้อมูลการแชร์</h2>
+                                    <b>เริ่มการแชร์:</b> {boardingTime.start_time}
+                                    <br/>
+                                    <b>ปิดการแชร์:</b> {boardingTime.end_time}
+                                    <br/>
+                                    <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
+                                    <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
+                                    <hr border="5" shadow="5"/>
                                 </div>
-                            <b>ต้นทาง:</b> {routes.start_address}
-                            <br></br>
-                            <b>ปลายทาง:</b> {routes.end_address}
-                            <br></br>
-                             <h2><RecentActorsIcon></RecentActorsIcon> ข้อมูลการแชร์</h2>
-                            <b>เริ่มการแชร์:</b> {boardingTime.start_time}
-                            <br></br>
-                            <b>ปิดการแชร์:</b> {boardingTime.end_time}
-                            <br></br>
-                            <b>ต้องการผู้ร่วมเดินทางเพิ่ม:</b> {numberOfTravel} คน
-                            <b>ต้องการร่วมเดินทางกับเพศ: {gender}</b>
-                            <hr border="5" shadow="5"></hr>
-                            </body>
                             </center>
-                        </body>
-                        
+                        </div>
+
                         <div style={{
                             position: "fixed",
                             bottom: '25px',
