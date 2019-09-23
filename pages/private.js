@@ -24,7 +24,13 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import SearchMap from '../components/SearchMap';
 import SearchBar from '../components/SearchBar';
-import { writeUserDataLogin, writeUserDataLocation, joinGroupShare } from '../firebase-database/write-data';
+import { 
+    writeUserDataLogin, 
+    writeUserDataLocation, 
+    joinGroupShare,
+    writeCreateGroupShareUserDataHeader,
+    writeCreateGroupShareUserDataHeaderAndWay
+ } from '../firebase-database/write-data';
 import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
@@ -339,11 +345,6 @@ const Private = function (props) {
                                                 maxWidth: 500
                                             });
 
-                                            function modifyText() {
-                                                console.log(1);
-
-                                            }
-
                                             marker1.addListener('click', function () {
                                                 infowindow.setContent(contentString)
                                                 infowindow.open(map, marker1);
@@ -352,13 +353,26 @@ const Private = function (props) {
                                             $(document).on('click', '#join-share', function () {
                                                 firebase.auth().onAuthStateChanged((user) => {
                                                     if (user) {
+                                                        firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
+                                                            let dataHeader = (snapshot.val());
+                                                            writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
+
+                                                            firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
+                                                                let dataHeaderAndWay = (snapshot.val());
+                                                                writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                            });
+                                                          
+                                                        });
+
                                                         firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
                                                             let dataJ = (snapshot.val());
                                                             joinGroupShare(key, user.uid, dataJ)
-                                                            // setTimeout(() => router.push('/share_group/'+key+''), 100)
-                                                        })
+                                                            setTimeout(() => router.push('/share_group/'), 100)
+                                                        });
+
                                                     }
                                                 })
+                                               
                                             });
                                         }
 

@@ -92,9 +92,17 @@ function AutocompleteDirectionsHandler(google, map) {
       firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
         var data = (snapshot.val());
 
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
-        me.setupClickListener(data.host.request.travelMode);
+        if (data.share === true) {
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.host.request.travelMode);
+
+        } else {
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.header.host.request.travelMode);
+        }
+
 
       })
     }
@@ -330,25 +338,26 @@ function FinishedStep(props) {
             })
 
             // join
-            firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
-              let keys = (snapshot.val());
-              if (keys !== null) {
-                keys.map((key) => {
-                  firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
-                    let stories = (snapshot.val());
+            firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
+              let hid = (snapshot.val());
+              firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
+                let keysJoin = (snapshot.val());
 
-                    let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+                keysJoin.map((key) => {
+                  firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let dataJoin = (snapshot.val());
+                    let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
 
                     let marker1 = new CustomMarker(
                       myLatlng,
                       map,
                       {},
-                      stories.photoURL
+                      dataJoin.photoURL
                     );
 
                     let pos = {
-                      lat: stories.coords.latitude,
-                      lng: stories.coords.longitude
+                      lat: dataJoin.coords.latitude,
+                      lng: dataJoin.coords.longitude
                     };
 
                     marker1.latlng = { lat: pos.lat, lng: pos.lng };
@@ -357,7 +366,7 @@ function FinishedStep(props) {
                     map.setCenter(pos);
                   })
                 })
-              }
+              })
             })
           })
         }}
