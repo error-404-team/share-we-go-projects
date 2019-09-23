@@ -24,13 +24,13 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import SearchMap from '../components/SearchMap';
 import SearchBar from '../components/SearchBar';
-import { 
-    writeUserDataLogin, 
-    writeUserDataLocation, 
+import {
+    writeUserDataLogin,
+    writeUserDataLocation,
     joinGroupShare,
     writeCreateGroupShareUserDataHeader,
     writeCreateGroupShareUserDataHeaderAndWay
- } from '../firebase-database/write-data';
+} from '../firebase-database/write-data';
 import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
@@ -331,7 +331,7 @@ const Private = function (props) {
                                                 '<br></br>' +
                                                 '<u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>' + stories.date_time.end_time + '</b>' +
                                                 '<br></br>' +
-                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>'+ Object.keys(stories.join.keys).length +'/'+ stories.number_of_travel + ' คน </b>' +
+                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>' + Object.keys(stories.join.keys).length + '/' + stories.number_of_travel + ' คน </b>' +
                                                 '<br></br>' +
                                                 '<u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b>' + stories.gender + '</b>' +
                                                 '<hr></hr>' +
@@ -351,28 +351,41 @@ const Private = function (props) {
                                             });
 
                                             $(document).on('click', '#join-share', function () {
-                                                firebase.auth().onAuthStateChanged((user) => {
-                                                    if (user) {
-                                                        firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
-                                                            let dataHeader = (snapshot.val());
-                                                            writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
+                                                if (Object.keys(stories.join.keys).length >= stories.number_of_travel) {
+                                                    firebase.auth().onAuthStateChanged((user) => {
+                                                        Object.keys(stories.join.keys).map((key) => {
+                                                            if (user.uid == key) {
+                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                            } else {
+                                                                alert('จำนวนผู้เข้าร่วมเต็ม')
+                                                            }
+                                                        })
+                                                    })
 
-                                                            firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
-                                                                let dataHeaderAndWay = (snapshot.val());
-                                                                writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                } else {
+                                                    firebase.auth().onAuthStateChanged((user) => {
+                                                        if (user) {
+                                                            firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
+                                                                let dataHeader = (snapshot.val());
+                                                                writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
+
+                                                                firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
+                                                                    let dataHeaderAndWay = (snapshot.val());
+                                                                    writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                                });
+
                                                             });
-                                                          
-                                                        });
 
-                                                        firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
-                                                            let dataJ = (snapshot.val());
-                                                            joinGroupShare(key, user.uid, dataJ)
-                                                            setTimeout(() => router.push('/share_group/'), 100)
-                                                        });
+                                                            firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                                                                let dataJ = (snapshot.val());
+                                                                joinGroupShare(key, user.uid, dataJ)
+                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                            });
 
-                                                    }
-                                                })
-                                               
+                                                        }
+                                                    })
+                                                }
+
                                             });
                                         }
 
