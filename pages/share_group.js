@@ -4,10 +4,12 @@ import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +18,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
 import { shareLocation, writeHistory } from '../firebase-database/write-data'
+
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
 // import 'react-chat-widget/lib/styles.css';
@@ -165,6 +168,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function FinishedStep(props) {
   const classes = useStyles();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [joinUser, setJoinUser] = React.useState({})
   const router = useRouter()
@@ -192,8 +196,6 @@ function FinishedStep(props) {
     setTimeout(() => router.push('/'), 100)
   }
 
-  console.log(joinUser);
-
 
   return (
     <div className={classes.root}>
@@ -206,7 +208,7 @@ function FinishedStep(props) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            กลุ่มเเชร์ 
         </Typography>
           <div className={classes.grow} />
           <IconButton onClick={handleClick} edge="end" color="inherit">
@@ -229,6 +231,7 @@ function FinishedStep(props) {
             </StyledMenuItem>
           </StyledMenu>
           {/* end-menu */}
+
 
         </Toolbar>
       </AppBar>
@@ -376,6 +379,7 @@ function FinishedStep(props) {
           })
         }}
       >
+
       </Map>
       {/* end-map */}
     
