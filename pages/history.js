@@ -19,80 +19,75 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import WcIcon from '@material-ui/icons/Wc';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-}));
 
 
+export default class ControlledExpansionPanels extends React.Component {
 
-export default function ControlledExpansionPanels() {
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  const [keys, setKeys] = React.useState([]);
-  const [history, setHistory] = React.useState([]);
-
-
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  function goBack() {
-    Router.back();
+  state = {
+    keys: [],
+    history: {},
+    expanded: false
   }
 
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      firebase.database().ref(`/history/${user.uid}`).once('value').then(function (snapshot) {
-        let data = (snapshot.val());
-        let keys = Object.keys(snapshot.val());
-        // let keys = snapshot.key;
-        // console.log(data[dataKeys[0]].share);
-        setHistory(data)
-        setKeys(keys)
+  handleChange = panel => (event, isExpanded) => {
+    this.setState({ expanded: isExpanded ? panel : false });
+  };
+
+  goBack() {
+    Router.back();
+  }
+
+  componentDidMount() {
+    const me = this;
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase.database().ref(`/history/${user.uid}`).once('value').then(function (snapshot) {
+          let data = (snapshot.val());
+          let keys = Object.keys(snapshot.val());
+          // let keys = snapshot.key;
+          // console.log(data[dataKeys[0]].share);
+          me.setState({
+            keys: keys,
+            history: data,
+          })
+
+        })
+      }
+    })
+
+  }
+
+  render() {
 
 
+    return (
+      <React.Fragment>
+        <CssBaseline />
 
-      })
-    }
-  })
-
-
-  return (
-    <React.Fragment>
-      <CssBaseline />
-
-      {/* app-bar */}
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit">ประวัติการเดินทาง</Typography>
-        </Toolbar>
-      </AppBar>
-      {/* end-app-bar */}
-      <div className={classes.root}>
-        {keys.map((key) =>
-          <ExpansionPanel expanded={expanded === key} onChange={handleChange(`${key}`)}>
+        {/* app-bar */}
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <IconButton onClick={this.goBack.bind(this)} edge="start" color="inherit" aria-label="menu">
+              <ArrowBackIosIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit">ประวัติการเดินทาง</Typography>
+          </Toolbar>
+        </AppBar>
+        {/* end-app-bar */}
+        <div style={{ width: '100%' }}>
+          {this.state.keys.map((key) =>
+          <ExpansionPanel expanded={this.state.expanded === key} onChange={this.handleChange(`${key}`)}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
-              <Typography className={classes.heading}>เวลา: </Typography>
-              <Typography className={classes.secondaryHeading}>{history[key].date_time.start_time}</Typography>
+              <Typography style={{
+                 flexBasis: '33.33%',
+                 flexShrink: 0,
+              }}>เวลา: </Typography>
+              <Typography >{this.state.history[key].date_time.start_time}</Typography>
             </ExpansionPanelSummary>
             <body>
               
@@ -100,22 +95,22 @@ export default function ControlledExpansionPanels() {
             <h4 body bgcolor="#607B8B">     <CommuteIcon></CommuteIcon>    ต้นทาง - ปลายทาง</h4>
               <hr></hr>
             </center>
-              <b font color="607B8B"><u>ต้นทาง:</u></b> {history[key].host.routes[0].legs[0].start_address}
+              <b font color="607B8B"><u>ต้นทาง:</u></b> {this.state.history[key].host.routes[0].legs[0].start_address}
               <br></br>
-              <b><u>ปลายทาง:</u></b> {history[key].host.routes[0].legs[0].end_address}
+              <b><u>ปลายทาง:</u></b> {this.state.history[key].host.routes[0].legs[0].end_address}
               <center>
               <h4>  <AccessTimeIcon></AccessTimeIcon>  เริ่มการแชร์ - ปิดการแชร์</h4>
               
               <hr border="5" shadow="5"></hr>
-              <b><u>เริ่มการแชร์:</u></b> {history[key].date_time.start_time}
+              <b><u>เริ่มการแชร์:</u></b> {this.state.history[key].date_time.start_time}
               <br></br>
-              <b><u>ปิดการแชร์:</u></b> {history[key].date_time.end_time}
+              <b><u>ปิดการแชร์:</u></b> {this.state.history[key].date_time.end_time}
               <br></br>
               <h4>     <WcIcon></WcIcon>    ผู้ร่วมเดินทาง - เพศผู้ร่วมเดินทาง</h4>
               <hr></hr>
-              <b><u>ต้องการผู้ร่วมเดินทางเพิ่ม:</u> </b> {history[key].number_of_travel} คน
+              <b><u>ต้องการผู้ร่วมเดินทางเพิ่ม:</u> </b> {this.state.history[key].number_of_travel} คน
               <br></br>
-              <b><u>    ต้องการร่วมเดินทางกับเพศ:</u> </b> {history[key].gender}
+              <b><u>    ต้องการร่วมเดินทางกับเพศ:</u> </b> {this.state.history[key].gender}
               </center>
               <br></br>
               <br></br>
@@ -124,7 +119,8 @@ export default function ControlledExpansionPanels() {
             </body>
           </ExpansionPanel>
         )}
-      </div>
-    </React.Fragment>
-  );
+        </div>
+      </React.Fragment>
+    );
+  }
 }

@@ -170,6 +170,7 @@ function FinishedStep(props) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [joinUser, setJoinUser] = React.useState({})
   const router = useRouter()
 
   function handleClick(event) {
@@ -348,12 +349,13 @@ function FinishedStep(props) {
               let hid = (snapshot.val());
               firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
                 let keysJoin = (snapshot.val());
+                console.log(Object.keys(keysJoin).length);
 
-                keysJoin.map((key) => {
+                Object.keys(keysJoin).map((key) => {
                   firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
                     let dataJoin = (snapshot.val());
+                    setJoinUser([dataJoin])
                     let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
-
                     let marker1 = new CustomMarker(
                       myLatlng,
                       map,
@@ -380,13 +382,7 @@ function FinishedStep(props) {
 
       </Map>
       {/* end-map */}
-
-      {/* <Widget
-          handleNewUserMessage={this.handleNewUserMessage}
-          // profileAvatar={logo}
-          title="My new awesome title"
-          subtitle="And my cool subtitle"
-        /> */}
+    
     </div>
   )
 
