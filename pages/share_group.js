@@ -1,13 +1,15 @@
 import React from 'react';
-import Router,{ useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,10 +17,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
-import { shareLocation } from '../firebase-database/write-data'
+import { shareLocation, writeHistory } from '../firebase-database/write-data'
+
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
-import 'react-chat-widget/lib/styles.css';
+// import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
 require('es6-promise').polyfill();
@@ -92,9 +95,17 @@ function AutocompleteDirectionsHandler(google, map) {
       firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
         var data = (snapshot.val());
 
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
-        me.setupClickListener(data.host.request.travelMode);
+        if (data.share === true) {
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.host.request.travelMode);
+
+        } else {
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.header.host.request.travelMode);
+        }
+
 
       })
     }
@@ -157,6 +168,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function FinishedStep(props) {
   const classes = useStyles();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const router = useRouter()
 
@@ -167,16 +179,22 @@ function FinishedStep(props) {
   function handleClose() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        shareLocation(user.uid,false)
+        firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+          let data = (snapshot.val());
+          writeHistory(user.uid, data)
+        })
+
+        shareLocation(user.uid, false)
         setAnchorEl(null);
         setTimeout(() => router.push('/'), 100)
       }
-  })
+    })
   }
 
   function goBack() {
     setTimeout(() => router.push('/'), 100)
   }
+
 
   return (
     <div className={classes.root}>
@@ -189,7 +207,7 @@ function FinishedStep(props) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            กลุ่มเเชร์ 
         </Typography>
           <div className={classes.grow} />
           <IconButton onClick={handleClick} edge="end" color="inherit">
@@ -205,13 +223,14 @@ function FinishedStep(props) {
             onClose={handleClose}
           >
             <StyledMenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <CloseIcon />
-                </ListItemIcon>
-                <ListItemText primary="ยกเลิก" />
+              <ListItemIcon>
+                <CloseIcon />
+              </ListItemIcon>
+              <ListItemText primary="ยกเลิก" />
             </StyledMenuItem>
           </StyledMenu>
           {/* end-menu */}
+
 
         </Toolbar>
       </AppBar>
@@ -325,25 +344,26 @@ function FinishedStep(props) {
             })
 
             // join
-            firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
-              let keys = (snapshot.val());
-              if (keys !== null) {
-                keys.map((key) => {
-                  firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
-                    let stories = (snapshot.val());
+            firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
+              let hid = (snapshot.val());
+              firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
+                let keysJoin = (snapshot.val());
 
-                    let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+                keysJoin.map((key) => {
+                  firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let dataJoin = (snapshot.val());
+                    let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
 
                     let marker1 = new CustomMarker(
                       myLatlng,
                       map,
                       {},
-                      stories.photoURL
+                      dataJoin.photoURL
                     );
 
                     let pos = {
-                      lat: stories.coords.latitude,
-                      lng: stories.coords.longitude
+                      lat: dataJoin.coords.latitude,
+                      lng: dataJoin.coords.longitude
                     };
 
                     marker1.latlng = { lat: pos.lat, lng: pos.lng };
@@ -352,11 +372,12 @@ function FinishedStep(props) {
                     map.setCenter(pos);
                   })
                 })
-              }
+              })
             })
           })
         }}
       >
+
       </Map>
       {/* end-map */}
 
