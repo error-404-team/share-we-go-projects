@@ -45,7 +45,7 @@ export default function InputEditProfile() {
     console.log(dName);
     const mail = demail ;
     console.log(demail);
-    const phoneNumber = dphoneNumber;
+    const phoneNum = dphoneNumber;
     console.log(dphoneNumber);
     
     
@@ -86,7 +86,7 @@ export default function InputEditProfile() {
 
     if (user) {
       console.log(user);
-      firebase.database().ref('users/' + user.uid + '/age').on('value', function (age) {
+      firebase.database().ref('users/' + user.uid + '/age').on('value', function (ryu) {
         setAge(age.val())
         console.log(age.val());
       })
@@ -104,7 +104,7 @@ export default function InputEditProfile() {
         let photo = document.getElementById("photo");
         let dphotoURL = photo.value;
 
-        let phone = document.getElementById("phoneNumber");
+        let phone = document.getElementById("phoneNum");
         let dphoneNumber = phone.value;
 
         let sexy = document.getElementById("sexy");
@@ -163,14 +163,14 @@ export default function InputEditProfile() {
       <TextField
         label="เพศ"
         id="dsex"
-        Value=""
+        Value={sex}
         className={classes.textField}
       />
 
       <TextField
         label="อายุ"
         id="dage"
-        Value=""
+        Value=
         className={classes.textField}
       />
 {/* 
