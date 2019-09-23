@@ -12,7 +12,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import firebase from '../lib/firebase';
-
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import CommuteIcon from '@material-ui/icons/Commute';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import WcIcon from '@material-ui/icons/Wc';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -89,14 +94,34 @@ export default function ControlledExpansionPanels() {
               <Typography className={classes.heading}>เวลา: </Typography>
               <Typography className={classes.secondaryHeading}>{history[key].date_time.start_time}</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <span>ต้นทาง: ${history[key].host.routes[0].legs[0].start_address}</span>
-              <span>ปลายทาง: ${history[key].host.routes[0].legs[0].end_address}</span>
-              <span>เริ่มการแชร์: ${history[key].date_time.start_time}</span>
-              <span>ปิดการแชร์: ${history[key].date_time.end_time}</span>
-              <span>ต้องการผู้ร่วมเดินทางเพิ่ม: ${history[key].number_of_travel} คน</span>
-              <span>ต้องการร่วมเดินทางกับเพศ: ${history[key].gender}</span>
-            </ExpansionPanelDetails>
+            <body>
+              
+            <center>
+            <h4 body bgcolor="#607B8B">     <CommuteIcon></CommuteIcon>    ต้นทาง - ปลายทาง</h4>
+              <hr></hr>
+            </center>
+              <b font color="607B8B"><u>ต้นทาง:</u></b> {history[key].host.routes[0].legs[0].start_address}
+              <br></br>
+              <b><u>ปลายทาง:</u></b> {history[key].host.routes[0].legs[0].end_address}
+              <center>
+              <h4>  <AccessTimeIcon></AccessTimeIcon>  เริ่มการแชร์ - ปิดการแชร์</h4>
+              
+              <hr border="5" shadow="5"></hr>
+              <b><u>เริ่มการแชร์:</u></b> {history[key].date_time.start_time}
+              <br></br>
+              <b><u>ปิดการแชร์:</u></b> {history[key].date_time.end_time}
+              <br></br>
+              <h4>     <WcIcon></WcIcon>    ผู้ร่วมเดินทาง - เพศผู้ร่วมเดินทาง</h4>
+              <hr></hr>
+              <b><u>ต้องการผู้ร่วมเดินทางเพิ่ม:</u> </b> {history[key].number_of_travel} คน
+              <br></br>
+              <b><u>    ต้องการร่วมเดินทางกับเพศ:</u> </b> {history[key].gender}
+              </center>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+            </body>
           </ExpansionPanel>
         )}
       </div>
