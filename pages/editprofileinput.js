@@ -156,21 +156,21 @@ export default function InputEditProfile() {
       <TextField
         label="เบอร์โทรศัพท์"
         id="dphoneNumber"
-        Value=""
+        Value={phoneNumber}
         className={classes.textField}
       />
 
       <TextField
         label="เพศ"
         id="dsex"
-        Value=""
+        Value={sex}
         className={classes.textField}
       />
 
       <TextField
         label="อายุ"
         id="dage"
-        Value=""
+        Value={age}
         className={classes.textField}
       />
 {/* 
