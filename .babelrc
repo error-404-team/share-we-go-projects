@@ -1,18 +1,9 @@
 {
   "presets": [
-    "next/babel",
+    "@babel/preset-env",
+    "@babel/preset-react"
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        "inline-dotenv",
-        "inline-react-svg"
-      ],
-    },
-    "production": {
-      "plugins": [
-        "transform-inline-environment-variables"
-      ]
-    }
-  }
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
+  ]
 }

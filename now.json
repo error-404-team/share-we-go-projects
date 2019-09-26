@@ -1,7 +1,0 @@
-{
-    "name": "share-we-go-projects",
-    "alias": "share-we-go-projects.now.sh",
-    "env": {
-      "NODE_ENV": "production"
-    }
-  }
