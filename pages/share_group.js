@@ -4,10 +4,12 @@ import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import Chat from '../components/Chat'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,7 +19,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
 import { shareLocation, writeHistory } from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
-
+// import Chat from '../components/Chat'
+import ContainedButtons from '../components/bottonShare_group'
 // import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
@@ -92,9 +95,17 @@ function AutocompleteDirectionsHandler(google, map) {
       firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
         var data = (snapshot.val());
 
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
-        me.setupClickListener(data.host.request.travelMode);
+        if (data.share === true) {
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.host.request.travelMode);
+
+        } else {
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.header.host.request.travelMode);
+        }
+
 
       })
     }
@@ -157,7 +168,9 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function FinishedStep(props) {
   const classes = useStyles();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [joinUser, setJoinUser] = React.useState({})
   const router = useRouter()
 
   function handleClick(event) {
@@ -183,6 +196,7 @@ function FinishedStep(props) {
     setTimeout(() => router.push('/'), 100)
   }
 
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -194,7 +208,7 @@ function FinishedStep(props) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            กลุ่มเเชร์ 
         </Typography>
           <div className={classes.grow} />
           <IconButton onClick={handleClick} edge="end" color="inherit">
@@ -217,6 +231,7 @@ function FinishedStep(props) {
             </StyledMenuItem>
           </StyledMenu>
           {/* end-menu */}
+
 
         </Toolbar>
       </AppBar>
@@ -330,25 +345,27 @@ function FinishedStep(props) {
             })
 
             // join
-            firebase.database().ref(`/group_share_user/${user.uid}/join/keys`).once('value').then(function (snapshot) {
-              let keys = (snapshot.val());
-              if (keys !== null) {
-                keys.map((key) => {
-                  firebase.database().ref(`/group_share_user/${user.uid}/join/user/${key}`).once('value').then(function (snapshot) {
-                    let stories = (snapshot.val());
+            firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
+              let hid = (snapshot.val());
+              firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
+                let keysJoin = (snapshot.val());
+                console.log(Object.keys(keysJoin).length);
 
-                    let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
-
+                Object.keys(keysJoin).map((key) => {
+                  firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let dataJoin = (snapshot.val());
+                    setJoinUser([dataJoin])
+                    let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
                     let marker1 = new CustomMarker(
                       myLatlng,
                       map,
                       {},
-                      stories.photoURL
+                      dataJoin.photoURL
                     );
 
                     let pos = {
-                      lat: stories.coords.latitude,
-                      lng: stories.coords.longitude
+                      lat: dataJoin.coords.latitude,
+                      lng: dataJoin.coords.longitude
                     };
 
                     marker1.latlng = { lat: pos.lat, lng: pos.lng };
@@ -357,20 +374,16 @@ function FinishedStep(props) {
                     map.setCenter(pos);
                   })
                 })
-              }
+              })
             })
           })
         }}
       >
+      <ContainedButtons></ContainedButtons>
+      <Chat></Chat>
       </Map>
       {/* end-map */}
-
-      {/* <Widget
-          handleNewUserMessage={this.handleNewUserMessage}
-          // profileAvatar={logo}
-          title="My new awesome title"
-          subtitle="And my cool subtitle"
-        /> */}
+    
     </div>
   )
 

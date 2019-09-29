@@ -60,17 +60,11 @@ export function writeUserDataEdit(uid, data) {
         photoURL: data.photoURL
     })
 
-    firebase.database().ref(`users/${uid}/phoneNumber`).set({
-        phoneNumber: data.phoneNumber,
-    })
+    firebase.database().ref(`users/${uid}/phoneNumber`).set(data.phoneNumber)
 
-    firebase.database().ref(`users/${uid}/sex`).set({
-        sex: data.sex
-    })
+    firebase.database().ref(`users/${uid}/sex`).set(data.sex)
 
-    firebase.database().ref(`users/${uid}/age`).set({
-        age: data.age
-    })
+    firebase.database().ref(`users/${uid}/age`).set(data.age)
 }
 
 export function writeUserDataLocation(uid, coords) {
@@ -114,8 +108,12 @@ export function writeCreateGroupShareUserDataHeader(uid, data) {
     firebase.database().ref(`group_share_user/${uid}/header`).set(data)
 }
 
+export function writeCreateGroupShareUserDataHeaderAndWay(uid, data) {
+    firebase.database().ref(`group_share_user/${uid}/header/host`).set(data)
+}
+
 export function writeCreateGroupShareUserDataKeys(uid) {
-    firebase.database().ref(`group_share_user/keys`).set([uid])
+    firebase.database().ref(`group_share_user/keys/${uid}`).set(uid)
 }
 
 export function shareLocation(uid, data) {
@@ -124,9 +122,10 @@ export function shareLocation(uid, data) {
 
 export function joinGroupShare(hid, uid, data) {
     firebase.database().ref(`group_share_user/${hid}/join/user/${uid}`).set(data);
-    firebase.database().ref(`group_share_user/${hid}/join/keys`).set([uid])
+
+    firebase.database().ref(`group_share_user/${hid}/join/keys/${uid}`).set(uid)
 }
 
-export function writeHistory(uid,data) {
+export function writeHistory(uid, data) {
     firebase.database().ref(`history/${uid}`).push(data)
 }
