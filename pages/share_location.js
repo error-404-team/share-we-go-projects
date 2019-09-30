@@ -273,7 +273,7 @@ function ShareLocation(props) {
         console.log(activeStep);
 
         if (activeStep === 0) {
-            fetch(`http://${window.location.pathname}:8080/origin_destination_route`).then(function (response) {
+            fetch(`http://localhost:8080/origin_destination_route`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -286,7 +286,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 1) {
-            fetch(`http://${window.location.pathname}:8080/boarding_time`).then(function (response) {
+            fetch(`http://localhost:8080/boarding_time`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -299,7 +299,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 2) {
-            fetch(`http://${window.location.pathname}:8080/number_of_travel`).then(function (response) {
+            fetch(`http://localhost:8080/number_of_travel`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -312,7 +312,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 3) {
-            fetch(`http://${window.location.pathname}:8080/gender`).then(function (response) {
+            fetch(`http://localhost:8080/gender`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }

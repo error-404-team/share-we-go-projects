@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from "@material-ui/core/Toolbar";
 
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';   
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 
@@ -119,36 +119,75 @@ export default class Profile extends React.Component {
 
             if (user) {
                 // console.log(user);
-                firebase.database().ref('users/' + user.uid).on('value', function (user) {
-                    const data = (user.val())
-                    if (data.photoURL !== null) {
+                firebase.database().ref('profile/' + user.uid).on('value', function (profileUser) {
+                    let data = (profileUser.val())
+                    console.log(data);
+                    if (data !== null) {
 
-                        me.setState({ photoURL: data.photoURL });
-                    }
+                        if (data.photoURL !== null) {
 
-                    if (data.displayName !== null) {
+                            me.setState({ photoURL: data.photoURL });
+                        }
 
-                        me.setState({ displayName: data.displayName });
-                    }
+                        if (data.displayName !== null) {
 
-                    if (data.email !== null) {
+                            me.setState({ displayName: data.displayName });
+                        }
 
-                        me.setState({ email: data.email });
-                    }
+                        if (data.email !== null) {
 
-                    if (data.phoneNumber !== null) {
+                            me.setState({ email: data.email });
+                        }
 
-                        me.setState({ phoneNumber: data.phoneNumber });
-                    }
+                        if (data.phoneNumber !== null) {
 
-                    if (data.sex !== null) {
+                            me.setState({ phoneNumber: data.phoneNumber });
+                        }
 
-                        me.setState({ sex: data.sex });
-                    }
+                        if (data.sex !== null) {
 
-                    if (data.age !== null) {
+                            me.setState({ sex: data.sex });
+                        }
 
-                        me.setState({ age: data.age });
+                        if (data.age !== null) {
+
+                            me.setState({ age: data.age });
+                        }
+                    } else {
+                        firebase.database().ref('users/' + user.uid).on('value', function (dataUser) {
+                            let dataState = (dataUser.val())
+                            console.log(dataState);
+
+                            if (dataState.photoURL !== null) {
+
+                                me.setState({ photoURL: dataState.photoURL });
+                            }
+
+                            if (dataState.displayName !== null) {
+
+                                me.setState({ displayName: dataState.displayName });
+                            }
+
+                            if (dataState.email !== null) {
+
+                                me.setState({ email: dataState.email });
+                            }
+
+                            if (dataState.phoneNumber !== null) {
+
+                                me.setState({ phoneNumber: dataState.phoneNumber });
+                            }
+
+                            if (dataState.sex !== null) {
+
+                                me.setState({ sex: dataState.sex });
+                            }
+
+                            if (dataState.age !== null) {
+
+                                me.setState({ age: dataState.age });
+                            }
+                        })
                     }
                     // console.log(photo.val());
 
@@ -185,8 +224,6 @@ export default class Profile extends React.Component {
                     <hr noshade='noshade' size="2"></hr>
                     </body>
                 </Box>
-               
-
 
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
                 
@@ -222,10 +259,7 @@ export default class Profile extends React.Component {
                         <body bgcolor='33CC66'>
                         <center>
                         <IconButton onClick={this.onEdit.bind(this)}  >
-                            
-                            
-                        
-                            <center><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</center>
+                            <center><BorderColorIcon></BorderColorIcon>  แก้ไขข้อมูล</center>
                             
                         </IconButton >
                         </center>
