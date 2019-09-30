@@ -17,7 +17,7 @@ import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
-import geno from '../image/geno.svg'
+// import geno from '../image/geno.svg'
 import Selectgender from '../components/Selectgender';
 import Link from 'next/link';
 import CommuteIcon from '@material-ui/icons/Commute';
@@ -273,7 +273,7 @@ function ShareLocation(props) {
         console.log(activeStep);
 
         if (activeStep === 0) {
-            fetch('http://localhost:7000/origin_destination_route').then(function (response) {
+            fetch(`http://${window.location.pathname}:8080/origin_destination_route`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -286,7 +286,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 1) {
-            fetch('http://localhost:7000/boarding_time').then(function (response) {
+            fetch(`http://${window.location.pathname}:8080/boarding_time`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -299,7 +299,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 2) {
-            fetch('http://localhost:7000/number_of_travel').then(function (response) {
+            fetch(`http://${window.location.pathname}:8080/number_of_travel`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
@@ -312,7 +312,7 @@ function ShareLocation(props) {
         }
 
         if (activeStep === 3) {
-            fetch('http://localhost:7000/gender').then(function (response) {
+            fetch(`http://${window.location.pathname}:8080/gender`).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");
                 }
