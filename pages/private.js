@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
+import $ from "jquery";
+import Router, { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
+import GroupIcon from '@material-ui/icons/Group';
 import Fab from '@material-ui/core/Fab';
 import HistoryIcon from '@material-ui/icons/History';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -21,11 +24,18 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import SearchMap from '../components/SearchMap';
 import SearchBar from '../components/SearchBar';
-import { writeUserDataLogin, writeUserDataLocation } from '../firebase-database/write-data';
+import {
+    writeUserDataLogin,
+    writeUserDataLocation,
+    joinGroupShare,
+    writeCreateGroupShareUserDataHeader,
+    writeCreateGroupShareUserDataHeaderAndWay
+} from '../firebase-database/write-data';
 import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
 import '../css/share-location-bar.css';
+// import { func } from 'prop-types';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -100,12 +110,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
+
+
+
+
 const Private = function (props) {
-    const classes = useStyles();
     const theme = useTheme();
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState({});
     const [map, setMap] = React.useState({});
+    const [statusShare, setStatusShare] = React.useState(false)
+    const router = useRouter()
     // const [google, setGoogle] = React.useState({});
     // var starCountRef = firebase.database().ref('users/' + postId + '/starCount');
 
@@ -116,7 +132,7 @@ const Private = function (props) {
     // กำหนดตัวแปล latlng
     let latlng;
 
-    fetch('http://localhost:7000/users').then(function (response) {
+    fetch(`http://localhost:8080/users`).then(function (response) {
         if (response.status >= 400) {
             throw new Error("Bad response from server");
         }
@@ -129,15 +145,28 @@ const Private = function (props) {
 
     })
 
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            setUsers(user);
-        }
-    })
-
 
     function handleDrawerOpen() {
         setOpen(true);
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // setUsers(user);
+                firebase.database().ref('profile/' + user.uid).on('value', function (profileUser) {
+                    let data = (profileUser.val())
+                    // console.log(data);
+                    if (data !== null) {
+                        setUsers(data)
+                    } else {
+                        firebase.database().ref('users/' + user.uid).on('value', function (dataUser) {
+                            let dataState = (dataUser.val())
+                            // console.log(dataState);
+                            setUsers(dataState)
+                        })
+                    }
+                })
+            }
+        })
     }
 
     function handleDrawerClose() {
@@ -163,63 +192,6 @@ const Private = function (props) {
     // console.log(map);
 
 
-    function CustomMarker(latlng, map, args, img) {
-        this.latlng = latlng;
-        this.args = args;
-        this.img = img;
-        this.setMap(map);
-
-        setMap(map)
-        // setGoogle(google)
-
-    }
-
-    CustomMarker.prototype = new google.maps.OverlayView();
-
-    CustomMarker.prototype.onAdd = function () {
-        var self = this;
-        var div = this.div;
-        if (!div) {
-            // Generate marker html
-            div = this.div = document.createElement('div');
-            div.className = 'custom-marker';
-            div.style.position = 'absolute';
-            var innerDiv = document.createElement('div');
-            innerDiv.className = 'custom-marker-inner';
-            innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
-            div.appendChild(innerDiv);
-
-            if (typeof (self.args.marker_id) !== 'undefined') {
-                div.dataset.marker_id = self.args.marker_id;
-            }
-
-            google.maps.event.addDomListener(div, "click", function (event) {
-                google.maps.event.trigger(self, "click");
-            });
-
-            var panes = this.getPanes();
-            panes.overlayImage.appendChild(div);
-        }
-    };
-
-    CustomMarker.prototype.draw = function () {
-        // มี bug icon ไม่เกาะ map
-        if (this.div) {
-            // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
-            let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
-
-            this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
-            // console.log(this.pos);
-            this.div.style.left = this.pos.x + 'px';
-            this.div.style.top = this.pos.y + 'px';
-        }
-    };
-
-    CustomMarker.prototype.getPosition = function () {
-        return this.latlng;
-    };
-
-
     return (
         <Fragment>
             <CssBaseline />
@@ -243,45 +215,219 @@ const Private = function (props) {
                     }}
                     setCenter={new google.maps.LatLng(latlng.lat, latlng.lng)}
                     DrawingOnMap={(google, map) => {
+                        function CustomMarker(latlng, map, args, img) {
+                            this.latlng = latlng;
+                            this.args = args;
+                            this.img = img;
+                            this.setMap(map);
 
-                        fetch('http://localhost:7000/users').then(function (response) {
+                            setMap(map)
+                            // setGoogle(google)
+
+                        }
+
+                        CustomMarker.prototype = new google.maps.OverlayView();
+
+                        CustomMarker.prototype.onAdd = function () {
+                            var self = this;
+                            var div = this.div;
+                            if (!div) {
+                                // Generate marker html
+                                div = this.div = document.createElement('div');
+                                div.className = 'custom-marker';
+                                div.style.position = 'absolute';
+                                var innerDiv = document.createElement('div');
+                                innerDiv.className = 'custom-marker-inner';
+                                innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
+                                div.appendChild(innerDiv);
+
+                                if (typeof (self.args.marker_id) !== 'undefined') {
+                                    div.dataset.marker_id = self.args.marker_id;
+                                }
+
+                                google.maps.event.addDomListener(div, "click", function (event) {
+                                    google.maps.event.trigger(self, "click");
+                                });
+
+                                var panes = this.getPanes();
+                                panes.overlayImage.appendChild(div);
+                            }
+                        };
+
+                        CustomMarker.prototype.draw = function () {
+                            // มี bug icon ไม่เกาะ map
+                            if (this.div) {
+                                // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
+                                let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
+
+                                this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
+                                // console.log(this.pos);
+                                this.div.style.left = this.pos.x + 'px';
+                                this.div.style.top = this.pos.y + 'px';
+                            }
+                        };
+
+                        CustomMarker.prototype.getPosition = function () {
+                            return this.latlng;
+                        };
+
+                        fetch(`http://localhost:8080/users`).then(function (response) {
                             if (response.status >= 400) {
                                 throw new Error("Bad response from server");
                             }
                             return response.json();
                         }).then(function (stories) {
-                                var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+                            var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-                                var marker1 = new CustomMarker(
-                                    myLatlng,
-                                    map,
-                                    {},
-                                    stories.photoURL
-                                );
+                            var marker1 = new CustomMarker(
+                                myLatlng,
+                                map,
+                                {},
+                                stories.photoURL
+                            );
 
-                                var pos = {
-                                    lat: stories.coords.latitude,
-                                    lng: stories.coords.longitude
-                                };
+                            var pos = {
+                                lat: stories.coords.latitude,
+                                lng: stories.coords.longitude
+                            };
 
-                                marker1.latlng = { lat: pos.lat, lng: pos.lng };
-                                marker1.draw();
+                            marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                            marker1.draw();
 
-                                map.setCenter(pos);
+                            map.setCenter(pos);
 
-                                // console.log(stories);
-                            });
+                            // console.log(stories);
+                        });
+
+                        firebase.auth().onAuthStateChanged((user) => {
+                            if (user) {
+                                firebase.database().ref(`/group_share_user/${user.uid}/share`).once('value').then(function (snapshot) {
+                                    let status = (snapshot.val());
+                                    setStatusShare(status)
+                                })
+                            }
+                        })
+
+                        firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
+                            let keys = (snapshot.val());
+                            if (keys !== null) {
+                                Object.keys(keys).map((key) => {
+                                    firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
+                                        let stories = (snapshot.val());
+                                        if (stories.share === true) {
+                                            let myLatlng = new google.maps.LatLng(stories.header.coords.latitude, stories.header.coords.longitude);
+
+                                            let marker1 = new CustomMarker(
+                                                myLatlng,
+                                                map,
+                                                {},
+                                                stories.header.photoURL
+                                            );
+
+                                            let pos = {
+                                                lat: stories.header.coords.latitude,
+                                                lng: stories.header.coords.longitude
+                                            };
+
+                                            marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                                            marker1.draw();
+
+                                            map.setCenter(pos);
+
+                                            const contentString =
+                                                '<center>' +
+                                                '<h2>ข้อมูลการแชร์</h2>' +
+                                                '</center>' +
+                                                '<hr></hr>' +
+                                                '<u style="font-size: 15px">ต้นทาง:</u></<u><b>' + stories.host.routes[0].legs[0].start_address + '</b>' +
+                                                '<br></br>' +
+                                                '<u style="font-size: 15px">ปลายทาง:</u></<u><b> ' + stories.host.routes[0].legs[0].end_address + '</b>' +
+                                                '<br></br>' +
+                                                '<u style="font-size: 15px">เริ่มแชร์เมื่อ:</u></<u><b>' + stories.date_time.start_time + '</b>' +
+                                                '<br></br>' +
+                                                '<u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>' + stories.date_time.end_time + '</b>' +
+                                                '<br></br>' +
+                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>' + Object.keys(stories.join.keys).length + '/' + stories.number_of_travel + ' คน </b>' +
+                                                '<br></br>' +
+                                                '<u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b>' + stories.gender + '</b>' +
+                                                '<hr></hr>' +
+                                                '<center><button style="background-color: lime; font-size: 17px" onclick="" id="join-share">เข้าร่วม</button></center>'
+
+                                                ;
+
+
+                                            var infowindow = new google.maps.InfoWindow({
+                                                content: "",
+                                                maxWidth: 500
+                                            });
+
+                                            marker1.addListener('click', function () {
+                                                infowindow.setContent(contentString)
+                                                infowindow.open(map, marker1);
+                                            });
+
+                                            $(document).on('click', '#join-share', function () {
+                                                if (Object.keys(stories.join.keys).length >= stories.number_of_travel) {
+                                                    firebase.auth().onAuthStateChanged((user) => {
+                                                        Object.keys(stories.join.keys).map((key) => {
+                                                            if (user.uid == key) {
+                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                            } else {
+                                                                alert('จำนวนผู้เข้าร่วมเต็ม')
+                                                            }
+                                                        })
+                                                    })
+
+                                                } else {
+                                                    firebase.auth().onAuthStateChanged((user) => {
+                                                        if (user) {
+                                                            firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
+                                                                let dataHeader = (snapshot.val());
+                                                                writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
+
+                                                                firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
+                                                                    let dataHeaderAndWay = (snapshot.val());
+                                                                    writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                                });
+
+                                                            });
+
+                                                            firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                                                                let dataJ = (snapshot.val());
+                                                                joinGroupShare(key, user.uid, dataJ)
+                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                            });
+
+                                                        }
+                                                    })
+                                                }
+
+                                            });
+                                        }
+
+                                    })
+                                })
+                            }
+                        })
 
                     }}
                 >
                     <SearchBar >
                         <SearchMap onClick={handleDrawerOpen} map={map} {...props} />
                     </SearchBar>
-                    <Link href="/share_location" >
-                        <Fab color="primary" aria-label="add" className={classes.fab}>
-                            <AddIcon />
-                        </Fab>
-                    </Link>
+                    {statusShare === true
+                        ? (<Link href="/share_group" >
+                            <Fab color="primary" aria-label="add" className={classes.fab}>
+                                <GroupIcon />
+                            </Fab>
+                        </Link>)
+                        : (<Link href="/share_location" >
+                            <Fab color="primary" aria-label="add" className={classes.fab}>
+                                <AddIcon />
+                            </Fab>
+                        </Link>)
+                    }
+
                 </Map>
             </div>
             <Drawer
