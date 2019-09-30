@@ -4,7 +4,7 @@ import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
-
+import Chat from '../components/Chat'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,9 +18,9 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
 import { shareLocation, writeHistory } from '../firebase-database/write-data'
-
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
-
+// import Chat from '../components/Chat'
+import ContainedButtons from '../components/bottonShare_group'
 // import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
@@ -379,7 +379,8 @@ function FinishedStep(props) {
           })
         }}
       >
-
+      <ContainedButtons></ContainedButtons>
+      <Chat></Chat>
       </Map>
       {/* end-map */}
     

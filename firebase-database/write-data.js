@@ -54,17 +54,18 @@ export function writeUserDataLogin(uid, data) {
 }
 
 export function writeUserDataEdit(uid, data) {
-    firebase.database().ref(`users/${uid}`).set({
-        displayName: data.displayName,
-        email: data.email,
-        photoURL: data.photoURL
-    })
+    
+    firebase.database().ref(`profile/${uid}/displayName`).set(data.displayName)
 
-    firebase.database().ref(`users/${uid}/phoneNumber`).set(data.phoneNumber)
+    firebase.database().ref(`profile/${uid}/email`).set(data.email)
 
-    firebase.database().ref(`users/${uid}/sex`).set(data.sex)
+    firebase.database().ref(`profile/${uid}/photoURL`).set(data.photoURL)
 
-    firebase.database().ref(`users/${uid}/age`).set(data.age)
+    firebase.database().ref(`profile/${uid}/phoneNumber`).set(data.phoneNumber)
+
+    firebase.database().ref(`profile/${uid}/sex`).set(data.sex)
+
+    firebase.database().ref(`profile/${uid}/age`).set(data.age)
 }
 
 export function writeUserDataLocation(uid, coords) {

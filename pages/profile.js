@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from "@material-ui/core/Toolbar";
 
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';   
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 
@@ -24,7 +24,11 @@ import firebase from "../lib/firebase";
 import { InputBase } from '@material-ui/core';
 
 import { writeUserDataEdit } from '../firebase-database/write-data'
-
+import PersonIcon from '@material-ui/icons/Person';
+import EmailIcon from '@material-ui/icons/Email';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WcIcon from '@material-ui/icons/Wc';
+import FaceIcon from '@material-ui/icons/Face';
 
 export default class Profile extends React.Component {
 
@@ -115,36 +119,75 @@ export default class Profile extends React.Component {
 
             if (user) {
                 // console.log(user);
-                firebase.database().ref('users/' + user.uid).on('value', function (user) {
-                    const data = (user.val())
-                    if (data.photoURL !== null) {
+                firebase.database().ref('profile/' + user.uid).on('value', function (profileUser) {
+                    let data = (profileUser.val())
+                    console.log(data);
+                    if (data !== null) {
 
-                        me.setState({ photoURL: data.photoURL });
-                    }
+                        if (data.photoURL !== null) {
 
-                    if (data.displayName !== null) {
+                            me.setState({ photoURL: data.photoURL });
+                        }
 
-                        me.setState({ displayName: data.displayName });
-                    }
+                        if (data.displayName !== null) {
 
-                    if (data.email !== null) {
+                            me.setState({ displayName: data.displayName });
+                        }
 
-                        me.setState({ email: data.email });
-                    }
+                        if (data.email !== null) {
 
-                    if (data.phoneNumber !== null) {
+                            me.setState({ email: data.email });
+                        }
 
-                        me.setState({ phoneNumber: data.phoneNumber });
-                    }
+                        if (data.phoneNumber !== null) {
 
-                    if (data.sex !== null) {
+                            me.setState({ phoneNumber: data.phoneNumber });
+                        }
 
-                        me.setState({ sex: data.sex });
-                    }
+                        if (data.sex !== null) {
 
-                    if (data.age !== null) {
+                            me.setState({ sex: data.sex });
+                        }
 
-                        me.setState({ age: data.age });
+                        if (data.age !== null) {
+
+                            me.setState({ age: data.age });
+                        }
+                    } else {
+                        firebase.database().ref('users/' + user.uid).on('value', function (dataUser) {
+                            let dataState = (dataUser.val())
+                            console.log(dataState);
+
+                            if (dataState.photoURL !== null) {
+
+                                me.setState({ photoURL: dataState.photoURL });
+                            }
+
+                            if (dataState.displayName !== null) {
+
+                                me.setState({ displayName: dataState.displayName });
+                            }
+
+                            if (dataState.email !== null) {
+
+                                me.setState({ email: dataState.email });
+                            }
+
+                            if (dataState.phoneNumber !== null) {
+
+                                me.setState({ phoneNumber: dataState.phoneNumber });
+                            }
+
+                            if (dataState.sex !== null) {
+
+                                me.setState({ sex: dataState.sex });
+                            }
+
+                            if (dataState.age !== null) {
+
+                                me.setState({ age: dataState.age });
+                            }
+                        })
                     }
                     // console.log(photo.val());
 
@@ -173,16 +216,20 @@ export default class Profile extends React.Component {
                         <Avatar src={this.state.photoURL}
                             style={{
                                 margin: 50,
-                                width: 200,
-                                height: 200
+                                width: 150,
+                                height: 150,
                             }} />
                     </Grid>
+                    <hr noshade='noshade' size="2"></hr>
                 </Box>
                 {this.state.statusEdit === true
                     ? (
                         <IconButton onClick={this.onEdit.bind(this)}  >
-                            <BorderColorIcon></BorderColorIcon>
-                            <span>แก้ไขข้อมูล</span>
+
+
+
+                            <span align='right'><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</span>
+
                         </IconButton >
                     )
                     : (
@@ -192,28 +239,32 @@ export default class Profile extends React.Component {
 
 
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
-                    <p>ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </p>
-                    <p>E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></p>
-                    <p>เบอร์โทรศัพท์: <InputBase ref={this.phoneNumberInput} onChange={this.phoneNumberInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.phoneNumber} /></p>
-                    <p>เพศ: <TextField
-                        id="outlined-select-currency"
-                        select
-                        disabled={this.state.statusEdit}
-                        value={this.state.sex}
-                        onChange={this.sexInputUpdate.bind(this)}
-                        SelectProps={{
-                            MenuProps: {
-                                // className: classes.menu,
-                            },
-                        }}
-                    >
-                        {this.state.currencies.map(option => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField></p>
-                    <p>อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></p>
+
+                    <body bgcolor="EEEEEE">
+                        <h3>  <PersonIcon></PersonIcon>       ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </h3>
+
+                        <h3><EmailIcon></EmailIcon>      E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></h3>
+                        <h3><PhoneIcon></PhoneIcon>           เบอร์: <InputBase ref={this.phoneNumberInput} onChange={this.phoneNumberInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.phoneNumber} /></h3>
+                        <h3><WcIcon></WcIcon>                เพศ: <TextField
+                            id="outlined-select-currency"
+                            select
+                            disabled={this.state.statusEdit}
+                            value={this.state.sex}
+                            onChange={this.sexInputUpdate.bind(this)}
+                            SelectProps={{
+                                MenuProps: {
+                                    // className: classes.menu,
+                                },
+                            }}
+                        >
+                            {this.state.currencies.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField></h3>
+                        <h3><FaceIcon></FaceIcon>             อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></h3>
+                    </body>
                 </Typography>
                 {/* <Personalform></Personalform> */}
 
