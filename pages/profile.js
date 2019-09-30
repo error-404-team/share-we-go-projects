@@ -225,23 +225,6 @@ export default class Profile extends React.Component {
                     {/* </body> */}
                 </Box>
 
-                {this.state.statusEdit === true
-                    ? (
-                        <IconButton onClick={this.onEdit.bind(this)}  >
-
-
-
-                            <span align='right'><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</span>
-
-                        </IconButton >
-                    )
-                    : (
-                        <Button onClick={this.onSave.bind(this)}>บันทึก</Button>
-                    )
-                }
-
-
-
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
 
                     <body bgcolor="EEEEEE">
@@ -276,10 +259,7 @@ export default class Profile extends React.Component {
                         <body bgcolor='33CC66'>
                         <center>
                         <IconButton onClick={this.onEdit.bind(this)}  >
-                            
-                            
-                        
-                            <center><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</center>
+                            <center><BorderColorIcon></BorderColorIcon>  แก้ไขข้อมูล</center>
                             
                         </IconButton >
                         </center>
