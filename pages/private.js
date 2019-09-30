@@ -309,11 +309,13 @@ const Private = function (props) {
                         })
 
                         firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-                            let keys = (snapshot.val());
+                            var keys = (snapshot.val());
+                            console.log(keys);
+
                             if (keys !== null) {
                                 Object.keys(keys).map((key) => {
                                     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
-                                        let stories = (snapshot.val());
+                                        var stories = (snapshot.val());
                                         if (stories.share === true) {
                                             let myLatlng = new google.maps.LatLng(stories.header.coords.latitude, stories.header.coords.longitude);
 
@@ -334,26 +336,27 @@ const Private = function (props) {
 
                                             map.setCenter(pos);
 
-                                            const contentString =
-                                                '<center>' +
-                                                '<h2>ข้อมูลการแชร์</h2>' +
-                                                '</center>' +
-                                                '<hr></hr>' +
-                                                '<u style="font-size: 15px">ต้นทาง:</u></<u><b>' + stories.host.routes[0].legs[0].start_address + '</b>' +
-                                                '<br></br>' +
-                                                '<u style="font-size: 15px">ปลายทาง:</u></<u><b> ' + stories.host.routes[0].legs[0].end_address + '</b>' +
-                                                '<br></br>' +
-                                                '<u style="font-size: 15px">เริ่มแชร์เมื่อ:</u></<u><b>' + stories.date_time.start_time + '</b>' +
-                                                '<br></br>' +
-                                                '<u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>' + stories.date_time.end_time + '</b>' +
-                                                '<br></br>' +
-                                                '<u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b>' + Object.keys(stories.join.keys).length + '/' + stories.number_of_travel + ' คน </b>' +
-                                                '<br></br>' +
-                                                '<u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b>' + stories.gender + '</b>' +
-                                                '<hr></hr>' +
-                                                '<center><button style="background-color: lime; font-size: 17px" onclick="" id="join-share">เข้าร่วม</button></center>'
 
-                                                ;
+                                            var contentString = `
+                                                <center>
+                                                <h2>ข้อมูลการแชร์</h2>
+                                                </center>
+                                                <hr></hr>
+                                                <u style="font-size: 15px">ต้นทาง:</u></<u><b> ${stories.host.routes[0].legs[0].start_address} </b>
+                                                <br></br>
+                                                <u style="font-size: 15px">ปลายทาง:</u></<u><b>  ${stories.host.routes[0].legs[0].end_address} </b>
+                                                <br></br>
+                                                <u style="font-size: 15px">เริ่มแชร์เมื่อ:</u></<u><b> ${stories.date_time.start_time} </b>
+                                                <br></br>
+                                                <u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>${stories.date_time.end_time} </b>
+                                                <br></br>
+                                                <u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b> ${stories.join !== undefined ? Object.keys(stories.join.keys).length : 0} / ${stories.number_of_travel}  คน </b>
+                                                <br></br>
+                                                <u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b> ${stories.gender} </b>
+                                                <hr></hr>
+                                                <center><button style="background-color: lime; font-size: 17px" id="join-share">เข้าร่วม</button></center>
+                                                `
+
 
 
                                             var infowindow = new google.maps.InfoWindow({
@@ -367,39 +370,45 @@ const Private = function (props) {
                                             });
 
                                             $(document).on('click', '#join-share', function () {
-                                                if (Object.keys(stories.join.keys).length >= stories.number_of_travel) {
-                                                    firebase.auth().onAuthStateChanged((user) => {
-                                                        Object.keys(stories.join.keys).map((key) => {
-                                                            if (user.uid == key) {
-                                                                setTimeout(() => router.push('/share_group/'), 100)
-                                                            } else {
-                                                                alert('จำนวนผู้เข้าร่วมเต็ม')
-                                                            }
+                                                console.log(stories.join);
+                                                if (stories.join !== undefined) {
+                                                    if (Object.keys(stories.join.keys).length >= stories.number_of_travel) {
+                                                        firebase.auth().onAuthStateChanged((user) => {
+                                                            Object.keys(stories.join.keys).map((key) => {
+                                                                if (user.uid == key) {
+                                                                    setTimeout(() => router.push('/share_group/'), 100)
+                                                                } else {
+                                                                    alert('จำนวนผู้เข้าร่วมเต็ม')
+                                                                }
+                                                            })
                                                         })
-                                                    })
 
-                                                } else {
-                                                    firebase.auth().onAuthStateChanged((user) => {
-                                                        if (user) {
-                                                            firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
-                                                                let dataHeader = (snapshot.val());
-                                                                writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
+                                                    } else {
+                                                        firebase.auth().onAuthStateChanged((user) => {
+                                                            if (user) {
+                                                                firebase.database().ref(`/users/${key}`).once('value').then(function (snapshot) {
+                                                                    let dataHeader = (snapshot.val());
+                                                                    writeCreateGroupShareUserDataHeader(user.uid, dataHeader);
 
-                                                                firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
-                                                                    let dataHeaderAndWay = (snapshot.val());
-                                                                    writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                                    firebase.database().ref(`/group_share_user/${key}/host`).once('value').then(function (snapshot) {
+                                                                        let dataHeaderAndWay = (snapshot.val());
+                                                                        writeCreateGroupShareUserDataHeaderAndWay(user.uid, dataHeaderAndWay);
+                                                                    });
+
                                                                 });
 
-                                                            });
+                                                                firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                                                                    let dataJ = (snapshot.val());
+                                                                    joinGroupShare(key, user.uid, dataJ)
+                                                                    setTimeout(() => router.push('/share_group/'), 100)
+                                                                });
 
-                                                            firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
-                                                                let dataJ = (snapshot.val());
-                                                                joinGroupShare(key, user.uid, dataJ)
-                                                                setTimeout(() => router.push('/share_group/'), 100)
-                                                            });
-
-                                                        }
-                                                    })
+                                                            }
+                                                        })
+                                                    }
+                                                } else {
+                                                    alert('คุณได้ทำการเข้าแชร์ของคุณเอง')
+                                                    setTimeout(() => router.push('/share_group/'), 100)
                                                 }
 
                                             });
