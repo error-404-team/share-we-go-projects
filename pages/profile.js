@@ -173,7 +173,7 @@ export default class Profile extends React.Component {
                 </AppBar>
 
                 <Box>
-                {/* <body bgcolor="EEEEEE"> */}
+                <body bgcolor="EEEEEE">
                     <Grid container justify="center" alignItems="center">
                         <Avatar src={this.state.photoURL}
                             style={{
@@ -183,14 +183,14 @@ export default class Profile extends React.Component {
                             }} />
                     </Grid>
                     <hr noshade='noshade' size="2"></hr>
-                    {/* </body> */}
+                    </body>
                 </Box>
                
 
 
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
                 
-                <body bgcolor="EEEEEE">
+                {/* <body bgcolor="EEEEEE"> */}
                 <h3>  <PersonIcon></PersonIcon>       ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </h3>
                 
                     <h3><EmailIcon></EmailIcon>      E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></h3>
@@ -214,7 +214,7 @@ export default class Profile extends React.Component {
                         ))}
                     </TextField></h3>
                     <h3><FaceIcon></FaceIcon>             อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></h3>
-                    </body>
+                    {/* </body> */}
                 </Typography>
                 {/* <Personalform></Personalform> */}
                 {this.state.statusEdit === true
