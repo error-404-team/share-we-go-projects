@@ -31,6 +31,11 @@ const useStyles = makeStyles(theme => ({
         // right: 0,
         margin: '0 auto',
       },
+      fabtwo: {
+        position: 'absolute',
+            bottom: theme.spacing(11),
+            right: theme.spacing(2),
+      },
 }));
 
 const Fade = React.forwardRef(function Fade(props, ref) {
@@ -83,6 +88,7 @@ export default function Chat(props) {
             <Fab color="primary" aria-label="add" onClick={handleOpen} className={classes.fabButton}>
             <QuestionAnswerIcon />
           </Fab>
+
           <span style={{
                         position:'absolute',
                         right:'-5%',
@@ -99,7 +105,7 @@ export default function Chat(props) {
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
-                    timeout: 500,
+                timeout: 500,
                 }}
             >
                 <Fade in={open}>
