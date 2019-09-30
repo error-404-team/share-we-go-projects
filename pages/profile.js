@@ -24,7 +24,11 @@ import firebase from "../lib/firebase";
 import { InputBase } from '@material-ui/core';
 
 import { writeUserDataEdit } from '../firebase-database/write-data'
-
+import PersonIcon from '@material-ui/icons/Person';
+import EmailIcon from '@material-ui/icons/Email';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WcIcon from '@material-ui/icons/Wc';
+import FaceIcon from '@material-ui/icons/Face';
 
 export default class Profile extends React.Component {
 
@@ -173,16 +177,20 @@ export default class Profile extends React.Component {
                         <Avatar src={this.state.photoURL}
                             style={{
                                 margin: 50,
-                                width: 200,
-                                height: 200
+                                width: 150,
+                                height: 150,
                             }} />
                     </Grid>
+                    <hr noshade='noshade' size="2"></hr>
                 </Box>
                 {this.state.statusEdit === true
                     ? (
                         <IconButton onClick={this.onEdit.bind(this)}  >
-                            <BorderColorIcon></BorderColorIcon>
-                            <span>แก้ไขข้อมูล</span>
+                            
+                            
+                        
+                            <span align='right'><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</span>
+                            
                         </IconButton >
                     )
                     : (
@@ -192,10 +200,13 @@ export default class Profile extends React.Component {
 
 
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
-                    <p>ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </p>
-                    <p>E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></p>
-                    <p>เบอร์โทรศัพท์: <InputBase ref={this.phoneNumberInput} onChange={this.phoneNumberInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.phoneNumber} /></p>
-                    <p>เพศ: <TextField
+                
+                <body bgcolor="EEEEEE">
+                <h3>  <PersonIcon></PersonIcon>       ชื่อ: <InputBase ref={this.displayNameInput} onChange={this.displayNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.displayName} /> </h3>
+                
+                    <h3><EmailIcon></EmailIcon>      E-mail: <InputBase ref={this.emailInput} onChange={this.emailNameInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.email} /></h3>
+                    <h3><PhoneIcon></PhoneIcon>           เบอร์: <InputBase ref={this.phoneNumberInput} onChange={this.phoneNumberInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.phoneNumber} /></h3>
+                    <h3><WcIcon></WcIcon>                เพศ: <TextField
                         id="outlined-select-currency"
                         select
                         disabled={this.state.statusEdit}
@@ -212,8 +223,9 @@ export default class Profile extends React.Component {
                                 {option.label}
                             </MenuItem>
                         ))}
-                    </TextField></p>
-                    <p>อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></p>
+                    </TextField></h3>
+                    <h3><FaceIcon></FaceIcon>             อายุ: <InputBase ref={this.ageInput} onChange={this.ageInputUpdate.bind(this)} type="text" disabled={this.state.statusEdit} value={this.state.age} /></h3>
+                    </body>
                 </Typography>
                 {/* <Personalform></Personalform> */}
 
