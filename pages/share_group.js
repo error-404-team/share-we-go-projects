@@ -1,17 +1,27 @@
 import React from 'react';
+import Router, { useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import Chat from '../components/Chat'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
+import { shareLocation, writeHistory } from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
-
-import 'react-chat-widget/lib/styles.css';
+// import Chat from '../components/Chat'
+import ContainedButtons from '../components/bottonShare_group'
+// import 'react-chat-widget/lib/styles.css';
 // import '../css/place-autocomplete-and-directions.css';
 
 require('es6-promise').polyfill();
@@ -38,6 +48,37 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})(props => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
 function AutocompleteDirectionsHandler(google, map) {
   this.map = map;
   this.originPlaceId = null;
@@ -54,9 +95,17 @@ function AutocompleteDirectionsHandler(google, map) {
       firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
         var data = (snapshot.val());
 
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
-        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
-        me.setupClickListener(data.host.request.travelMode);
+        if (data.share === true) {
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.host.request.travelMode);
+
+        } else {
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
+          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
+          me.setupClickListener(data.header.host.request.travelMode);
+        }
+
 
       })
     }
@@ -120,27 +169,75 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 function FinishedStep(props) {
   const classes = useStyles();
 
-  function handleNewUserMessage(newMessage) {
-    console.log(`New message incoming! ${newMessage}`);
-    // Now send the message throught the backend API
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [joinUser, setJoinUser] = React.useState({})
+  const router = useRouter()
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
   }
+
+  function handleClose() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+          let data = (snapshot.val());
+          writeHistory(user.uid, data)
+        })
+
+        shareLocation(user.uid, false)
+        setAnchorEl(null);
+        setTimeout(() => router.push('/'), 100)
+      }
+    })
+  }
+
+  function goBack() {
+    setTimeout(() => router.push('/'), 100)
+  }
+
+
   return (
     <div className={classes.root}>
       <CssBaseline />
+
+      {/* app-bar */}
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            กลุ่มเเชร์ 
         </Typography>
           <div className={classes.grow} />
-          <IconButton edge="end" color="inherit">
+          <IconButton onClick={handleClick} edge="end" color="inherit">
             <MoreIcon />
           </IconButton>
+
+          {/* menu */}
+          <StyledMenu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <StyledMenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <CloseIcon />
+              </ListItemIcon>
+              <ListItemText primary="ยกเลิก" />
+            </StyledMenuItem>
+          </StyledMenu>
+          {/* end-menu */}
+
+
         </Toolbar>
       </AppBar>
+      {/* end-app-bar */}
+
+      {/* map */}
       <Map google={props.google}
         setStyle={{
           position: "absolute",
@@ -226,16 +323,16 @@ function FinishedStep(props) {
             firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
               let stories = (snapshot.val());
 
-              var myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+              let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-              var marker1 = new CustomMarker(
+              let marker1 = new CustomMarker(
                 myLatlng,
                 map,
                 {},
                 stories.photoURL
               );
 
-              var pos = {
+              let pos = {
                 lat: stories.coords.latitude,
                 lng: stories.coords.longitude
               };
@@ -246,17 +343,47 @@ function FinishedStep(props) {
               map.setCenter(pos);
 
             })
+
+            // join
+            firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
+              let hid = (snapshot.val());
+              firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
+                let keysJoin = (snapshot.val());
+                console.log(Object.keys(keysJoin).length);
+
+                Object.keys(keysJoin).map((key) => {
+                  firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                    let dataJoin = (snapshot.val());
+                    setJoinUser([dataJoin])
+                    let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
+                    let marker1 = new CustomMarker(
+                      myLatlng,
+                      map,
+                      {},
+                      dataJoin.photoURL
+                    );
+
+                    let pos = {
+                      lat: dataJoin.coords.latitude,
+                      lng: dataJoin.coords.longitude
+                    };
+
+                    marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                    marker1.draw();
+
+                    map.setCenter(pos);
+                  })
+                })
+              })
+            })
           })
         }}
       >
-
+      <ContainedButtons></ContainedButtons>
+      <Chat></Chat>
       </Map>
-      {/* <Widget
-          handleNewUserMessage={this.handleNewUserMessage}
-          // profileAvatar={logo}
-          title="My new awesome title"
-          subtitle="And my cool subtitle"
-        /> */}
+      {/* end-map */}
+    
     </div>
   )
 

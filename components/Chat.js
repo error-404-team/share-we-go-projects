@@ -6,6 +6,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { useSpring, animated } from 'react-spring';
 // import { GiftedChat } from 'react-web-gifted-chat';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import Appout from '../components/Messend/Appout'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -21,10 +23,12 @@ const useStyles = makeStyles(theme => ({
     },
     fabButton: {
         position: 'absolute',
-        zIndex: 1,
-        top: -30,
-        left: 0,
-        right: 0,
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        // zIndex: 1,
+        // top: -30,
+        // left: 0,
+        // right: 0,
         margin: '0 auto',
       },
 }));
@@ -76,9 +80,16 @@ export default function Chat(props) {
 
     return (
         <React.Fragment>
-            <Fab color="secondary" aria-label="add" onClick={handleOpen} className={classes.fabButton}>
+            <Fab color="primary" aria-label="add" onClick={handleOpen} className={classes.fabButton}>
             <QuestionAnswerIcon />
           </Fab>
+          <span style={{
+                        position:'absolute',
+                        right:'-5%',
+                        top:'-14%',
+                    }}>
+ <HighlightOffIcon></HighlightOffIcon>
+                    </span>
             <Modal
                 aria-labelledby="spring-modal-title"
                 aria-describedby="spring-modal-description"
@@ -99,7 +110,7 @@ export default function Chat(props) {
                             id: 1,
                         }}
                     /> */}
-                    <h1>chat</h1>
+                    <Appout></Appout>
                 </Fade>
             </Modal>
         </React.Fragment>
