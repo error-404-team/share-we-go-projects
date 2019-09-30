@@ -25,7 +25,7 @@ export default function RadioButtonsGroup() {
     const classes = useStyles();
     const [value, setValue] = React.useState('1');
 
-    const socket = io(`http://${window.location.pathname}:8080/`);
+    const socket = io(`http://localhost:8080/`);
 
     function handleChange(event) {
         setValue(event.target.value);

@@ -129,7 +129,7 @@ const Private = function (props) {
     // กำหนดตัวแปล latlng
     let latlng;
 
-    fetch(`http://${window.location.pathname}:8080/users`).then(function (response) {
+    fetch(`http://localhost:8080/users`).then(function (response) {
         if (response.status >= 400) {
             throw new Error("Bad response from server");
         }
@@ -255,7 +255,7 @@ const Private = function (props) {
                             return this.latlng;
                         };
 
-                        fetch(`http://${window.location.pathname}:8080/users`).then(function (response) {
+                        fetch(`http://localhost:8080/users`).then(function (response) {
                             if (response.status >= 400) {
                                 throw new Error("Bad response from server");
                             }
@@ -318,7 +318,7 @@ const Private = function (props) {
 
                                             map.setCenter(pos);
 
-                                            var contentString =
+                                            const contentString =
                                                 '<center>' +
                                                 '<h2>ข้อมูลการแชร์</h2>' +
                                                 '</center>' +
