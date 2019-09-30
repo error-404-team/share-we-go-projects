@@ -35,7 +35,7 @@ import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
 import '../css/share-location-bar.css';
-import { func } from 'prop-types';
+// import { func } from 'prop-types';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -111,9 +111,12 @@ const useStyles = makeStyles(theme => ({
 
 
 
+
+
+
 const Private = function (props) {
-    const classes = useStyles();
     const theme = useTheme();
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState({});
     const [map, setMap] = React.useState({});
@@ -142,15 +145,28 @@ const Private = function (props) {
 
     })
 
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            setUsers(user);
-        }
-    })
-
 
     function handleDrawerOpen() {
         setOpen(true);
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // setUsers(user);
+                firebase.database().ref('profile/' + user.uid).on('value', function (profileUser) {
+                    let data = (profileUser.val())
+                    // console.log(data);
+                    if (data !== null) {
+                        setUsers(data)
+                    } else {
+                        firebase.database().ref('users/' + user.uid).on('value', function (dataUser) {
+                            let dataState = (dataUser.val())
+                            // console.log(dataState);
+                            setUsers(dataState)
+                        })
+                    }
+                })
+            }
+        })
     }
 
     function handleDrawerClose() {
