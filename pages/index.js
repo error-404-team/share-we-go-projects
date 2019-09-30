@@ -22,7 +22,7 @@ class Index extends React.Component {
 
     componentDidMount() {
 
-        const socket = io('http://localhost:7000/')
+        const socket = io(`http://${window.location.pathname}:8080/`)
 
 
 

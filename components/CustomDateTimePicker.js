@@ -55,7 +55,7 @@ export default function CustomDateTimePicker() {
   // The first commit of Material-UI
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
-  const socket = io('http://localhost:7000/');
+  const socket = io(`http://${window.location.pathname}:8080/`);
 
   function handleDateChange(date) {
     setSelectedDate(date);

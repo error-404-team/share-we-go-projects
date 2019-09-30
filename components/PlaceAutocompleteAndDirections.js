@@ -23,7 +23,7 @@ function PlaceAutocompleteAndDirections(props) {
     const originSearchInput = React.useRef(null);
     const destinationSearchInput = React.useRef(null);
 
-    const socket = io('http://localhost:7000/');
+    const socket = io(`http://${window.location.pathname}:8080/`);
 
     /**
      * @constructor

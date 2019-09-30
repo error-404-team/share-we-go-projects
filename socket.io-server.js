@@ -93,8 +93,8 @@ nextApp.prepare().then(() => {
     return nextHandler(req, res)
   })
 
-  server.listen(7000, (err) => {
+  server.listen(8080, (err) => {
     if (err) throw err
-    // console.log('> Ready on http://localhost:7000')
+    console.log('> Ready on http://localhost:8080')
   })
 })

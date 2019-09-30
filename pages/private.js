@@ -129,7 +129,7 @@ const Private = function (props) {
     // กำหนดตัวแปล latlng
     let latlng;
 
-    fetch('http://localhost:7000/users').then(function (response) {
+    fetch(`http://${window.location.pathname}:8080/users`).then(function (response) {
         if (response.status >= 400) {
             throw new Error("Bad response from server");
         }
@@ -255,7 +255,7 @@ const Private = function (props) {
                             return this.latlng;
                         };
 
-                        fetch('http://localhost:7000/users').then(function (response) {
+                        fetch(`http://${window.location.pathname}:8080/users`).then(function (response) {
                             if (response.status >= 400) {
                                 throw new Error("Bad response from server");
                             }
