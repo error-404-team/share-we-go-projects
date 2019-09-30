@@ -58,7 +58,7 @@ class ListData extends React.Component {
                     </button>
                     <div style={{
                         padding: '10px 15px',
-                        marginTop: '18%'
+                        marginTop: '28%'
 
                     }}>
                         {listMsg !== null
@@ -67,29 +67,46 @@ class ListData extends React.Component {
                                     <React.Fragment key={key}>
                                         {listMsg[key].uid === uid
                                             ? <React.Fragment key={key}>
-                                                <p style={{
+                                                <div style={{
                                                     bottom: '14%',
                                                     padding: 'inherit',
                                                     padding: '10px 15px',
                                                     clear: 'both',
                                                     borderRadius: '5px',
-                                                    float: 'right',
-                                                    color: 'blue'
-                                                }}
-                                                    key={key}>{listMsg[key].msg}
-                                                </p>
+                                                    float: 'right'
+                                                }}>
+                                                    <Chip
+                                                        key={key}
+                                                        // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
+                                                        label={(
+                                                            <div>
+                                                                {/* <h3>{listMsg[key].displayName}</h3> */}
+                                                                <p>{listMsg[key].msg}</p>
+                                                            </div>
+                                                        )}
+                                                    />
+                                                </div>
                                             </React.Fragment>
                                             : <React.Fragment key={key}>
-                                                <Chip
-                                                    key={key}
-                                                    avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                    label={(
-                                                        <div>
-                                                            <h3>{listMsg[key].displayName}</h3>
-                                                            <p>{listMsg[key].msg}</p>
-                                                        </div>
-                                                    )}
-                                                />
+                                                <div style={{
+                                                    bottom: '14%',
+                                                    padding: 'inherit',
+                                                    padding: '10px 15px',
+                                                    clear: 'both',
+                                                    borderRadius: '5px',
+                                                    float: 'left'
+                                                }}>
+                                                    <Chip
+                                                        key={key}
+                                                        avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
+                                                        label={(
+                                                            <div>
+                                                                <h3>{listMsg[key].displayName}</h3>
+                                                                <p>{listMsg[key].msg}</p>
+                                                            </div>
+                                                        )}
+                                                    />
+                                                </div>
                                             </React.Fragment>
                                         }
                                     </React.Fragment>
@@ -99,13 +116,8 @@ class ListData extends React.Component {
                             : <React.Fragment>
                                 <center>
                                     <p style={{
-                                        bottom: '14%',
                                         padding: 'inherit',
-                                        padding: '10px 15px',
                                         clear: 'both',
-                                        borderRadius: '5px',
-                                        float: 'left',
-                                        color: 'black'
                                     }}>พิมพ์ข้อความลงไปเพื่สนทนาตอบโต้</p>
                                 </center>
                             </React.Fragment>
