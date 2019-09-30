@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
-import Link from 'next/link';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import $ from "jquery";
-import Router, { useRouter } from 'next/router';
+// import {history} from 'react-router-dom';
+// import Router, { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
@@ -30,12 +31,12 @@ import {
     joinGroupShare,
     writeCreateGroupShareUserDataHeader,
     writeCreateGroupShareUserDataHeaderAndWay
-} from '../firebase-database/write-data';
+} from '../../server/firebase-database/write-data';
 import firebase from '../lib/firebase';
 import '../css/map.css';
 import '../css/styles.css';
 import '../css/share-location-bar.css';
-import { func } from 'prop-types';
+// import { func } from 'prop-types';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -118,7 +119,7 @@ const Private = function (props) {
     const [users, setUsers] = React.useState({});
     const [map, setMap] = React.useState({});
     const [statusShare, setStatusShare] = React.useState(false)
-    const router = useRouter()
+    // const router = useRouter()
     // const [google, setGoogle] = React.useState({});
     // var starCountRef = firebase.database().ref('users/' + postId + '/starCount');
 
@@ -355,7 +356,7 @@ const Private = function (props) {
                                                     firebase.auth().onAuthStateChanged((user) => {
                                                         Object.keys(stories.join.keys).map((key) => {
                                                             if (user.uid == key) {
-                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                                setTimeout(() => props.history.push('/share_group/'), 100)
                                                             } else {
                                                                 alert('จำนวนผู้เข้าร่วมเต็ม')
                                                             }
@@ -379,7 +380,7 @@ const Private = function (props) {
                                                             firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
                                                                 let dataJ = (snapshot.val());
                                                                 joinGroupShare(key, user.uid, dataJ)
-                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                                setTimeout(() => props.history.push('/share_group/'), 100)
                                                             });
 
                                                         }

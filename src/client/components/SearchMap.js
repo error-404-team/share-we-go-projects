@@ -2,7 +2,7 @@ import React from 'react';
 import PropsTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import { ThemeProvider, withStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
+// import { createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';

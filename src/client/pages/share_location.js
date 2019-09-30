@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Router from 'next/router';
-import clsx from 'clsx';
+// import Router from 'next/router';
+// import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 // import { ThemeProvider, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,15 +11,15 @@ import StepButton from '@material-ui/core/StepButton';
 // import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types'
-import { createMuiTheme } from '@material-ui/core/styles';
+// import PropTypes from 'prop-types'
+// import { createMuiTheme } from '@material-ui/core/styles';
 import ShareLocationBar from '../components/ShareLocationBar';
 import PlaceAutocompleteAndDirections from '../components/PlaceAutocompleteAndDirections';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import TravelCompanion from '../components/TravelCompanion';
-import geno from '../image/geno.svg'
+// import geno from '../image/geno.svg'
 import Selectgender from '../components/Selectgender';
-import Link from 'next/link';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import CommuteIcon from '@material-ui/icons/Commute';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import RecentActorsIcon from '@material-ui/icons/RecentActors';
@@ -33,7 +33,7 @@ import {
     writeCreateGroupShareUserDataHeader,
     writeCreateGroupShareUserDataKeys,
     shareLocation
-} from '../firebase-database/write-data'
+} from '../../server/firebase-database/write-data'
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -351,7 +351,7 @@ function ShareLocation(props) {
     }
 
     function handleGoBackPage() {
-        Router.back()
+        props.history.ogBack()
     }
 
     function goBack() {

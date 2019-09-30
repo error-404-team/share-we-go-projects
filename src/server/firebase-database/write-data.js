@@ -1,4 +1,4 @@
-import firebase from '../lib/firebase';
+import firebase from '../../client/lib/firebase';
 
 export function writeUserDataLogin(uid, data) {
     if (data.displayName === null && data.email === null && data.photoURL === null) {

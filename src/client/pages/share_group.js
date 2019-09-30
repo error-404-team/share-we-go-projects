@@ -1,5 +1,5 @@
 import React from 'react';
-import Router, { useRouter } from 'next/router';
+// import Router, { useRouter } from 'next/router';
 import { Map, ConnectApiMaps } from '../lib/maps';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
-import { shareLocation, writeHistory } from '../firebase-database/write-data'
+import { shareLocation, writeHistory } from '../../server/firebase-database/write-data'
 
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 
@@ -171,7 +171,7 @@ function FinishedStep(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [joinUser, setJoinUser] = React.useState({})
-  const router = useRouter()
+  // const router = useRouter()
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -187,13 +187,13 @@ function FinishedStep(props) {
 
         shareLocation(user.uid, false)
         setAnchorEl(null);
-        setTimeout(() => router.push('/'), 100)
+        setTimeout(() => props.history.push('/'), 100)
       }
     })
   }
 
   function goBack() {
-    setTimeout(() => router.push('/'), 100)
+    setTimeout(() => props.history.push('/'), 100)
   }
 
 

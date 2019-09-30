@@ -1,22 +1,22 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Router from 'next/router';
+// import Router from 'next/router';
 import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+// import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import firebase from '../lib/firebase';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import RecentActorsIcon from '@material-ui/icons/RecentActors';
 import CommuteIcon from '@material-ui/icons/Commute';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+// import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import WcIcon from '@material-ui/icons/Wc';
 
 
@@ -35,7 +35,7 @@ export default class ControlledExpansionPanels extends React.Component {
   };
 
   goBack() {
-    Router.back();
+    this.props.history.goBack();
   }
 
   componentDidMount() {

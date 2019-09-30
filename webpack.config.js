@@ -36,7 +36,7 @@ module.exports = {
     open: true,
     proxy: {
       '/api': 'http://localhost:8080',
-      '/socket.io': 'http://localhost:9000'
+      '/socket.io': 'http://localhost:7000'
     }
   },
   plugins: [

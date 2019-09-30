@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Router from 'next/router';
+// import Router from 'next/router';
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from "@material-ui/core/Toolbar";
 
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 
@@ -23,7 +23,7 @@ import TextField from '@material-ui/core/TextField';
 import firebase from "../lib/firebase";
 import { InputBase } from '@material-ui/core';
 
-import { writeUserDataEdit } from '../firebase-database/write-data'
+import { writeUserDataEdit } from '../../server/firebase-database/write-data'
 
 
 export default class Profile extends React.Component {
@@ -83,7 +83,7 @@ export default class Profile extends React.Component {
     }
 
     goBack() {
-        Router.back()
+        this.props.history.goBack()
     }
 
     onEdit() {
