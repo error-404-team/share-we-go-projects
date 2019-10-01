@@ -25,7 +25,7 @@ const Styeles = {
         bottom: '17%',
         left: '8%',
         width: '77%',
-        height: '60%',
+        height: '58%',
         overflow: 'scroll',
         position:'fixed'
     },
@@ -75,7 +75,7 @@ class ListData extends React.Component {
                                                     padding: 'inherit',
                                                     padding: '10px 15px',
                                                     clear: 'both',
-                                                    borderRadius: '5px',
+                                                    borderRadius: '5ypx',
                                                     float: 'right'
                                                 }}>
                                                     <Chip
