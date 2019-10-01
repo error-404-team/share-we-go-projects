@@ -212,6 +212,7 @@ export default class Profile extends React.Component {
                 </AppBar>
 
                 <Box>
+                {/* <body bgcolor="EEEEEE"> */}
                     <Grid container justify="center" alignItems="center">
                         <Avatar src={this.state.photoURL}
                             style={{
@@ -221,22 +222,8 @@ export default class Profile extends React.Component {
                             }} />
                     </Grid>
                     <hr noshade='noshade' size="2"></hr>
+                    {/* </body> */}
                 </Box>
-                {this.state.statusEdit === true
-                    ? (
-                        <IconButton onClick={this.onEdit.bind(this)}  >
-
-
-
-                            <span align='right'><BorderColorIcon></BorderColorIcon>                            แก้ไขข้อมูล</span>
-
-                        </IconButton >
-                    )
-                    : (
-                        <Button onClick={this.onSave.bind(this)}>บันทึก</Button>
-                    )
-                }
-
 
                 <Typography style={{ fontSize: 14, }} color="textSecondary" gutterBottom>
 
@@ -267,6 +254,25 @@ export default class Profile extends React.Component {
                     </body>
                 </Typography>
                 {/* <Personalform></Personalform> */}
+                {this.state.statusEdit === true
+                    ? (
+                        <body bgcolor='33CC66'>
+                        <center>
+                        <IconButton onClick={this.onEdit.bind(this)}  >
+                            <center><BorderColorIcon></BorderColorIcon>  แก้ไขข้อมูล</center>
+                            
+                        </IconButton >
+                        </center>
+                        </body>
+                    )
+                    : (
+                        <body bgcolor='33CC66'>
+                        <center>
+                        <Button onClick={this.onSave.bind(this)}><h3>บันทึก</h3></Button>
+                        </center>
+                        </body>
+                    )
+                }
 
             </React.Fragment>
 
