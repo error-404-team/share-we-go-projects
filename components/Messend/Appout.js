@@ -21,12 +21,12 @@ class Appout extends React.Component {
   componentDidMount() {
     const me = this;
     firebase.auth().onAuthStateChanged((user) => {
-      firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-        var keys = (snapshot.val());
-        if (keys !== null) {
-          Object.keys(keys).map((key) => {
+      firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+        var group_share_user = (snapshot.val());
+        if (group_share_user !== null) {
+          Object.keys(group_share_user).map((key) => {
             if (key !== user.uid) {
-              firebase.database().ref(`/group_share_user/${key}/join/keys`).on('value', function (snapshot) {
+              firebase.database().ref(`/group_share_user/${key}/join/`).on('value', function (snapshot) {
                 let joinKeys = (snapshot.val());
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {
@@ -70,12 +70,12 @@ class Appout extends React.Component {
   onClickButtonHandlerData = (msg) => {
 
     firebase.auth().onAuthStateChanged((user) => {
-      firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-        var keys = (snapshot.val());
-        if (keys !== null) {
-          Object.keys(keys).map((key) => {
+      firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+        var group_share_user = (snapshot.val());
+        if (group_share_user !== null) {
+          Object.keys(group_share_user).map((key) => {
             if (key !== user.uid) {
-              firebase.database().ref(`/group_share_user/${key}/join/keys`).on('value', function (snapshot) {
+              firebase.database().ref(`/group_share_user/${key}/join/`).on('value', function (snapshot) {
                 let joinKeys = (snapshot.val());
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {
@@ -120,19 +120,33 @@ class Appout extends React.Component {
             } else {
               firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
                 let stories = (snapshot.val());
-                console.log('false', false);
                 if (stories.share !== false) {
                   firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshot) {
                     let dataProfileUser = (snapshot.val());
-                    let data = {
-                      displayName: dataProfileUser.displayName,
-                      photoURL: dataProfileUser.photoURL,
-                      msg: msg,
-                      uid: user.uid,
-                      mid: Math.random().toString(36).substr(2, 9),
-                      header: true
+                    if (dataProfileUser !== null) {
+                      let data = {
+                        displayName: dataProfileUser.displayName,
+                        photoURL: dataProfileUser.photoURL,
+                        msg: msg,
+                        uid: user.uid,
+                        mid: Math.random().toString(36).substr(2, 9),
+                        header: true
+                      }
+                      writeMessenger(user.uid, data)
+                    } else {
+                      firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                        let dataUser = (snapshot.val());
+                        let data = {
+                          displayName: dataUser.displayName,
+                          photoURL: dataUser.photoURL,
+                          msg: msg,
+                          uid: user.uid,
+                          mid: Math.random().toString(36).substr(2, 9),
+                          header: true
+                        }
+                        writeMessenger(user.uid, data)
+                      })
                     }
-                    writeMessenger(user.uid, data)
                   })
                 }
               })
