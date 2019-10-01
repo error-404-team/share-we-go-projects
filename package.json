@@ -8,7 +8,7 @@
     "socket.io-server": "SET NODE_ENV=production node socket.io-server.js",
     "client": "next start",
     "build": "next build",
-    "start": "concurrently \"npm run server\" \"npm run client\" \"npm run socket.io-server\""
+    "start": "concurrently \"npm run dev-client\" \"npm run dev\""
   },
   "repository": {
     "type": "git",

@@ -25,7 +25,7 @@ export default function RadioButtonsGroup() {
     const classes = useStyles();
     const [value, setValue] = React.useState('MaleAndFemale');
 
-    const socket = io('http://localhost:7000/');
+    const socket = io(`http://localhost:8080/`);
 
     function handleChange(event) {
         setValue(event.target.value);

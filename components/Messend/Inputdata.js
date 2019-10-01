@@ -72,7 +72,7 @@ class InputData extends Component {
                                  bottom: '18%'
                             }}
                             onClick={this.onClickButton}>
-                            <SendRoundedIcon onClick={this.onClickButton} ></SendRoundedIcon></button>
+                            <SendRoundedIcon  ></SendRoundedIcon></button>
                     </span>
                 </div>
             </div>

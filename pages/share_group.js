@@ -182,10 +182,20 @@ function FinishedStep(props) {
       if (user) {
         firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
           let data = (snapshot.val());
-          writeHistory(user.uid, data)
+          if(user.uid === data.header.uid) {
+            shareLocation(user.uid, false)
+            writeHistory(user.uid, data)
+            firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
+          }else {
+            firebase.database().ref(`/group_share_user/${data.header.uid}`).once('value').then(function (snapshot) {
+              let dataHaderShare = (snapshot.val());
+              writeHistory(user.uid, dataHaderShare)
+            })
+            firebase.database().ref(`/group_share_user/${data.header.uid}/join/user/${user.uid}`).remove()
+          }
+          
         })
 
-        shareLocation(user.uid, false)
         setAnchorEl(null);
         setTimeout(() => router.push('/'), 100)
       }
@@ -208,7 +218,7 @@ function FinishedStep(props) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            กลุ่มเเชร์ 
+            กลุ่มเเชร์
         </Typography>
           <div className={classes.grow} />
           <IconButton onClick={handleClick} edge="end" color="inherit">
@@ -349,41 +359,46 @@ function FinishedStep(props) {
               let hid = (snapshot.val());
               firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
                 let keysJoin = (snapshot.val());
-                console.log(Object.keys(keysJoin).length);
+                if (keysJoin !== null) {
+                  // console.log(keysJoin);
+  
+                  // console.log(Object.keys(keysJoin).length);
+                  Object.keys(keysJoin).map((key) => {
+                    firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                      let dataJoin = (snapshot.val());
+                      setJoinUser([dataJoin])
+                      let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
+                      let marker1 = new CustomMarker(
+                        myLatlng,
+                        map,
+                        {},
+                        dataJoin.photoURL
+                      );
 
-                Object.keys(keysJoin).map((key) => {
-                  firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
-                    let dataJoin = (snapshot.val());
-                    setJoinUser([dataJoin])
-                    let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
-                    let marker1 = new CustomMarker(
-                      myLatlng,
-                      map,
-                      {},
-                      dataJoin.photoURL
-                    );
+                      let pos = {
+                        lat: dataJoin.coords.latitude,
+                        lng: dataJoin.coords.longitude
+                      };
 
-                    let pos = {
-                      lat: dataJoin.coords.latitude,
-                      lng: dataJoin.coords.longitude
-                    };
+                      marker1.latlng = { lat: pos.lat, lng: pos.lng };
+                      marker1.draw();
 
-                    marker1.latlng = { lat: pos.lat, lng: pos.lng };
-                    marker1.draw();
-
-                    map.setCenter(pos);
+                      map.setCenter(pos);
+                    })
                   })
-                })
+                } else {
+                  alert('ขณะนี้ยังไม่มีเข้าเข้าร่วมแชร์')
+                }
               })
             })
           })
         }}
       >
-      <ContainedButtons></ContainedButtons>
-      <Chat></Chat>
+        <ContainedButtons></ContainedButtons>
+        <Chat></Chat>
       </Map>
       {/* end-map */}
-    
+
     </div>
   )
 
