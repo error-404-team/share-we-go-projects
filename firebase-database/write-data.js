@@ -130,3 +130,7 @@ export function joinGroupShare(hid, uid, data) {
 export function writeHistory(uid, data) {
     firebase.database().ref(`history/${uid}`).push(data)
 }
+
+export function writeMessenger(hid, data) {
+    firebase.database().ref(`group_share_user/${hid}/messengers`).push(data)
+}
