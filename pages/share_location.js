@@ -199,7 +199,7 @@ function ShareLocation(props) {
                     let users = (snapshot.val());
                     writeCreateGroupShareUserDataHeader(user.uid, users);
                     shareLocation(user.uid, true)
-                    writeCreateGroupShareUserDataKeys(user.uid)
+                    // writeCreateGroupShareUserDataKeys(user.uid)
                 });
             }
         })

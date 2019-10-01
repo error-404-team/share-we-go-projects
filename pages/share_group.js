@@ -182,10 +182,20 @@ function FinishedStep(props) {
       if (user) {
         firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
           let data = (snapshot.val());
-          writeHistory(user.uid, data)
+          if(user.uid === data.header.uid) {
+            shareLocation(user.uid, false)
+            writeHistory(user.uid, data)
+            firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
+          }else {
+            firebase.database().ref(`/group_share_user/${data.header.uid}`).once('value').then(function (snapshot) {
+              let dataHaderShare = (snapshot.val());
+              writeHistory(user.uid, dataHaderShare)
+            })
+            firebase.database().ref(`/group_share_user/${data.header.uid}/join/user/${user.uid}`).remove()
+          }
+          
         })
 
-        shareLocation(user.uid, false)
         setAnchorEl(null);
         setTimeout(() => router.push('/'), 100)
       }
