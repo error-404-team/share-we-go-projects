@@ -407,8 +407,16 @@ const Private = function (props) {
                                                         })
                                                     }
                                                 } else {
-                                                    alert('คุณได้ทำการเข้าแชร์ของคุณเอง')
-                                                    setTimeout(() => router.push('/share_group/'), 100)
+                                                    // alert('คุณได้ทำการเข้าแชร์ของคุณเอง')
+                                                    firebase.auth().onAuthStateChanged((user) => {
+                                                        if (user) {
+                                                            firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                                                                let dataJ = (snapshot.val());
+                                                                joinGroupShare(key, user.uid, dataJ)
+                                                                setTimeout(() => router.push('/share_group/'), 100)
+                                                            });
+                                                        }
+                                                    })
                                                 }
 
                                             });

@@ -31,11 +31,14 @@ class Appout extends React.Component {
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {
                     if (key === user.uid) {
-                      firebase.database().ref(`/group_share_user/${key}/messengers`).on('value', function (snapshot) {
-                        let dataMsg = (snapshot.val());
-                        me.setState({
-                          listMsg: dataMsg,
-                          uid: user.uid
+                      firebase.database().ref(`/group_share_user/${user.uid}/header`).on('value', function (snapshot) {
+                        let joinHeaderKeys = (snapshot.val());
+                        firebase.database().ref(`/group_share_user/${joinHeaderKeys.uid}/messengers`).on('value', function (snapshot) {
+                          let dataMsg = (snapshot.val());
+                          me.setState({
+                            listMsg: dataMsg,
+                            uid: user.uid
+                          })
                         })
                       })
                     }
@@ -65,7 +68,7 @@ class Appout extends React.Component {
   }
 
   onClickButtonHandlerData = (msg) => {
-    
+
     firebase.auth().onAuthStateChanged((user) => {
       firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
         var keys = (snapshot.val());
@@ -77,17 +80,38 @@ class Appout extends React.Component {
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {
                     if (key === user.uid) {
-                      firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshot) {
-                        let dataProfileUser = (snapshot.val());
-                        let data = {
-                          displayName: dataProfileUser.displayName,
-                          photoURL: dataProfileUser.photoURL,
-                          msg: msg,
-                          uid: user.uid,
-                          mid: Math.random().toString(36).substr(2, 9),
-                          header: false
-                        }
-                        writeMessenger(user.uid, data)
+                      firebase.database().ref(`/group_share_user/${user.uid}/header`).on('value', function (snapshot) {
+                        let joinHeaderKeys = (snapshot.val());
+                        firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshotData) {
+                          let dataProfileUser = (snapshotData.val());
+
+                          if (dataProfileUser !== null) {
+                            let data = {
+                              displayName: dataProfileUser.displayName,
+                              photoURL: dataProfileUser.photoURL,
+                              msg: msg,
+                              uid: user.uid,
+                              mid: Math.random().toString(36).substr(2, 9),
+                              header: false
+                            }
+                            writeMessenger(joinHeaderKeys.uid, data)
+                          } else {
+                            firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshotDataUser) {
+                              let dataeUser = (snapshotDataUser.val());
+
+                              let data = {
+                                displayName: dataeUser.displayName,
+                                photoURL: dataeUser.photoURL,
+                                msg: msg,
+                                uid: user.uid,
+                                mid: Math.random().toString(36).substr(2, 9),
+                                header: false
+                              }
+                              writeMessenger(joinHeaderKeys.uid, data)
+                            })
+                          }
+
+                        })
                       })
                     }
                   })
@@ -96,7 +120,7 @@ class Appout extends React.Component {
             } else {
               firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
                 let stories = (snapshot.val());
-                console.log('false',false);
+                console.log('false', false);
                 if (stories.share !== false) {
                   firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshot) {
                     let dataProfileUser = (snapshot.val());
