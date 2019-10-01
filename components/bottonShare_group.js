@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useSpring, animated } from 'react-spring';
 // import { GiftedChat } from 'react-web-gifted-chat';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import LocalTaxiIcon from '@material-ui/icons/LocalTaxi';
 import App1 from '../components/App1'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
         // right: 0,
         margin: '0 auto',
       },
+
       fabtwo: {
         position: 'absolute',
             bottom: theme.spacing(11),
@@ -116,6 +117,7 @@ export default function Chat(props) {
                         }}
                     /> */}
                     <App1></App1>
+                    {/* <App1></App1> */}
                 </Fade>
             </Modal>
         </React.Fragment>

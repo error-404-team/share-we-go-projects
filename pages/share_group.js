@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import bottonShare_group from '../components/bottonShare_group'
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -394,6 +396,7 @@ function FinishedStep(props) {
           })
         }}
       >
+        <bottonShare_group></bottonShare_group>
         <ContainedButtons></ContainedButtons>
         <Chat></Chat>
       </Map>
