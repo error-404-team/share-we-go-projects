@@ -21,12 +21,12 @@ class Appout extends React.Component {
   componentDidMount() {
     const me = this;
     firebase.auth().onAuthStateChanged((user) => {
-      firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-        var keys = (snapshot.val());
-        if (keys !== null) {
-          Object.keys(keys).map((key) => {
+      firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+        var group_share_user = (snapshot.val());
+        if (group_share_user !== null) {
+          Object.keys(group_share_user).map((key) => {
             if (key !== user.uid) {
-              firebase.database().ref(`/group_share_user/${key}/join/keys`).on('value', function (snapshot) {
+              firebase.database().ref(`/group_share_user/${key}/join/`).on('value', function (snapshot) {
                 let joinKeys = (snapshot.val());
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {
@@ -70,12 +70,12 @@ class Appout extends React.Component {
   onClickButtonHandlerData = (msg) => {
 
     firebase.auth().onAuthStateChanged((user) => {
-      firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-        var keys = (snapshot.val());
-        if (keys !== null) {
-          Object.keys(keys).map((key) => {
+      firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+        var group_share_user = (snapshot.val());
+        if (group_share_user !== null) {
+          Object.keys(group_share_user).map((key) => {
             if (key !== user.uid) {
-              firebase.database().ref(`/group_share_user/${key}/join/keys`).on('value', function (snapshot) {
+              firebase.database().ref(`/group_share_user/${key}/join/`).on('value', function (snapshot) {
                 let joinKeys = (snapshot.val());
                 if (joinKeys !== null) {
                   Object.keys(joinKeys).map((key) => {

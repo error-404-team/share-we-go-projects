@@ -29,7 +29,9 @@ import {
     writeUserDataLocation,
     joinGroupShare,
     writeCreateGroupShareUserDataHeader,
-    writeCreateGroupShareUserDataHeaderAndWay
+    writeCreateGroupShareUserDataHeaderAndWay,
+    writeHistory,
+    shareLocation
 } from '../firebase-database/write-data';
 import firebase from '../lib/firebase';
 import '../css/map.css';
@@ -308,12 +310,12 @@ const Private = function (props) {
                             }
                         })
 
-                        firebase.database().ref(`/group_share_user/keys`).once('value').then(function (snapshot) {
-                            var keys = (snapshot.val());
-                            console.log(keys);
+                        firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+                            var group_share_user = (snapshot.val());
+                            console.log(group_share_user);
 
-                            if (keys !== null) {
-                                Object.keys(keys).map((key) => {
+                            if (group_share_user !== null) {
+                                Object.keys(group_share_user).map((key) => {
                                     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
                                         var stories = (snapshot.val());
                                         if (stories.share === true) {
@@ -350,7 +352,7 @@ const Private = function (props) {
                                                 <br></br>
                                                 <u style="font-size: 15px">ปิดแชร์เวลา:</u></<u><b>${stories.date_time.end_time} </b>
                                                 <br></br>
-                                                <u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b> ${stories.join !== undefined ? Object.keys(stories.join.keys).length : 0} / ${stories.number_of_travel}  คน </b>
+                                                <u style="font-size: 15px">ต้องการผู้เดินทางเพิ่ม:</u></<u><b> ${stories.join !== undefined ? Object.keys(stories.join).length : 0} / ${stories.number_of_travel}  คน </b>
                                                 <br></br>
                                                 <u style="font-size: 15px">เดินทางกับเพศ:</u></<u><b> ${stories.gender} </b>
                                                 <hr></hr>
@@ -372,13 +374,13 @@ const Private = function (props) {
                                             $(document).on('click', '#join-share', function () {
                                                 console.log(stories.join);
                                                 if (stories.join !== undefined) {
-                                                    if (Object.keys(stories.join.keys).length >= stories.number_of_travel) {
+                                                    if (Object.keys(stories.join).length >= stories.number_of_travel) {
                                                         firebase.auth().onAuthStateChanged((user) => {
-                                                            Object.keys(stories.join.keys).map((key) => {
-                                                                if (user.uid == key) {
-                                                                    setTimeout(() => router.push('/share_group/'), 100)
-                                                                } else {
+                                                            Object.keys(stories.join).map((key) => {
+                                                                if (user.uid !== key) {
                                                                     alert('จำนวนผู้เข้าร่วมเต็ม')
+                                                                } else {
+                                                                    setTimeout(() => router.push('/share_group/'), 100)
                                                                 }
                                                             })
                                                         })
@@ -399,6 +401,28 @@ const Private = function (props) {
 
                                                                 firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
                                                                     let dataJ = (snapshot.val());
+                                                                    firebase.database().ref(`/group_share_user/`).once('value').then(function (snapshot) {
+                                                                        let chackUser = (snapshot.val());
+                                                                        Object.keys(chackUser).map((key) => {
+                                                                            console.log(key);
+                                                                            
+                                                                            // if(chackUser[key].header.uid === user.uid) {
+                                                                            //     alert('การเข้าร่วมแชร์นี้ จะทำการยกเลิกกลุ่มแชร์เดิม')
+                                                                            //     shareLocation(user.uid, false)
+                                                                            //     firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
+                                                                            // }
+
+                                                                            // if(chackUser[key].join.user[user.uid].uid === user.uid) {
+                                                                            //     alert('การเข้าร่วมแชร์นี้ จะทำการออกแชร์เดิม')
+                                                                            //     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
+                                                                            //         let dataHaderShare = (snapshot.val());
+                                                                            //         writeHistory(user.uid, dataHaderShare)
+                                                                            //       })
+                                                                            //     firebase.database().ref(`/group_share_user/${key}/join/user/${user.uid}`).remove()
+                                                                            // }
+                                                                        })
+                                                                    })
+
                                                                     joinGroupShare(key, user.uid, dataJ)
                                                                     setTimeout(() => router.push('/share_group/'), 100)
                                                                 });
