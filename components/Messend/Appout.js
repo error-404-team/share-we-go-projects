@@ -123,15 +123,30 @@ class Appout extends React.Component {
                 if (stories.share !== false) {
                   firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshot) {
                     let dataProfileUser = (snapshot.val());
-                    let data = {
-                      displayName: dataProfileUser.displayName,
-                      photoURL: dataProfileUser.photoURL,
-                      msg: msg,
-                      uid: user.uid,
-                      mid: Math.random().toString(36).substr(2, 9),
-                      header: true
+                    if (dataProfileUser !== null) {
+                      let data = {
+                        displayName: dataProfileUser.displayName,
+                        photoURL: dataProfileUser.photoURL,
+                        msg: msg,
+                        uid: user.uid,
+                        mid: Math.random().toString(36).substr(2, 9),
+                        header: true
+                      }
+                      writeMessenger(user.uid, data)
+                    } else {
+                      firebase.database().ref(`/users/${user.uid}`).once('value').then(function (snapshot) {
+                        let dataUser = (snapshot.val());
+                        let data = {
+                          displayName: dataUser.displayName,
+                          photoURL: dataUser.photoURL,
+                          msg: msg,
+                          uid: user.uid,
+                          mid: Math.random().toString(36).substr(2, 9),
+                          header: true
+                        }
+                        writeMessenger(user.uid, data)
+                      })
                     }
-                    writeMessenger(user.uid, data)
                   })
                 }
               })

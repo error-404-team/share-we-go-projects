@@ -318,6 +318,8 @@ const Private = function (props) {
                                 Object.keys(group_share_user).map((key) => {
                                     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
                                         var stories = (snapshot.val());
+                                        console.log(stories);
+                                        
                                         if (stories.share === true) {
                                             let myLatlng = new google.maps.LatLng(stories.header.coords.latitude, stories.header.coords.longitude);
 
@@ -406,20 +408,20 @@ const Private = function (props) {
                                                                         Object.keys(chackUser).map((key) => {
                                                                             console.log(key);
                                                                             
-                                                                            // if(chackUser[key].header.uid === user.uid) {
-                                                                            //     alert('การเข้าร่วมแชร์นี้ จะทำการยกเลิกกลุ่มแชร์เดิม')
-                                                                            //     shareLocation(user.uid, false)
-                                                                            //     firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
-                                                                            // }
+                                                                            if(chackUser[key].header.uid === user.uid) {
+                                                                                alert('การเข้าร่วมแชร์นี้ จะทำการยกเลิกกลุ่มแชร์เดิม')
+                                                                                shareLocation(user.uid, false)
+                                                                                firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
+                                                                            }
 
-                                                                            // if(chackUser[key].join.user[user.uid].uid === user.uid) {
-                                                                            //     alert('การเข้าร่วมแชร์นี้ จะทำการออกแชร์เดิม')
-                                                                            //     firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
-                                                                            //         let dataHaderShare = (snapshot.val());
-                                                                            //         writeHistory(user.uid, dataHaderShare)
-                                                                            //       })
-                                                                            //     firebase.database().ref(`/group_share_user/${key}/join/user/${user.uid}`).remove()
-                                                                            // }
+                                                                            if(chackUser[key].join.user[user.uid].uid === user.uid) {
+                                                                                alert('การเข้าร่วมแชร์นี้ จะทำการออกแชร์เดิม')
+                                                                                firebase.database().ref(`/group_share_user/${key}`).once('value').then(function (snapshot) {
+                                                                                    let dataHaderShare = (snapshot.val());
+                                                                                    writeHistory(user.uid, dataHaderShare)
+                                                                                  })
+                                                                                firebase.database().ref(`/group_share_user/${key}/join/user/${user.uid}`).remove()
+                                                                            }
                                                                         })
                                                                     })
 
