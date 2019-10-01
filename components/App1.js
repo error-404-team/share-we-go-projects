@@ -29,7 +29,8 @@ class App1 extends React.Component{
 
           <body>
           <h4 align = 'center'>ชื่อผู้ขับขี่</h4>
-            <h4 align = 'center'><input type= "bod" name= "bob1" id= "bod2" size= "24"></input></h4>
+            <h4 align = 'center'><input type= "bod" name= "bob1"
+            id= "bod2" size= "24"></input></h4>
             <h4 align = 'center'>ป้ายทะเบียนรถยนต์</h4>
               <h4 align = 'center'><input type= "bod" name= "bob1" id= "bod2" size= "24"></input></h4> 
 
