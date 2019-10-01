@@ -5,6 +5,7 @@ import Chip from '@material-ui/core/Chip';
 // import TEST from '../Img/TEST.jpg'
 // import Img from '../Messend/Photo/Img.jpeg'
 
+
 const Styeles = {
     OverScroll: {
         // backgroundColor:'skyblue',
@@ -16,29 +17,31 @@ const Styeles = {
 
         backgroundColor: 'white',
         // borderTop: '0px solid #ddd',
-        borderTopRightRadius: '20px',
-        borderTopLeftRadius: '20px',
+        // borderTopRightRadius: '20px',
+        // borderTopLeftRadius: '20px',
         // borderBottomRightRadius: '0px',
         // borderBottomLeftRadius: '0px',
         position: 'fixed',
         bottom: '17%',
         left: '8%',
         width: '77%',
-        height: '70%',
-        overflow: 'auto',
+        height: '60%',
+        overflow: 'scroll',
+        position:'fixed'
     },
 
 
 }
 
+
 class ListData extends React.Component {
 
     render() {
         const { classes, listMsg, uid } = this.props
-
+        
         // Object.keys(listMsg).map((key,index)=> console.log(listMsg[key].msg))
         return (
-            <div>
+            <div >
                 <div className={classes.InpuChatButton}>
                     <button
                         style={{
