@@ -113,20 +113,24 @@ export function writeCreateGroupShareUserDataHeaderAndWay(uid, data) {
     firebase.database().ref(`group_share_user/${uid}/header/host`).set(data)
 }
 
-export function writeCreateGroupShareUserDataKeys(uid) {
-    firebase.database().ref(`group_share_user/keys/${uid}`).set(uid)
-}
+// export function writeCreateGroupShareUserDataKeys(uid) {
+//     firebase.database().ref(`group_share_user/keys/${uid}`).set(uid)
+// }
 
 export function shareLocation(uid, data) {
     firebase.database().ref(`group_share_user/${uid}/share`).set(data)
 }
 
 export function joinGroupShare(hid, uid, data) {
-    firebase.database().ref(`group_share_user/${hid}/join/user/${uid}`).set(data);
+    firebase.database().ref(`group_share_user/${hid}/join/${uid}`).set(data);
 
-    firebase.database().ref(`group_share_user/${hid}/join/keys/${uid}`).set(uid)
+    // firebase.database().ref(`group_share_user/${hid}/join/keys/${uid}`).set(uid)
 }
 
 export function writeHistory(uid, data) {
     firebase.database().ref(`history/${uid}`).push(data)
+}
+
+export function writeMessenger(hid, data) {
+    firebase.database().ref(`group_share_user/${hid}/messengers`).push(data)
 }
