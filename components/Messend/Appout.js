@@ -120,7 +120,6 @@ class Appout extends React.Component {
             } else {
               firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
                 let stories = (snapshot.val());
-                console.log('false', false);
                 if (stories.share !== false) {
                   firebase.database().ref(`/profile/${user.uid}`).once('value').then(function (snapshot) {
                     let dataProfileUser = (snapshot.val());
