@@ -1,5 +1,5 @@
 import React from 'react'
-import { withStyles } from '@material-ui/styles';
+import {withStyles} from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 // import TEST from '../Img/TEST.jpg'
@@ -27,7 +27,6 @@ const Styeles = {
         width: '77%',
         height: '58%',
         overflow: 'scroll',
-        position:'fixed'
     },
 
 
@@ -35,23 +34,33 @@ const Styeles = {
 
 
 class ListData extends React.Component {
+    constructor(props) {
+        super(props);
+
+    }
+
+
+    // scroll to last message
+    componentDidUpdate(){
+        const element = document.getElementById('bottom');
+        element.scrollIntoView({behavior: 'smooth'});
+    }
 
     render() {
-        const { classes, listMsg, uid } = this.props
-        
+        const {classes, listMsg, uid} = this.props
+
         // Object.keys(listMsg).map((key,index)=> console.log(listMsg[key].msg))
         return (
-            <div >
+            <div>
                 <div className={classes.InpuChatButton}>
                     <button
                         style={{
                             border: '0px solid #ffffff00',
                             backgroundColor: '#3f51b5',
-                            position: 'fixed',
                             bottom: '480px',
                             height: '77px',
-                            width: '77%',
-                            right: '15%',
+                            width: '100%',
+
                             // borderTopLeftRadius: '18px',
                             // borderTopRightRadius: '18px',
                         }}>
@@ -59,73 +68,76 @@ class ListData extends React.Component {
                             </InsertEmoticonOutlinedIcon> */}
                         <span>สมาชิก</span>
                     </button>
-                    <div style={{
-                        padding: '10px 15px',
-                        marginTop: '28%'
 
-                    }}>
-                        {listMsg !== null
-                            ? <React.Fragment>
-                                {Object.keys(listMsg).map(key => (
-                                    <React.Fragment key={key}>
-                                        {listMsg[key].uid === uid
-                                            ? <React.Fragment key={key}>
-                                                <div style={{
-                                                    bottom: '14%',
-                                                    padding: 'inherit',
-                                                    padding: '10px 15px',
-                                                    clear: 'both',
-                                                    borderRadius: '5ypx',
-                                                    float: 'right'
-                                                }}>
-                                                    <Chip
-                                                        key={key}
-                                                        // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                        label={(
-                                                            <div>
-                                                                {/* <h3>{listMsg[key].displayName}</h3> */}
-                                                                <p>{listMsg[key].msg}</p>
-                                                            </div>
-                                                        )}
-                                                    />
-                                                </div>
-                                            </React.Fragment>
-                                            : <React.Fragment key={key}>
-                                                <div style={{
-                                                    bottom: '14%',
-                                                    padding: 'inherit',
-                                                    padding: '10px 15px',
-                                                    clear: 'both',
-                                                    borderRadius: '5px',
-                                                    float: 'left'
-                                                }}>
-                                                    <Chip
-                                                        key={key}
-                                                        avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                        label={(
-                                                            <div>
-                                                                <h3>{listMsg[key].displayName}</h3>
-                                                                <p>{listMsg[key].msg}</p>
-                                                            </div>
-                                                        )}
-                                                    />
-                                                </div>
-                                            </React.Fragment>
-                                        }
-                                    </React.Fragment>
-                                ))
-                                }
+                    {listMsg !== null
+                        ? <React.Fragment>
+                            {Object.keys(listMsg).map(key => (
+                                <React.Fragment key={key}>
+                                    {listMsg[key].uid === uid
+                                        ? <React.Fragment key={key}>
+                                            <div style={{
+                                                bottom: '14%',
+                                                padding: 'inherit',
+                                                padding: '10px 15px',
+                                                clear: 'both',
+                                                borderRadius: '5ypx',
+                                                float: 'right'
+                                            }}>
+                                                <Chip
+                                                    key={key}
+                                                    // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
+                                                    label={(
+                                                        <div>
+                                                            {/* <h3>{listMsg[key].displayName}</h3> */}
+                                                            <p>{listMsg[key].msg}</p>
+                                                        </div>
+                                                    )}
+                                                />
+                                            </div>
+                                        </React.Fragment>
+                                        : <React.Fragment key={key}>
+                                            <div style={{
+                                                bottom: '14%',
+                                                padding: 'inherit',
+                                                padding: '10px 15px',
+                                                clear: 'both',
+                                                borderRadius: '5px',
+                                                float: 'left'
+                                            }}>
+                                                <Chip
+                                                    key={key}
+                                                    avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL}/>}
+                                                    label={(
+                                                        <div>
+                                                            <h3>{listMsg[key].displayName}</h3>
+                                                            <p>{listMsg[key].msg}</p>
+                                                        </div>
+                                                    )}
+                                                />
+                                            </div>
+                                        </React.Fragment>
+                                    }
+
+                                </React.Fragment>
+                            ))
+                            }
+
+                            <React.Fragment>
+                                <div  id='bottom' style={{clear: 'both',}}>
+                                </div>
                             </React.Fragment>
-                            : <React.Fragment>
-                                <center>
-                                    <p style={{
-                                        padding: 'inherit',
-                                        clear: 'both',
-                                    }}>พิมพ์ข้อความลงไปเพื่สนทนาตอบโต้</p>
-                                </center>
-                            </React.Fragment>
-                        }
-                    </div>
+
+                        </React.Fragment>
+                        : <React.Fragment>
+                            <center>
+                                <p style={{
+                                    padding: 'inherit',
+                                    clear: 'both',
+                                }}>พิมพ์ข้อความลงไปเพื่สนทนาตอบโต้</p>
+                            </center>
+                        </React.Fragment>
+                    }
+
 
                 </div>
             </div>
