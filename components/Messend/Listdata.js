@@ -83,16 +83,21 @@ class ListData extends React.Component {
                                                 borderRadius: '5ypx',
                                                 float: 'right'
                                             }}>
-                                                <Chip
-                                                    key={key}
-                                                    // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                    label={(
-                                                        <div>
-                                                            {/* <h3>{listMsg[key].displayName}</h3> */}
-                                                            <p>{listMsg[key].msg}</p>
-                                                        </div>
-                                                    )}
-                                                />
+
+                                                <div style={{clear: 'both'}}>
+                                                    <div style={{
+                                                        float: 'right',
+                                                        padding: '8px',
+                                                        backgroundColor: '#c8c8c8',
+                                                        color: 'black',
+                                                        borderRadius: '4px'
+                                                    }}
+                                                         key={key}>
+                                                        <div>{listMsg[key].msg}</div>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
                                         </React.Fragment>
                                         : <React.Fragment key={key}>
@@ -104,16 +109,28 @@ class ListData extends React.Component {
                                                 borderRadius: '5px',
                                                 float: 'left'
                                             }}>
-                                                <Chip
-                                                    key={key}
-                                                    avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL}/>}
-                                                    label={(
+
+                                                <div style={{clear: 'both'}}>
+                                                    <Avatar alt="Natacha" src={listMsg[key].photoURL}/>
+                                                    <div style={{
+                                                        float: 'right',
+                                                        padding: '8px',
+                                                        backgroundColor: '#c8c8c8',
+                                                        color: 'black',
+                                                        borderRadius: '4px'
+                                                    }}
+                                                         key={key}>
+
                                                         <div>
                                                             <h3>{listMsg[key].displayName}</h3>
-                                                            <p>{listMsg[key].msg}</p>
+                                                            <div>{listMsg[key].msg}</div>
                                                         </div>
-                                                    )}
-                                                />
+
+
+                                                    </div>
+                                                </div>
+
+
                                             </div>
                                         </React.Fragment>
                                     }
