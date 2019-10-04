@@ -1,10 +1,7 @@
 import React from 'react'
-import { withStyles } from '@material-ui/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
+import {withStyles} from '@material-ui/styles';
 // import TEST from '../Img/TEST.jpg'
 // import Img from '../Messend/Photo/Img.jpeg'
-
 
 const Styeles = {
     OverScroll: {
@@ -14,124 +11,79 @@ const Styeles = {
         // float:'right'
     },
     InpuChatButton: {
-
         backgroundColor: 'white',
-        // borderTop: '0px solid #ddd',
-        // borderTopRightRadius: '20px',
-        // borderTopLeftRadius: '20px',
-        // borderBottomRightRadius: '0px',
-        // borderBottomLeftRadius: '0px',
         position: 'fixed',
         bottom: '17%',
         left: '8%',
         width: '77%',
-        height: '58%',
-        overflow: 'scroll',
-        position:'fixed'
+        height: '70%',
+        overflow: 'auto',
     },
 
 
 }
 
+const ListData = (props) => {
+    const {classes} = props;
 
-class ListData extends React.Component {
+    return (
+        <div>
 
-    render() {
-        const { classes, listMsg, uid } = this.props
-        
-        // Object.keys(listMsg).map((key,index)=> console.log(listMsg[key].msg))
-        return (
-            <div >
-                <div className={classes.InpuChatButton}>
-                    <button
-                        style={{
-                            border: '0px solid #ffffff00',
-                            backgroundColor: '#3f51b5',
-                            position: 'fixed',
-                            bottom: '480px',
-                            height: '77px',
-                            width: '77%',
-                            right: '15%',
-                            // borderTopLeftRadius: '18px',
-                            // borderTopRightRadius: '18px',
-                        }}>
-                        {/* <InsertEmoticonOutlinedIcon>
-                            </InsertEmoticonOutlinedIcon> */}
-                        <span>สมาชิก</span>
-                    </button>
-                    <div style={{
-                        padding: '10px 15px',
-                        marginTop: '28%'
-
+            <div className={classes.InpuChatButton}>
+                <button
+                    style={{
+                        border: '0px solid #ffffff00',
+                        backgroundColor: '#3f51b5',
+                        height: '77px',
+                        width: '100%',
+                        right: '15%',
+                        color: 'white',
+                        fontSize: '18px'
+                        // borderTopLeftRadius: '18px',
+                        // borderTopRightRadius: '18px',
                     }}>
-                        {listMsg !== null
-                            ? <React.Fragment>
-                                {Object.keys(listMsg).map(key => (
-                                    <React.Fragment key={key}>
-                                        {listMsg[key].uid === uid
-                                            ? <React.Fragment key={key}>
-                                                <div style={{
-                                                    bottom: '14%',
-                                                    padding: 'inherit',
-                                                    padding: '10px 15px',
-                                                    clear: 'both',
-                                                    borderRadius: '5ypx',
-                                                    float: 'right'
-                                                }}>
-                                                    <Chip
-                                                        key={key}
-                                                        // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                        label={(
-                                                            <div>
-                                                                {/* <h3>{listMsg[key].displayName}</h3> */}
-                                                                <p>{listMsg[key].msg}</p>
-                                                            </div>
-                                                        )}
-                                                    />
-                                                </div>
-                                            </React.Fragment>
-                                            : <React.Fragment key={key}>
-                                                <div style={{
-                                                    bottom: '14%',
-                                                    padding: 'inherit',
-                                                    padding: '10px 15px',
-                                                    clear: 'both',
-                                                    borderRadius: '5px',
-                                                    float: 'left'
-                                                }}>
-                                                    <Chip
-                                                        key={key}
-                                                        avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                        label={(
-                                                            <div>
-                                                                <h3>{listMsg[key].displayName}</h3>
-                                                                <p>{listMsg[key].msg}</p>
-                                                            </div>
-                                                        )}
-                                                    />
-                                                </div>
-                                            </React.Fragment>
-                                        }
-                                    </React.Fragment>
-                                ))
-                                }
-                            </React.Fragment>
-                            : <React.Fragment>
-                                <center>
-                                    <p style={{
-                                        padding: 'inherit',
-                                        clear: 'both',
-                                    }}>พิมพ์ข้อความลงไปเพื่สนทนาตอบโต้</p>
-                                </center>
-                            </React.Fragment>
-                        }
-                    </div>
 
+
+                    {/* <InsertEmoticonOutlinedIcon>
+                            </InsertEmoticonOutlinedIcon> */}
+                    <span>
+                    สมาชิก
+                            </span>
+                </button>
+
+                <div style={{
+                    padding: '10px 15px',
+                }}>
+                    {
+                        props.data.listMsg.map(msg => {
+
+                            if(msg){
+                                return <div style={{clear: 'both'}}>
+                                    <div style={{
+                                        float: 'right',
+                                        padding: '15px',
+                                        marginBottom: '15px',
+                                        backgroundColor: '#c8c8c8',
+                                        color: 'black',
+                                        borderRadius: '4px'
+                                    }}
+                                         key={msg.key}>
+                                        <div>{msg.displayName ? msg.displayName : null}</div>
+                                        {msg.message}
+                                    </div>
+                                </div>
+                            }
+
+
+                        })
+                    }
                 </div>
-            </div>
 
-        )
-    }
+            </div>
+        </div>
+
+    )
+
 }
 
 // export default ListData;

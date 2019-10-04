@@ -1,7 +1,7 @@
 import React from 'react';
-import Router, { useRouter } from 'next/router';
-import { Map, ConnectApiMaps } from '../lib/maps';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Router, {useRouter} from 'next/router';
+import {Map, ConnectApiMaps} from '../lib/maps';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Chat from '../components/Chat'
@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import firebase from '../lib/firebase';
-import { shareLocation, writeHistory } from '../firebase-database/write-data'
+import {shareLocation, writeHistory} from '../firebase-database/write-data'
 // import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
 // import Chat from '../components/Chat'
 import ContainedButtons from '../components/bottonShare_group'
@@ -28,383 +28,389 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 const useStyles = makeStyles(theme => ({
-  text: {
-    padding: theme.spacing(2, 2, 0),
-  },
-  paper: {
-    paddingBottom: 50,
-  },
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  list: {
-    marginBottom: theme.spacing(2),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+    text: {
+        padding: theme.spacing(2, 2, 0),
+    },
+    paper: {
+        paddingBottom: 50,
+    },
+    root: {
+        flexGrow: 1,
+    },
+    grow: {
+        flexGrow: 1,
+    },
+    list: {
+        marginBottom: theme.spacing(2),
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
 }));
 
 const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
+    paper: {
+        border: '1px solid #d3d4d5',
+    },
 })(props => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
+    <Menu
+        elevation={0}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+        }}
+        {...props}
+    />
 ));
 
 const StyledMenuItem = withStyles(theme => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
+    root: {
+        '&:focus': {
+            backgroundColor: theme.palette.primary.main,
+            '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                color: theme.palette.common.white,
+            },
+        },
     },
-  },
 }))(MenuItem);
 
 function AutocompleteDirectionsHandler(google, map) {
-  this.map = map;
-  this.originPlaceId = null;
-  this.destinationPlaceId = null;
-  this.travelMode = 'WALKING';
-  this.directionsService = new google.maps.DirectionsService;
-  this.directionsRenderer = new google.maps.DirectionsRenderer;
-  this.directionsRenderer.setMap(this.map);
+    this.map = map;
+    this.originPlaceId = null;
+    this.destinationPlaceId = null;
+    this.travelMode = 'WALKING';
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer = new google.maps.DirectionsRenderer;
+    this.directionsRenderer.setMap(this.map);
 
-  var me = this
+    var me = this
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
-        var data = (snapshot.val());
+    firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+                    var data = (snapshot.val());
 
-        if (data.share === true) {
-          me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
-          me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
-          me.setupClickListener(data.host.request.travelMode);
+                    // check data
+                    if (data && data.share === true) {
+                        me.setupPlaceChangedListener(data.host.geocoded_waypoints[0].place_id, 'ORIG');
+                        me.setupPlaceChangedListener(data.host.geocoded_waypoints[1].place_id, 'DEST');
+                        me.setupClickListener(data.host.request.travelMode);
 
-        } else {
-          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
-          me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
-          me.setupClickListener(data.header.host.request.travelMode);
+                    } else if (data && data.header) {
+                        me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[0].place_id, 'ORIG');
+                        me.setupPlaceChangedListener(data.header.host.geocoded_waypoints[1].place_id, 'DEST');
+                        me.setupClickListener(data.header.host.request.travelMode);
+                    }
+
+
+                })
+            }
         }
-
-
-      })
-    }
-  }
-  )
+    )
 }
 
 // Sets a listener on a radio button to change the filter type on Places
 // Autocomplete.
 AutocompleteDirectionsHandler.prototype.setupClickListener = function (mode) {
-  var me = this;
+    var me = this;
 
-  me.travelMode = mode;
-  me.route();
+    me.travelMode = mode;
+    me.route();
 };
 
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
-  place, mode) {
-  var me = this;
+    place, mode) {
+    var me = this;
 
-  console.log(place);
+    console.log(place);
 
-  if (!place) {
-    alert('Please select an option from the dropdown list.');
-    return;
-  }
-  if (mode === 'ORIG') {
-    me.originPlaceId = place;
-  } else {
-    me.destinationPlaceId = place;
-  }
-  me.route();
+    if (!place) {
+        alert('Please select an option from the dropdown list.');
+        return;
+    }
+    if (mode === 'ORIG') {
+        me.originPlaceId = place;
+    } else {
+        me.destinationPlaceId = place;
+    }
+    me.route();
 };
 
 AutocompleteDirectionsHandler.prototype.route = function () {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
-    return;
-  }
-  var me = this;
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+        return;
+    }
+    var me = this;
 
-  this.directionsService.route(
-    {
-      origin: { 'placeId': this.originPlaceId },
-      destination: { 'placeId': this.destinationPlaceId },
-      travelMode: this.travelMode
-    },
-    function (response, status) {
-      if (status === 'OK') {
-        me.directionsRenderer.setDirections(response);
-        // console.log(response);
+    this.directionsService.route(
+        {
+            origin: {'placeId': this.originPlaceId},
+            destination: {'placeId': this.destinationPlaceId},
+            travelMode: this.travelMode
+        },
+        function (response, status) {
+            if (status === 'OK') {
+                me.directionsRenderer.setDirections(response);
+                // console.log(response);
 
-      } else {
-        alert('Directions request failed due to ' + status);
-        // console.log(response, status);
+            } else {
+                alert('Directions request failed due to ' + status);
+                // console.log(response, status);
 
-      }
-    });
+            }
+        });
 };
 
 
 function FinishedStep(props) {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [joinUser, setJoinUser] = React.useState({})
-  const router = useRouter()
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [joinUser, setJoinUser] = React.useState({})
+    const router = useRouter()
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
+    function handleClick(event) {
+        setAnchorEl(event.currentTarget);
+    }
 
-  function handleClose() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
-          let data = (snapshot.val());
-          if(user.uid === data.header.uid) {
-            shareLocation(user.uid, false)
-            writeHistory(user.uid, data)
-            firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
-          }else {
-            firebase.database().ref(`/group_share_user/${data.header.uid}`).once('value').then(function (snapshot) {
-              let dataHaderShare = (snapshot.val());
-              writeHistory(user.uid, dataHaderShare)
-            })
-            firebase.database().ref(`/group_share_user/${data.header.uid}/join/user/${user.uid}`).remove()
-          }
-          
+    function handleClose() {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                firebase.database().ref(`/group_share_user/${user.uid}`).once('value').then(function (snapshot) {
+                    let data = (snapshot.val());
+                    if (user.uid === data.header.uid) {
+                        shareLocation(user.uid, false)
+                        writeHistory(user.uid, data)
+                        firebase.database().ref(`/group_share_user/${user.uid}/join`).remove()
+                    } else {
+                        firebase.database().ref(`/group_share_user/${data.header.uid}`).once('value').then(function (snapshot) {
+                            let dataHaderShare = (snapshot.val());
+                            writeHistory(user.uid, dataHaderShare)
+                        })
+                        firebase.database().ref(`/group_share_user/${data.header.uid}/join/user/${user.uid}`).remove()
+                    }
+
+                })
+
+                setAnchorEl(null);
+                setTimeout(() => router.push('/'), 100)
+            }
         })
+    }
 
-        setAnchorEl(null);
+    function goBack() {
         setTimeout(() => router.push('/'), 100)
-      }
-    })
-  }
-
-  function goBack() {
-    setTimeout(() => router.push('/'), 100)
-  }
+    }
 
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
+    return (
+        <div className={classes.root}>
+            <CssBaseline/>
 
-      {/* app-bar */}
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit">
-            กลุ่มเเชร์
-        </Typography>
-          <div className={classes.grow} />
-          <IconButton onClick={handleClick} edge="end" color="inherit">
-            <MoreIcon />
-          </IconButton>
+            {/* app-bar */}
+            <AppBar position="static">
+                <Toolbar variant="dense">
+                    <IconButton onClick={goBack} edge="start" className={classes.menuButton} color="inherit"
+                                aria-label="menu">
+                        <ArrowBackIosIcon/>
+                    </IconButton>
+                    <Typography variant="h6" color="inherit">
+                        กลุ่มเเชร์
+                    </Typography>
+                    <div className={classes.grow}/>
+                    <IconButton onClick={handleClick} edge="end" color="inherit">
+                        <MoreIcon/>
+                    </IconButton>
 
-          {/* menu */}
-          <StyledMenu
-            id="customized-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <StyledMenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <CloseIcon />
-              </ListItemIcon>
-              <ListItemText primary="ยกเลิก" />
-            </StyledMenuItem>
-          </StyledMenu>
-          {/* end-menu */}
-
-
-        </Toolbar>
-      </AppBar>
-      {/* end-app-bar */}
-
-      {/* map */}
-      <Map google={props.google}
-        setStyle={{
-          position: "absolute",
-          overflow: "hidden",
-          height: "100%",
-          width: "100%",
-        }}
-        opts={{
-          zoom: 15,
-          center: { lat: -33.8688, lng: 151.2195 },
-          disableDefaultUI: true,
-          styles: [{
-            featureType: 'poi.business',
-            stylers: [{ visibility: 'on' }]
-          },
-          {
-            featureType: 'transit',
-            elementType: 'labels.icon',
-            stylers: [{ visibility: 'off' }]
-          }]
-        }}
-        DrawingOnMap={(google, map) => {
-          new AutocompleteDirectionsHandler(google, map)
+                    {/* menu */}
+                    <StyledMenu
+                        id="customized-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <StyledMenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                <CloseIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="ยกเลิก"/>
+                        </StyledMenuItem>
+                    </StyledMenu>
+                    {/* end-menu */}
 
 
-          function CustomMarker(latlng, map, args, img) {
-            this.latlng = latlng;
-            this.args = args;
-            this.img = img;
-            this.setMap(map);
+                </Toolbar>
+            </AppBar>
+            {/* end-app-bar */}
 
-            // setMap(map)
-            // setGoogle(google)
+            {/* map */}
+            <Map google={props.google}
+                 setStyle={{
+                     position: "absolute",
+                     overflow: "hidden",
+                     height: "100%",
+                     width: "100%",
+                 }}
+                 opts={{
+                     zoom: 15,
+                     center: {lat: -33.8688, lng: 151.2195},
+                     disableDefaultUI: true,
+                     styles: [{
+                         featureType: 'poi.business',
+                         stylers: [{visibility: 'on'}]
+                     },
+                         {
+                             featureType: 'transit',
+                             elementType: 'labels.icon',
+                             stylers: [{visibility: 'off'}]
+                         }]
+                 }}
+                 DrawingOnMap={(google, map) => {
+                     new AutocompleteDirectionsHandler(google, map)
 
-          }
 
-          CustomMarker.prototype = new window.google.maps.OverlayView();
+                     function CustomMarker(latlng, map, args, img) {
+                         this.latlng = latlng;
+                         this.args = args;
+                         this.img = img;
+                         this.setMap(map);
 
-          CustomMarker.prototype.onAdd = function () {
-            var self = this;
-            var div = this.div;
-            if (!div) {
-              // Generate marker html
-              div = this.div = document.createElement('div');
-              div.className = 'custom-marker';
-              div.style.position = 'absolute';
-              var innerDiv = document.createElement('div');
-              innerDiv.className = 'custom-marker-inner';
-              innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
-              div.appendChild(innerDiv);
+                         // setMap(map)
+                         // setGoogle(google)
 
-              if (typeof (self.args.marker_id) !== 'undefined') {
-                div.dataset.marker_id = self.args.marker_id;
-              }
+                     }
 
-              google.maps.event.addDomListener(div, "click", function (event) {
-                google.maps.event.trigger(self, "click");
-              });
+                     CustomMarker.prototype = new window.google.maps.OverlayView();
 
-              var panes = this.getPanes();
-              panes.overlayImage.appendChild(div);
-            }
-          };
+                     CustomMarker.prototype.onAdd = function () {
+                         var self = this;
+                         var div = this.div;
+                         if (!div) {
+                             // Generate marker html
+                             div = this.div = document.createElement('div');
+                             div.className = 'custom-marker';
+                             div.style.position = 'absolute';
+                             var innerDiv = document.createElement('div');
+                             innerDiv.className = 'custom-marker-inner';
+                             innerDiv.innerHTML = `<img  src="${this.img}" style="border-radius: inherit;width: 20px;height: 20px;margin: 2px;"/>`
+                             div.appendChild(innerDiv);
 
-          CustomMarker.prototype.draw = function () {
-            // มี bug icon ไม่เกาะ map
-            if (this.div) {
-              // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
-              let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
+                             if (typeof (self.args.marker_id) !== 'undefined') {
+                                 div.dataset.marker_id = self.args.marker_id;
+                             }
 
-              this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
-              // console.log(this.pos);
-              this.div.style.left = this.pos.x + 'px';
-              this.div.style.top = this.pos.y + 'px';
-            }
-          };
+                             google.maps.event.addDomListener(div, "click", function (event) {
+                                 google.maps.event.trigger(self, "click");
+                             });
 
-          CustomMarker.prototype.getPosition = function () {
-            return this.latlng;
-          };
+                             var panes = this.getPanes();
+                             panes.overlayImage.appendChild(div);
+                         }
+                     };
 
-          firebase.auth().onAuthStateChanged((user) => {
-            firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
-              let stories = (snapshot.val());
+                     CustomMarker.prototype.draw = function () {
+                         // มี bug icon ไม่เกาะ map
+                         if (this.div) {
+                             // กำหนด ตำแหน่ง ของhtml ที่สร้างไว้
+                             let positionA = new google.maps.LatLng(this.latlng.lat, this.latlng.lng);
 
-              let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
+                             this.pos = this.getProjection().fromLatLngToDivPixel(positionA);
+                             // console.log(this.pos);
+                             this.div.style.left = this.pos.x + 'px';
+                             this.div.style.top = this.pos.y + 'px';
+                         }
+                     };
 
-              let marker1 = new CustomMarker(
-                myLatlng,
-                map,
-                {},
-                stories.photoURL
-              );
+                     CustomMarker.prototype.getPosition = function () {
+                         return this.latlng;
+                     };
 
-              let pos = {
-                lat: stories.coords.latitude,
-                lng: stories.coords.longitude
-              };
+                     firebase.auth().onAuthStateChanged((user) => {
+                         firebase.database().ref(`/group_share_user/${user.uid}/header`).once('value').then(function (snapshot) {
+                             let stories = (snapshot.val());
 
-              marker1.latlng = { lat: pos.lat, lng: pos.lng };
-              marker1.draw();
+                             // check stories data
+                             if (stories) {
+                                 let myLatlng = new google.maps.LatLng(stories.coords.latitude, stories.coords.longitude);
 
-              map.setCenter(pos);
+                                 let marker1 = new CustomMarker(
+                                     myLatlng,
+                                     map,
+                                     {},
+                                     stories.photoURL
+                                 );
 
-            })
+                                 let pos = {
+                                     lat: stories.coords.latitude,
+                                     lng: stories.coords.longitude
+                                 };
 
-            // join
-            firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
-              let hid = (snapshot.val());
-              firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
-                let keysJoin = (snapshot.val());
-                if (keysJoin !== null) {
-                  // console.log(keysJoin);
-  
-                  // console.log(Object.keys(keysJoin).length);
-                  Object.keys(keysJoin).map((key) => {
-                    firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
-                      let dataJoin = (snapshot.val());
-                      setJoinUser([dataJoin])
-                      let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
-                      let marker1 = new CustomMarker(
-                        myLatlng,
-                        map,
-                        {},
-                        dataJoin.photoURL
-                      );
+                                 marker1.latlng = {lat: pos.lat, lng: pos.lng};
+                                 marker1.draw();
 
-                      let pos = {
-                        lat: dataJoin.coords.latitude,
-                        lng: dataJoin.coords.longitude
-                      };
+                                 map.setCenter(pos);
+                             }
 
-                      marker1.latlng = { lat: pos.lat, lng: pos.lng };
-                      marker1.draw();
 
-                      map.setCenter(pos);
-                    })
-                  })
-                } else {
-                  alert('ขณะนี้ยังไม่มีเข้าเข้าร่วมแชร์')
-                }
-              })
-            })
-          })
-        }}
-      >
-        <ContainedButtons></ContainedButtons>
-        <Chat></Chat>
-      </Map>
-      {/* end-map */}
+                         });
 
-    </div>
-  )
+                         // join
+                         firebase.database().ref(`/group_share_user/${user.uid}/header/uid`).once('value').then(function (snapshot) {
+                             let hid = (snapshot.val());
+                             firebase.database().ref(`/group_share_user/${hid}/join/keys`).once('value').then(function (snapshot) {
+                                 let keysJoin = (snapshot.val());
+                                 if (keysJoin !== null) {
+                                     // console.log(keysJoin);
+
+                                     // console.log(Object.keys(keysJoin).length);
+                                     Object.keys(keysJoin).map((key) => {
+                                         firebase.database().ref(`/group_share_user/${hid}/join/user/${key}`).once('value').then(function (snapshot) {
+                                             let dataJoin = (snapshot.val());
+                                             setJoinUser([dataJoin])
+                                             let myLatlng = new google.maps.LatLng(dataJoin.coords.latitude, dataJoin.coords.longitude);
+                                             let marker1 = new CustomMarker(
+                                                 myLatlng,
+                                                 map,
+                                                 {},
+                                                 dataJoin.photoURL
+                                             );
+
+                                             let pos = {
+                                                 lat: dataJoin.coords.latitude,
+                                                 lng: dataJoin.coords.longitude
+                                             };
+
+                                             marker1.latlng = {lat: pos.lat, lng: pos.lng};
+                                             marker1.draw();
+
+                                             map.setCenter(pos);
+                                         })
+                                     })
+                                 } else {
+                                     alert('ขณะนี้ยังไม่มีเข้าเข้าร่วมแชร์')
+                                 }
+                             })
+                         })
+                     })
+                 }}
+            >
+                <ContainedButtons></ContainedButtons>
+                <Chat></Chat>
+            </Map>
+            {/* end-map */}
+
+        </div>
+    )
 
 }
 
 export default ConnectApiMaps({
-  apiKey: "AIzaSyCfdx1_dkKY9BejzU-We23YqfEynZtAIJc",
-  libraries: ['places', 'geometry'],
+    apiKey: "AIzaSyCfdx1_dkKY9BejzU-We23YqfEynZtAIJc",
+    libraries: ['places', 'geometry'],
 })(FinishedStep)
