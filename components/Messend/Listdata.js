@@ -83,18 +83,6 @@ class ListData extends React.Component {
                                                 borderRadius: '5ypx',
                                                 float: 'right'
                                             }}>
-<<<<<<< HEAD
-                                                <Chip
-                                                    key={key}
-                                                    // avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL} />}
-                                                    label={(
-                                                        <div>
-                                                            {/* <h3>{listMsg[key].displayName}</h3> */}
-                                                            <p>{listMsg[key].msg}</p>
-                                                        </div>
-                                                    )}
-                                                />
-=======
 
                                                 <div style={{clear: 'both'}}>
                                                     <div style={{
@@ -110,7 +98,6 @@ class ListData extends React.Component {
                                                 </div>
 
 
->>>>>>> 40d5228612f76eb2ea748e7f6e96b4876f9b2be0
                                             </div>
                                         </React.Fragment>
                                         : <React.Fragment key={key}>
@@ -122,18 +109,6 @@ class ListData extends React.Component {
                                                 borderRadius: '5px',
                                                 float: 'left'
                                             }}>
-<<<<<<< HEAD
-                                                <Chip
-                                                    key={key}
-                                                    avatar={<Avatar alt="Natacha" src={listMsg[key].photoURL}/>}
-                                                    label={(
-                                                        <div>
-                                                            <h3>{listMsg[key].displayName}</h3>
-                                                            <p>{listMsg[key].msg}</p>
-                                                        </div>
-                                                    )}
-                                                />
-=======
 
                                                 <div style={{clear: 'both'}}>
                                                     <Avatar alt="Natacha" src={listMsg[key].photoURL}/>
@@ -156,7 +131,6 @@ class ListData extends React.Component {
                                                 </div>
 
 
->>>>>>> 40d5228612f76eb2ea748e7f6e96b4876f9b2be0
                                             </div>
                                         </React.Fragment>
                                     }
