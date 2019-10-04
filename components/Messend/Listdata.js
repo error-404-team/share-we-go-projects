@@ -59,13 +59,8 @@ class ListData extends React.Component {
                             backgroundColor: '#3f51b5',
                             bottom: '480px',
                             height: '77px',
-                            width: '100%',
-
-                            // borderTopLeftRadius: '18px',
-                            // borderTopRightRadius: '18px',
-                        }}>
-                        {/* <InsertEmoticonOutlinedIcon>
-                            </InsertEmoticonOutlinedIcon> */}
+                            width: '100%',    
+                            }}>
                         <span>สมาชิก</span>
                     </button>
 
