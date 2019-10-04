@@ -42,8 +42,10 @@ class InputData extends Component {
     //     this.props.onEmojiClick(this.state.myCallback)
     // }
 
-    onClickButton = () => {
-        this.props.onClickButtonHandler(this.state.msg)
+    onClickButton = async () => {
+        this.props.onClickButtonHandler(this.state.msg);
+        // reset message after send
+        await this.setState({msg: ''});
     }
 
     render() {
