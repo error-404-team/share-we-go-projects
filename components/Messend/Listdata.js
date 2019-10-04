@@ -68,7 +68,7 @@ class ListData extends React.Component {
                             </InsertEmoticonOutlinedIcon> */}
                         <span>สมาชิก</span>
                     </button>
-
+                    {/* base megre */}
                     {listMsg !== null
                         ? <React.Fragment>
                             {Object.keys(listMsg).map(key => (
