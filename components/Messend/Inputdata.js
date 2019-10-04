@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {withStyles} from '@material-ui/styles';
+import React, { Component } from 'react'
+import { withStyles } from '@material-ui/styles';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 // import InsertEmoticonOutlinedIcon from '@material-ui/icons/InsertEmoticonOutlined';
 // import EmojiPicker from 'emoji-picker-react';
@@ -16,7 +16,7 @@ const Styeles = {
         position: 'fixed',
         bottom: '10%',
         width: '77%',
-        right: '15%'
+        right:'15%'
     },
     InputInborder: {
         border: '1px solid gray',
@@ -32,8 +32,7 @@ class InputData extends Component {
 
     state = {
         msg: ""
-    };
-
+    }
     onTextChange = (e) => {
         this.setState({
             msg: e.target.value
@@ -47,10 +46,10 @@ class InputData extends Component {
         this.props.onClickButtonHandler(this.state.msg);
         // reset message after send
         await this.setState({msg: ''});
-    };
+    }
 
     render() {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <div className={classes.InpuChatButton}>
@@ -63,7 +62,7 @@ class InputData extends Component {
                         // id="btn-input" 
                         // type="text" 
                         // className="form-control input-sm" 
-                        placeholder="พิมพ์ข้อความ"></input>
+                        placeholder="พิมพ์ข้อความ" ></input>
                     <span>
                         {/* <EmojiPicker onEmojiClick={this.myCallback}></EmojiPicker> */}
                         <button
@@ -71,16 +70,15 @@ class InputData extends Component {
                                 border: '0px solid #ffffff00',
                                 backgroundColor: '#ffffff00',
                                 position: 'absolute',
-                                right: '0%',
-                                bottom: '18%'
+                                 right: '0%',
+                                 bottom: '18%'
                             }}
                             onClick={this.onClickButton}>
-                            <SendRoundedIcon onClick={this.onClickButton}></SendRoundedIcon></button>
+                            <SendRoundedIcon  ></SendRoundedIcon></button>
                     </span>
                 </div>
             </div>
         )
     }
 }
-
 export default withStyles(Styeles)(InputData);
