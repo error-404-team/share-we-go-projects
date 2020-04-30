@@ -34,7 +34,7 @@
     "express": "^4.17.1",
     "firebase": "^6.5.0",
     "isomorphic-fetch": "^2.2.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "next": "^9.0.5",
     "next-page-transitions": "^1.0.0-beta.2",
     "pretty-format": "^24.9.0",
